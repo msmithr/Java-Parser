@@ -1,9 +1,23 @@
 <class> -> <class modifiers> class <identifier> [<extends>] [<implements>] '{'<class body>'}'
 
+<class modifiers> -> [<access modifier>] {<class modifier>}
+<access modifier> -> public | private | protected
+<class modifier> -> abstract | static | final | strictfp
+
 <extends> -> extends <identifier>
 <implements> -> implements <identifier> {, <identifier>}
 
 <class body> -> {<class body statement>}
 
-<class body statement> -> <class variable declaration> | <method declaration> | <constructor declaration>
+<class body statement> -> <field modifier> <variable declaration> | <method declaration> | <constructor declaration>
+
+<variable declaration> -> <type> <identifier> {, <identifier>}
+
+<field modifier> -> public | protected | private | static | final | transient | volatile
+
+<type> -> <primitive type> | <nonprimitive type>
+
+<primitive type> -> boolean | byte | char | short | int | long | float | double
+<nonprimitive type> -> <identifier>
+
 
