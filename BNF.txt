@@ -1,0 +1,9 @@
+<class> -> <class modifiers> class <identifier> [<extends>] [<implements>] '{'<class body>'}'
+
+<extends> -> extends <identifier>
+<implements> -> implements <identifier> {, <identifier>}
+
+<class body> -> {<class body statement>}
+
+<class body statement> -> <class variable declaration> | <method declaration> | <constructor declaration>
+
