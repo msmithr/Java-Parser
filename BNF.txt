@@ -19,5 +19,3 @@
 
 <primitive type> -> boolean | byte | char | short | int | long | float | double
 <nonprimitive type> -> <identifier>
-
-
