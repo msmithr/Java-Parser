@@ -9,13 +9,12 @@
 
 <class body> -> {<class body statement>}
 
-<class body statement> -> <field modifier> <variable declaration> | <method declaration> | <constructor declaration>
+<class body statement> -> <field modifier> <variable declaration>[ = <expression>]; | <method declaration> | <constructor declaration>
 
 <variable declaration> -> <type> <identifier> {, <identifier>}
 
 <field modifier> -> public | protected | private | static | final | transient | volatile
 
 <type> -> <primitive type> | <nonprimitive type>
-
 <primitive type> -> boolean | byte | char | short | int | long | float | double
 <nonprimitive type> -> <identifier>
