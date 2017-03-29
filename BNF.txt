@@ -14,7 +14,6 @@
 
 <extends> = "extends" <identifier>;
 <implements> = "implements" <identifier> {',' <identifier>};
-(* Can these be in opposite orders? *)
 
 <class body> = {<class body statement>};
 
