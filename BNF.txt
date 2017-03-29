@@ -1,20 +1,28 @@
-<class> -> <class modifiers> class <identifier> [<extends>] [<implements>] '{'<class body>'}'
+<program> = [<package declaration>] [{<import declaration>}] [{<class>}];
+(* problem: interfaces? *)
 
-<class modifiers> -> [<access modifier>] {<class modifier>}
-<access modifier> -> public | private | protected
-<class modifier> -> abstract | static | final | strictfp
+<package declaration> = "package" <identifier>;
 
-<extends> -> extends <identifier>
-<implements> -> implements <identifier> {, <identifier>}
+<class> = <class modifiers> "class" <identifier> [<extends>] [<implements>] '{'<class body>'}';
 
-<class body> -> {<class body statement>}
+<class modifiers> = [<access_modifier>] {<class modifier>};
+<access modifier> = "public" | "private" | "protected";
+<class modifier> = "abstract" | "static" | "final" | "strictfp";
+(* problem: class cannot be both abstract and final *)
+(* problem: access modifier and class modifiers can be in any order*)
 
-<class body statement> -> <field modifier> <variable declaration>[ = <expression>]; | <method declaration> | <constructor declaration>
+<extends> = "extends" <identifier>;
+<implements> = "implements" <identifier> {',' <identifier>};
+(* Can these be in opposite orders? *)
 
-<variable declaration> -> <type> <identifier> {, <identifier>}
+<class body> = {<class body statement>};
 
-<field modifier> -> public | protected | private | static | final | transient | volatile
+<class body statement> = <field declaration> | <method declaration> | <constructor declaration>;
+(* See: Static initializer *)
 
-<type> -> <primitive type> | <nonprimitive type>
-<primitive type> -> boolean | byte | char | short | int | long | float | double
-<nonprimitive type> -> <identifier>
+<field modifier> = public | protected | private | static | final | transient | volatile;
+(* Some of these conflict? *)
+
+<type> = <primitive type> | <nonprimitive type>;
+<primitive type> = boolean | byte | char | short | int | long | float | double;
+<nonprimitive type> = <identifier>;
