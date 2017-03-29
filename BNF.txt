@@ -3,9 +3,10 @@
 
 <package declaration> = "package" <identifier>;
 
-<class> = <class modifiers> "class" <identifier> [<extends>] [<implements>] '{'<class body>'}';
+<class> = <class modifiers> "class" <identifier>
+[<extends>] [<implements>] '{'<class body>'}';
 
-<class modifiers> = [<access_modifier>] {<class modifier>};
+<class modifiers> = [<access modifier>] {<class modifier>};
 <access modifier> = "public" | "private" | "protected";
 <class modifier> = "abstract" | "static" | "final" | "strictfp";
 (* problem: class cannot be both abstract and final *)
@@ -20,9 +21,17 @@
 <class body statement> = <field declaration> | <method declaration> | <constructor declaration>;
 (* See: Static initializer *)
 
+<field declaration> = {<field modifiers>} <type>
+<identifier> [ = <expr>] {, <identifier> [ = <expr>]}';';
+
 <field modifier> = public | protected | private | static | final | transient | volatile;
 (* Some of these conflict? *)
 
+<method declaration> = <method modifiers> <type> <identifier>
+'(' <parameters> ')' '{' <method body> '}';
+
+<parameters> = [<type> <identifier>] {, <type> <identifier>};
+
 <type> = <primitive type> | <nonprimitive type>;
 <primitive type> = boolean | byte | char | short | int | long | float | double;
-<nonprimitive type> = <identifier>;
+<nonprimitive type> = <identifier> | <type>'[]';
