@@ -17,17 +17,23 @@
 
 <class body> = {<class body statement>};
 
-<class body statement> = <field declaration> | <method declaration> | <constructor declaration>;
-(* See: Static initializer *)
+<class body statement> = <field declaration> | <method declaration>
+| <constructor declaration> | <static initializer>;
+(*Todo: Constructor declaration*)
 
 <field declaration> = {<field modifiers>} <type>
 <identifier> [ = <expr>] {, <identifier> [ = <expr>]}';';
 
+<method declaration> = <method modifiers> <type> <identifier>
+'(' <parameters> ')' '{' <method body> '}';
+(*Todo: throws*)
+
+<static initializer> = "static" <block>;
+
 <field modifier> = public | protected | private | static | final | transient | volatile;
 (* Some of these conflict? *)
 
-<method declaration> = <method modifiers> <type> <identifier>
-'(' <parameters> ')' '{' <method body> '}';
+
 
 <parameters> = [<type> <identifier>] {, <type> <identifier>};
 
