@@ -24,16 +24,16 @@
 <field declaration> = {<field modifiers>} <type>
 <identifier> [ = <expr>] {, <identifier> [ = <expr>]}';';
 
-<method declaration> = <method modifiers> <type> <identifier>
+<method declaration> = <method modifiers> (<type>|"void") <identifier>
 '(' <parameters> ')' '{' <method body> '}';
 (*Todo: throws*)
 
 <static initializer> = "static" <block>;
 
+
+
 <field modifier> = public | protected | private | static | final | transient | volatile;
 (* Some of these conflict? *)
-
-
 
 <parameters> = [<type> <identifier>] {, <type> <identifier>};
 
