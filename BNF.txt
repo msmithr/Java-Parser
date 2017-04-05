@@ -21,8 +21,7 @@
 | <constructor declaration> | <static initializer>;
 (*Todo: Constructor declaration*)
 
-<field declaration> = {<field modifiers>} <type>
-<identifier> [ = <expr>] {, <identifier> [ = <expr>]}';';
+<field declaration> = {<field modifiers>} <type> <variable declarators>;
 
 <method declaration> = <method modifiers> (<type>|"void") <identifier>
 '(' <parameters> ')' [<throws>] '{' [<block>] '}';
@@ -43,7 +42,11 @@
 <primitive type> = boolean | byte | char | short | int | long | float | double;
 <nonprimitive type> = <identifier> | <type>'[]';
 
+<block> = {<block statement>};
+<block statement> = <local variable declaration> | <statement>;
+
+<local variable declaration> = <type> <variable declarators>;
 
 
 
-<block> = {<block statement};
+<variable decalarators> = <identifier> [ = <expr>] {, <identifier> [ = <expr>]};
