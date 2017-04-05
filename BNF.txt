@@ -25,18 +25,25 @@
 <identifier> [ = <expr>] {, <identifier> [ = <expr>]}';';
 
 <method declaration> = <method modifiers> (<type>|"void") <identifier>
-'(' <parameters> ')' '{' <method body> '}';
-(*Todo: throws*)
+'(' <parameters> ')' [<throws>] '{' [<block>] '}';
+
+<constructor declaration> = <access modifier> <identifier>
+'(' <parameters> ')' [<throws>] '{' <constructor body> '}';
+
+<throws> = throws <identifier> {, <identifer>};
 
 <static initializer> = "static" <block>;
-
-
 
 <field modifier> = public | protected | private | static | final | transient | volatile;
 (* Some of these conflict? *)
 
-<parameters> = [<type> <identifier>] {, <type> <identifier>};
+<parameters> = [<type> <identifier> {, <type> <identifier>}];
 
 <type> = <primitive type> | <nonprimitive type>;
 <primitive type> = boolean | byte | char | short | int | long | float | double;
 <nonprimitive type> = <identifier> | <type>'[]';
+
+
+
+
+<block> = {<block statement};
