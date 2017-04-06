@@ -17,26 +17,26 @@
         (* Some of these conflict? *)
 
     <method declaration> = <method modifiers> (<type>|"void") <identifier>
-    '(' <parameters> ')' [<throws>] '{' [<block>] '}';
+    '(' <parameters> ')' [<throws>] [<block>];
 
     <constructor declaration> = <access modifier> <identifier>
     '(' <parameters> ')' [<throws>] '{' <constructor body> '}';
 
-        <parameters> = [<type> <identifier> {, <type> <identifier>}];
+        <parameters> = [<type> <variable identifier> {, <type> <variable identifier>}];
         <throws> = throws <identifier> {, <identifer>};
 
     <static initializer> = "static" <block>;
 
 
 (*--BLOCK STATEMENTS--*)
-<block> = {<block statement>};
+<block> = '{'{<block statement>}'}';
 <block statement> = <local variable declaration> | <statement>;
 
 <local variable declaration> = <type> <variable declarators>;
 
 <statement> = <if statement> | <while loop> | <for loop> | <block>
             | <do while> | <switch case> | <return> | <break> | <continue>
-            | <throws statement> | <try>;
+            | <throw statement> | <try> | <synchronized>;
 
     <if statement> = "if" '(' <expression> ')' <statement> [else <statement>];
 
@@ -50,19 +50,32 @@
 
     <do while> = "do" <statement> "while" '(' <expression> ')';
 
-    <return> = "return" [<expression>];
-    <break> = "break" [<identifier>];
-    <continue> = "continue" [<identifier>];
+    <throw statement> = "throw" <expression> ';';
+    <return> = "return" [<expression>]';';
+    <break> = "break" [<identifier>]';';
+    <continue> = "continue" [<identifier>]';';
+
+    <synchronized> = "synchronized" '(' <expression> ')' <block>;
+
+    <try> = "try" <block> <catches> ["finally" <block>];
+
+        <catches> = "catch" '(' <type> <variable identifier> ')' <block>
+            {"catch" '(' <type> <variable identifier> ')' <block>};
+        (*is this correct?*)
 
 (*Modifiers, Declarators, Types*)
-<variable decalarators> = <identifier> [ = <expr>] {, <identifier> [ = <expr>]};
+<variable decalarators> = <variable identifier> [ = (<expression> | <array init>) ]
+    {, <variable identifier> [ = (<expression> | <array init>)]};
 
-<type> = <primitive type> | <nonprimitive type>;
+<type> = <primitive type> | <reference type>;
 <primitive type> = boolean | byte | char | short | int | long | float | double;
-<nonprimitive type> = <identifier> | <type>'[]';
+<reference type> = <identifier> | <type>'[]';
 
 <class modifiers> = [<access modifier>] {<class modifier>};
 <access modifier> = "public" | "private" | "protected";
 <class modifier> = "abstract" | "static" | "final" | "strictfp";
 (* problem: class cannot be both abstract and final *)
 (* problem: access modifier and class modifiers can be in any order*)
+
+<variable id> = <identifier>{'[]'};
+(*array init is currently undefined*)
