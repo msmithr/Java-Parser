@@ -1,4 +1,3 @@
-package interfaces;
 /**
  * Interface for a recursive descent parser for the class definition of 
  * the Java programming language, to be used with a lexical analyzer. 
@@ -7,6 +6,9 @@ package interfaces;
  * @author Michael Smith
  *
  */
+
+package interfaces;
+
 
 public interface ParserInterface {
 	/**

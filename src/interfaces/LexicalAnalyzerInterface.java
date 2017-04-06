@@ -1,6 +1,3 @@
-package interfaces;
-import types.Lexeme;
-
 /**
  * Simple interface for a lexical analyzer for the class definition in the
  * Java programming language. The only public functionality should be the lex() method.
@@ -8,6 +5,11 @@ import types.Lexeme;
  * @author Michael Smith
  *
  */
+
+package interfaces;
+import types.Lexeme;
+
+
 public interface LexicalAnalyzerInterface {
     
 	/**
