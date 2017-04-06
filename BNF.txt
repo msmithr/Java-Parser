@@ -1,52 +1,63 @@
-<program> = [<package declaration>] [{<import declaration>}] [{<class>}];
-(* problem: interfaces? *)
-
-<package declaration> = "package" <identifier>;
-
+(*--CLASS DECLARATION--*)
 <class> = <class modifiers> "class" <identifier>
 [<extends>] [<implements>] '{'<class body>'}';
+
+    <extends> = "extends" <identifier>;
+    <implements> = "implements" <identifier> {',' <identifier>};
+
+(*--CLASS BODY DECLARATIONS--*)
+<class body> = {<class body statement>};
+
+<class body statement> = <field declaration> | <method declaration>
+| <constructor declaration> | <static initializer>;
+
+    <field declaration> = {<field modifier>} <type> <variable declarators>;
+
+        <field modifier> = public | protected | private | static | final | transient | volatile;
+        (* Some of these conflict? *)
+
+    <method declaration> = <method modifiers> (<type>|"void") <identifier>
+    '(' <parameters> ')' [<throws>] '{' [<block>] '}';
+
+    <constructor declaration> = <access modifier> <identifier>
+    '(' <parameters> ')' [<throws>] '{' <constructor body> '}';
+
+        <parameters> = [<type> <identifier> {, <type> <identifier>}];
+        <throws> = throws <identifier> {, <identifer>};
+
+    <static initializer> = "static" <block>;
+
+
+(*--BLOCK STATEMENTS--*)
+<block> = {<block statement>};
+<block statement> = <local variable declaration> | <statement>;
+
+<local variable declaration> = <type> <variable declarators>;
+
+<statement> = <if statement> | <while loop> | <for loop> | <block>;
+(*<block here??*)
+
+    <if statement> = "if" '(' <expression> ')' <statement> [else <statement>];
+
+    <while loop> = "while" (<expression>) <statement>;
+
+    <for loop> = "for" '(' [<for init>]';' [<expression>]';' [<for update>]  ')' <statement>;
+
+        <for init> = <expression list> | <local variable declaration>;
+        <for update> = <expression list>;
+        <expression list> = <expression> {, <expression>};
+
+
+
+(*Modifiers, Declarators, Types*)
+<variable decalarators> = <identifier> [ = <expr>] {, <identifier> [ = <expr>]};
+
+<type> = <primitive type> | <nonprimitive type>;
+<primitive type> = boolean | byte | char | short | int | long | float | double;
+<nonprimitive type> = <identifier> | <type>'[]';
 
 <class modifiers> = [<access modifier>] {<class modifier>};
 <access modifier> = "public" | "private" | "protected";
 <class modifier> = "abstract" | "static" | "final" | "strictfp";
 (* problem: class cannot be both abstract and final *)
 (* problem: access modifier and class modifiers can be in any order*)
-
-<extends> = "extends" <identifier>;
-<implements> = "implements" <identifier> {',' <identifier>};
-
-<class body> = {<class body statement>};
-
-<class body statement> = <field declaration> | <method declaration>
-| <constructor declaration> | <static initializer>;
-(*Todo: Constructor declaration*)
-
-<field declaration> = {<field modifiers>} <type> <variable declarators>;
-
-<method declaration> = <method modifiers> (<type>|"void") <identifier>
-'(' <parameters> ')' [<throws>] '{' [<block>] '}';
-
-<constructor declaration> = <access modifier> <identifier>
-'(' <parameters> ')' [<throws>] '{' <constructor body> '}';
-
-<throws> = throws <identifier> {, <identifer>};
-
-<static initializer> = "static" <block>;
-
-<field modifier> = public | protected | private | static | final | transient | volatile;
-(* Some of these conflict? *)
-
-<parameters> = [<type> <identifier> {, <type> <identifier>}];
-
-<type> = <primitive type> | <nonprimitive type>;
-<primitive type> = boolean | byte | char | short | int | long | float | double;
-<nonprimitive type> = <identifier> | <type>'[]';
-
-<block> = {<block statement>};
-<block statement> = <local variable declaration> | <statement>;
-
-<local variable declaration> = <type> <variable declarators>;
-
-
-
-<variable decalarators> = <identifier> [ = <expr>] {, <identifier> [ = <expr>]};
