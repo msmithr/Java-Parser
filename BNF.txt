@@ -34,8 +34,9 @@
 
 <local variable declaration> = <type> <variable declarators>;
 
-<statement> = <if statement> | <while loop> | <for loop> | <block>;
-(*<block here??*)
+<statement> = <if statement> | <while loop> | <for loop> | <block>
+            | <do while> | <switch case> | <return> | <break> | <continue>
+            | <throws statement> | <try>;
 
     <if statement> = "if" '(' <expression> ')' <statement> [else <statement>];
 
@@ -47,7 +48,11 @@
         <for update> = <expression list>;
         <expression list> = <expression> {, <expression>};
 
+    <do while> = "do" <statement> "while" '(' <expression> ')';
 
+    <return> = "return" [<expression>];
+    <break> = "break" [<identifier>];
+    <continue> = "continue" [<identifier>];
 
 (*Modifiers, Declarators, Types*)
 <variable decalarators> = <identifier> [ = <expr>] {, <identifier> [ = <expr>]};
