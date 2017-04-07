@@ -4,8 +4,10 @@ import types.Token;
 
 public class Driver {
 	public static void main(String[] args) {
-		Lexeme l = new Lexeme(Token.IDENTIFIER, "Hello");
+		LexicalAnalyzer lex = new LexicalAnalyzer("{}();[]");
 		
-		System.out.println(l);
+		for (int i = 0; i < 10; i++) {
+			System.out.println(lex.lex());
+		}
 	}
 }
