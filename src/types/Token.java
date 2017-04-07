@@ -8,7 +8,6 @@ package types;
 public enum Token {
 	IDENTIFIER,
 
-	
 	// keywords
 	KEYWORD_CLASS,
 	KEYWORD_EXTENDS,
@@ -28,9 +27,9 @@ public enum Token {
 	RIGHT_BRACE,
 	LEFT_BRACKET,
 	RIGHT_BRACKET,
-	
+
 	SEMICOLON,
-	
-	
+
+
 
 }
