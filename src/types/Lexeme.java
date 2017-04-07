@@ -22,14 +22,12 @@ public class Lexeme implements LexemeInterface {
 	
 	@Override
 	public Token getToken() {
-		// TODO Auto-generated method stub
-		return null;
+		return token;
 	}
 
 	@Override
 	public String getLexeme() {
-		// TODO Auto-generated method stub
-		return null;
+		return lexeme;
 	}
 	
 	@Override
