@@ -24,14 +24,7 @@ public enum Token {
 	LEFT_BRACKET,
 	RIGHT_BRACKET,
 
-<<<<<<< HEAD
 	COMMA,
 	SEMICOLON,
-
-=======
-	SEMICOLON,
-
-
->>>>>>> e7d5ccaad46faae60a2c98d6085e4946eeec5ac2
 
 }
