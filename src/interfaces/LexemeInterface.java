@@ -10,8 +10,6 @@
 package interfaces;
 import types.Token;
 
-
-
 public interface LexemeInterface {
 
 	/**

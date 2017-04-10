@@ -1,13 +1,10 @@
 package parser;
-import types.Lexeme;
-import types.Token;
+import types.InvalidInputException;
 
 public class Driver {
-	public static void main(String[] args) {
-		LexicalAnalyzer lex = new LexicalAnalyzer("{}();[]");
+	public static void main(String[] args) throws InvalidInputException {
+		Parser p = new Parser("public abstract static final class Hello extends abcd implements test, tet2, asdf {}");
 		
-		for (int i = 0; i < 10; i++) {
-			System.out.println(lex.lex());
-		}
+		p.start();
 	}
 }
