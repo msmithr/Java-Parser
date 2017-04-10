@@ -48,26 +48,34 @@ public class Parser implements ParserInterface{
 	// <class modifiers>
 	private void classModifiers() throws InvalidInputException {
 		System.out.println("Enter <class modifiers>");
-		
+
 		accessModifiers();
 		otherClassModifiers();
-		
+
 		System.out.println("Exit <class modifiers>");
 	}
-	
-	private void accessModifiers() throws InvalidInputException {
+
+    // <access modifiers>
+    private void accessModifiers() throws InvalidInputException {
 		System.out.println("Enter <access modifiers>");
-		
+
 		processLexeme(Token.KEYWORD_ACCESSMODIFIER);
-		
+
 		System.out.println("Exit <access modifiers>");
 	}
-	
-	private void otherClassModifiers() throws InvalidInputException {
-		while (nextLexeme.getToken() == Token.KEYWORD_CLASSMODIFIER) {
+
+  // <class modifier>
+    private void otherClassModifiers() throws InvalidInputException {
+		System.out.println("Enter <other modifiers>");
+		
+    	while (nextLexeme.getToken() == Token.KEYWORD_CLASSMODIFIER) {
 			processLexeme(Token.KEYWORD_CLASSMODIFIER);
 		}
-	}
+	
+    System.out.println("Exit <other modifiers>");
+  }
+
+    
 
 	// <extends>
 	private void extendsRule() throws InvalidInputException {
@@ -82,7 +90,7 @@ public class Parser implements ParserInterface{
 	// <implements>
 	private void implementsRule() throws InvalidInputException {
 		System.out.println("Enter <implements>");
-		
+
 		if (processLexeme(Token.KEYWORD_IMPLEMENTS, true) == true) {
 			processLexeme(Token.IDENTIFIER);
 			while (nextLexeme.getToken() == Token.COMMA) {
@@ -122,7 +130,7 @@ public class Parser implements ParserInterface{
 	}
 
 	/**
-	 * Wrapper class for processLexeme, always required, ignores return
+	 * Wrapper method for processLexeme, always required, ignores return
 	 */
 	private void processLexeme(Token token) throws InvalidInputException {
 		processLexeme(token, false);
