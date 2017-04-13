@@ -38,6 +38,19 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		switch(nextChar) {
 
+		// next lexeme is a comment and needs to be ignored
+		case '/':
+			
+			// skip forward to next non comment lexeme
+			position++;
+			if (inputString.charAt(position) == '/') { // single line comment
+				while (inputString.charAt(++position) != '\n');
+			} else if (inputString.charAt(position) == '*') { // multi line comment /* */
+				while (inputString.charAt(++position) != '*' || inputString.charAt(++position) != '/');
+			}
+			
+			return nextLexeme(); // recursively call to return next lexeme
+		
 		// nextChar is left paren
 		case '(':
 			token = Token.LEFT_PAREN;
@@ -115,7 +128,6 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 
 		} // end switch case
-
 
 		return new Lexeme(token, lexeme);
 
