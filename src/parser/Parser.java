@@ -37,10 +37,7 @@ public class Parser implements ParserInterface{
 		extendsRule();
 		implementsRule();
 
-		processLexeme(Token.LEFT_BRACE);
 		classBody();
-		processLexeme(Token.RIGHT_BRACE);
-
 
 		System.out.println("Exit <class>");
 	}
@@ -49,14 +46,16 @@ public class Parser implements ParserInterface{
 	private void classModifiers() throws InvalidInputException {
 		System.out.println("Enter <class modifiers>");
 
-		accessModifiers();
-		otherClassModifiers();
+		while (nextLexeme.getToken() != Token.KEYWORD_CLASS) {
+			if (nextLexeme.getToken() == Token.KEYWORD_ACCESSMODIFIER) accessModifier();
+			else classModifier();
+		}
 
 		System.out.println("Exit <class modifiers>");
 	}
 
-    // <access modifiers>
-    private void accessModifiers() throws InvalidInputException {
+    // <access modifier>
+    private void accessModifier() throws InvalidInputException {
 		System.out.println("Enter <access modifiers>");
 
 		processLexeme(Token.KEYWORD_ACCESSMODIFIER);
@@ -65,14 +64,24 @@ public class Parser implements ParserInterface{
 	}
 
   // <class modifier>
-    private void otherClassModifiers() throws InvalidInputException {
+    private void classModifier() throws InvalidInputException {
 		System.out.println("Enter <other modifiers>");
 		
-    	while (nextLexeme.getToken() == Token.KEYWORD_CLASSMODIFIER) {
-			processLexeme(Token.KEYWORD_CLASSMODIFIER);
-		}
+    	switch (nextLexeme.getToken()) {
+    	
+    	case KEYWORD_ABSTRACT:
+    	case KEYWORD_STATIC:
+    	case KEYWORD_FINAL:
+    	case KEYWORD_STRICTFP:
+    		processLexeme(nextLexeme.getToken());
+    		break;
+    		
+    	default:
+    		throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+    	
+    	}
 	
-    System.out.println("Exit <other modifiers>");
+    	System.out.println("Exit <other modifiers>");
   }
 
     
@@ -103,10 +112,47 @@ public class Parser implements ParserInterface{
 	}
 
 	// <class body>
-	private void classBody() {
+	private void classBody() throws InvalidInputException {
 		System.out.println("Enter <class body>");
-
+		
+		processLexeme(Token.LEFT_BRACE);
+		
+		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
+			classBodyStatement();
+		}
+		
+		processLexeme(Token.RIGHT_BRACE);
+		
 		System.out.println("Exit <class body>");
+	}
+	
+	// <class body statement>
+	private void classBodyStatement() throws InvalidInputException {
+		System.out.println("Enter <class body statement>");
+		
+		switch (nextLexeme.getToken()) {
+		case KEYWORD_STATIC:
+			staticInitializer();
+
+		
+		}
+		
+		System.out.println("Exit <class body statement>");
+	}
+	
+	private void staticInitializer() throws InvalidInputException {
+		System.out.println("Enter <static initializer>");
+		
+		processLexeme(Token.KEYWORD_STATIC);
+		block();
+		
+		System.out.println("Exit <static initializer>");
+	}
+	
+	private void block() throws InvalidInputException {
+		System.out.println("Enter <block>");
+		
+		System.out.println("Exit <block>");
 	}
 
 

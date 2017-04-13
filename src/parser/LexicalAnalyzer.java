@@ -153,11 +153,29 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			return Token.KEYWORD_ACCESSMODIFIER;
 
 		case "abstract":
+			return Token.KEYWORD_ABSTRACT;
+			
 		case "static":
+			return Token.KEYWORD_STATIC;
+			
 		case "final":
+			return Token.KEYWORD_FINAL;
+			
 		case "strictfp":
-			return Token.KEYWORD_CLASSMODIFIER;
-
+			return Token.KEYWORD_STRICTFP;
+			
+		case "transient":
+			return Token.KEYWORD_TRANSIENT;
+		
+		case "volatile":
+			return Token.KEYWORD_VOLATILE;
+			
+		case "synchronized":
+			return Token.KEYWORD_SYNCHRONIZED;
+		
+		case "native":
+			return Token.KEYWORD_NATIVE;
+			
 		default:
 			return Token.IDENTIFIER;
 

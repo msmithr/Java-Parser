@@ -1,9 +1,15 @@
 (*--CLASS DECLARATION--*)
 <class> = <class modifiers> "class" <identifier>
-[<extends>] [<implements>] '{'<class body>'}';
+[<extends>] [<implements>] <class body>;
 
     <extends> = "extends" <identifier>;
     <implements> = "implements" <identifier> {',' <identifier>};
+
+    <class modifiers> = {<access modifier> | <class modifier>};
+    <access modifier> = "public" | "private" | "protected";
+    <class modifier> = "abstract" | "static" | "final" | "strictfp";
+    (* problem: class cannot be both abstract and final *)
+    (* problem: access modifier and class modifiers can be in any order*)
 
 (*--CLASS BODY DECLARATIONS--*)
 <class body> = {<class body statement>};
@@ -70,12 +76,6 @@
 <type> = <primitive type> | <reference type>;
 <primitive type> = boolean | byte | char | short | int | long | float | double;
 <reference type> = <identifier> | <type>'[]';
-
-<class modifiers> = [<access modifier>] {<class modifier>};
-<access modifier> = "public" | "private" | "protected";
-<class modifier> = "abstract" | "static" | "final" | "strictfp";
-(* problem: class cannot be both abstract and final *)
-(* problem: access modifier and class modifiers can be in any order*)
 
 <variable id> = <identifier>{'[]'};
 (*array init is currently undefined*)

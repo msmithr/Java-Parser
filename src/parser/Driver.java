@@ -3,18 +3,10 @@ import types.InvalidInputException;
 
 public class Driver {
 	public static void main(String[] args) throws InvalidInputException {
-		String input = "Hello /* Comment comment \n comment comment */ world";
+		String input = "public abstract strictfp class /* comment comment */ main extends test implements a, b { static }";
 		
-		LexicalAnalyzer lex = new LexicalAnalyzer(input);
+		Parser p = new Parser(input);
 		
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
-		System.out.println(lex.nextLexeme());
+		p.start();
 	}
 }
