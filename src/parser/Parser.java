@@ -1,4 +1,7 @@
 package parser;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+
 import interfaces.ParserInterface;
 import types.InvalidInputException;
 import types.Lexeme;
@@ -54,8 +57,8 @@ public class Parser implements ParserInterface{
 		System.out.println("Exit <class modifiers>");
 	}
 
-    // <access modifier>
-    private void accessModifier() throws InvalidInputException {
+	// <access modifier>
+	private void accessModifier() throws InvalidInputException {
 		System.out.println("Enter <access modifiers>");
 
 		processLexeme(Token.KEYWORD_ACCESSMODIFIER);
@@ -64,27 +67,25 @@ public class Parser implements ParserInterface{
 	}
 
   // <class modifier>
-    private void classModifier() throws InvalidInputException {
+	private void classModifier() throws InvalidInputException {
 		System.out.println("Enter <other modifiers>");
-		
-    	switch (nextLexeme.getToken()) {
-    	
-    	case KEYWORD_ABSTRACT:
-    	case KEYWORD_STATIC:
-    	case KEYWORD_FINAL:
-    	case KEYWORD_STRICTFP:
-    		processLexeme(nextLexeme.getToken());
-    		break;
-    		
-    	default:
-    		throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
-    	
-    	}
-	
-    	System.out.println("Exit <other modifiers>");
-  }
 
-    
+		switch (nextLexeme.getToken()) {
+
+		case KEYWORD_ABSTRACT:
+		case KEYWORD_STATIC:
+		case KEYWORD_FINAL:
+		case KEYWORD_STRICTFP:
+			processLexeme(nextLexeme.getToken());
+			break;
+
+		default:
+			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+
+		}
+
+	System.out.println("Exit <other modifiers>");
+	}
 
 	// <extends>
 	private void extendsRule() throws InvalidInputException {
@@ -114,44 +115,121 @@ public class Parser implements ParserInterface{
 	// <class body>
 	private void classBody() throws InvalidInputException {
 		System.out.println("Enter <class body>");
-		
+
 		processLexeme(Token.LEFT_BRACE);
-		
+
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
 			classBodyStatement();
 		}
-		
+
 		processLexeme(Token.RIGHT_BRACE);
-		
+
 		System.out.println("Exit <class body>");
 	}
-	
+
 	// <class body statement>
 	private void classBodyStatement() throws InvalidInputException {
 		System.out.println("Enter <class body statement>");
-		
-		switch (nextLexeme.getToken()) {
-		case KEYWORD_STATIC:
-			staticInitializer();
 
-		
-		}
-		
+		// class body statement can be a static initializer,
+		// field declaration, method declaration, or constructor declaration
+
+		// if the next lexeme is the static keyword, static initializer
+		if (nextLexeme.getToken() == Token.KEYWORD_STATIC) {
+			staticInitializer();
+		} else {
+			// otherwise, we have to look through the input, keeping track of each lexeme
+			ArrayDeque<Lexeme> lexemeHistory = new ArrayDeque<Lexeme>();
+
+			// skip forward to the next identifier, storing each lexeme in a queue
+			while (nextLexeme.getToken() != Token.IDENTIFIER) {
+				lexemeHistory.addLast(nextLexeme);
+				nextLexeme = lex.nextLexeme();
+			}
+
+			// add the last lexeme to the queue
+			lexemeHistory.addLast(nextLexeme);
+			nextLexeme = lex.nextLexeme();
+
+			// if the first lexeme after the identifier is not a parenthesis, field declaration
+			if (nextLexeme.getToken() != Token.LEFT_PAREN) {
+				// must "enter" in this method because of stored lexeme history
+				System.out.println("Enter <field declaration>");
+
+				// print out each lexeme stored
+				while (!lexemeHistory.isEmpty()) {
+					System.out.println(lexemeHistory.removeFirst());
+				}
+
+				fieldDeclaration();
+
+			} else {
+				// remove the last lexeme in the queue and store it as a temp,
+				// so we can look at the previous lexeme
+				Lexeme temp = lexemeHistory.removeLast();
+				// if a type was defined, this is a method declaration
+				if (lexemeHistory.peekLast().getToken() == Token.KEYWORD_TYPE) {
+					lexemeHistory.addLast(temp); // put the identifier back in the queue
+
+					// must "enter" in this method because of stored lexeme history
+					System.out.println("Enter <method declaration>");
+
+					// print out each stored lexeme
+					while (!lexemeHistory.isEmpty()) {
+						System.out.println(lexemeHistory.removeFirst());
+					}
+
+					methodDeclaration();
+
+				} else { // if there was no type defined, this is a constructor declaration
+					lexemeHistory.addLast(temp); // put the identifier back in the queue
+
+					// must "enter" in this method because of stored lexeme history
+					System.out.println("Enter <constructor declaration>");
+
+					// print out each stored lexeme
+					while (!lexemeHistory.isEmpty()) {
+						System.out.println(lexemeHistory.removeFirst());
+					} // end while
+
+					constructorDeclaration();
+
+				} // end else
+			} // end else
+
+		} // end else
+
 		System.out.println("Exit <class body statement>");
+	} // end classBodyStatement()
+
+	private void fieldDeclaration() {
+		// up to and including <id> has already been processed
+
+		System.out.println("Exit <field declaration>");
 	}
-	
+
+	private void methodDeclaration() {
+		// up to and including <id> has already been processed
+		System.out.println("Exit <method declaration>");
+	}
+
+	private void constructorDeclaration() {
+		// up to and including <id> has already been processed
+		System.out.println("Exit <constructor declaration>");
+	}
+
 	private void staticInitializer() throws InvalidInputException {
 		System.out.println("Enter <static initializer>");
-		
+
 		processLexeme(Token.KEYWORD_STATIC);
 		block();
-		
+
 		System.out.println("Exit <static initializer>");
 	}
-	
+
 	private void block() throws InvalidInputException {
 		System.out.println("Enter <block>");
-		
+
 		System.out.println("Exit <block>");
 	}
 

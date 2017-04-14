@@ -176,6 +176,16 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "native":
 			return Token.KEYWORD_NATIVE;
 			
+		case "boolean":
+		case "byte":
+		case "char":
+		case "short":
+		case "int":
+		case "long":
+		case "float":
+		case "double":
+			return Token.KEYWORD_TYPE;
+			
 		default:
 			return Token.IDENTIFIER;
 
