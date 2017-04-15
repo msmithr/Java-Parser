@@ -9,6 +9,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 	private String inputString;
 	private int position;
+	private boolean arrayType = false; // flag to indicate lexeme is an array type (such as int[])
 
 	/**
 	 * Constructor sets the input string and initializes the position index to 0.
@@ -121,6 +122,10 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				} // end while
 
 				token = processIdentifier(newLexeme);
+				if (arrayType) {
+					newLexeme += "[]";
+					arrayType = false;
+				}
 				lexeme = newLexeme;
 
 			} else {
@@ -184,6 +189,10 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "long":
 		case "float":
 		case "double":
+			if ((inputString.length() >= position+1) && inputString.charAt(position) == '[' && inputString.charAt(position+1) == ']') {
+				arrayType = true;
+				position = position + 2;
+			}
 			return Token.KEYWORD_TYPE;
 			
 		default:

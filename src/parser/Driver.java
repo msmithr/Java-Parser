@@ -3,11 +3,13 @@ import types.InvalidInputException;
 
 public class Driver {
 	public static void main(String[] args) throws InvalidInputException {
-		String input = "class main { public int teast() }";
+		String input = "class main { public int[] teast() boolean[] }[] char[] char";
 		
-		Parser p = new Parser(input);
+		LexicalAnalyzer lex = new LexicalAnalyzer(input);
 		
-		p.start();
+		for (int i = 0; i < 20; i++) {
+			System.out.println(lex.nextLexeme());
+		}
 		
 	}
 }
