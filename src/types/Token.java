@@ -7,25 +7,65 @@ package types;
 
 public enum Token {
 	IDENTIFIER,
-	INT_LITERAL,
-	COMMENT,
+
 
 	// keywords
 	KEYWORD_CLASS,
 	KEYWORD_EXTENDS,
 	KEYWORD_IMPLEMENTS,
-	KEYWORD_ACCESSMODIFIER, // public, private, or protected
+	KEYWORD_ACCESSMODIFIER,
 	KEYWORD_ABSTRACT,
 	KEYWORD_STATIC,
 	KEYWORD_FINAL,
 	KEYWORD_STRICTFP,
+	//KEYWORD_INTERFACE, NOTE: need to change EBNF and parser to account for this.  It can be a modifier to a class like abstract, static, and final
+	KEYWORD_IF,
+	//KEYWORD_ELSE,//don't need yet
+	KEYWORD_WHILE,
+	KEYWORD_DO,
+	KEYWORD_FOR,
+	KEYWORD_SWITCH,
+	KEYWORD_CASE,//don't need yet
+	//KEYWORD_DEFAULT,//don't need yet
+	KEYWORD_RETURN,
+	KEYWORD_BREAK,
+	KEYWORD_CONTINUE,
+	KEYWORD_THROW,
+	//KEYWORD_THROWS,//don't need yet
+	KEYWORD_TRY,
+	//KEYWORD_CATCH,//don't need yet
+	//KEYWORD_FINALLY,//don't need yet
+	KEYWORD_SYNCHRONIZED,
+	KEYWORD_TYPE,
+
+	//We don't account for these yet in the parser, but they are all Java keywords
+	//KEYWORD_BOOLEAN,
+	//KEYWORD_BYTE,
+	//KEYWORD_CHAR,
+	//KEYWORD_DOUBLE,
+	//KEYWORD_FLOAT,
+	//KEYWORD_INT,
+	//KEYWORD_LONG,
+	//KEYWORD_SHORT,
+	//KEYWORD_VOID,
+	//KEYWORD_ASSERT,
+	//KEYWORD_CONST, //NOTE:  does nothing in Java, but is a keyword
+	//KEYWORD_ENUM,
+	//KEYWORD_GOTO, //NOTE:  does same thing as break or continue, (can't remember which)
+	//KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	//KEYWORD_INSTANCEOF,
+	KEYWORD_NATIVE,  //This one is interesting.  Look it up on wikipedia.  It is used in method headers.
+	//KEYWORD_NEW,
+	//KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	//KEYWORD_SUPER,
+	//KEYWORD_THIS,
 	KEYWORD_TRANSIENT,
 	KEYWORD_VOLATILE,
-	KEYWORD_SYNCHRONIZED,
-	KEYWORD_NATIVE,
-	KEYWORD_TYPE,
-	KEYWORD_VOID,
-	
+	//KEYWORD_NULL,
+	//KEYWORD_TRUE,
+	//KEYWORD_FALSE,
+
+
 	// brackets
 	LEFT_PAREN,
 	RIGHT_PAREN,
@@ -33,8 +73,30 @@ public enum Token {
 	RIGHT_BRACE,
 	LEFT_BRACKET,
 	RIGHT_BRACKET,
+	//LEFT_ANGLE_BRACKET,// <
+	//RIGHT_ANGLE_BRACKET,// >
+	//DOUBLE_QUOTE,// "
+	//SINGLE_QUOTE,// '
 
-	COMMA,
+
 	SEMICOLON,
+	COMMA,
+
+	// operators and other symbols
+	//PLUS,// +
+	//MINUS,// -
+	//ASTERISK,// *
+	//BACKSLASH,// /
+	//FORWARDSLASH,// \
+	//MODULO,// %
+	//AT,// @
+	//EXCLAIMATION_POINT,// ! (aka NOT, or BANG)
+	//AMPERSAND,// &
+	//PIPE,// |
+	//EQUALS_SIGN,// =
+	//COLON,// :
+	//QUESTION_MARK,// ?
+
+
 
 }

@@ -41,7 +41,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		// next lexeme is a comment and needs to be ignored
 		case '/':
-			
+
 			// skip forward to next non comment lexeme
 			position++;
 			if (inputString.charAt(position) == '/') { // single line comment
@@ -49,9 +49,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			} else if (inputString.charAt(position) == '*') { // multi line comment /* */
 				while (inputString.charAt(++position) != '*' || inputString.charAt(++position) != '/');
 			}
-			
+
 			return nextLexeme(); // recursively call to return next lexeme
-		
+
 		// nextChar is left paren
 		case '(':
 			token = Token.LEFT_PAREN;
@@ -159,28 +159,58 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "abstract":
 			return Token.KEYWORD_ABSTRACT;
-			
+
 		case "static":
 			return Token.KEYWORD_STATIC;
-			
+
 		case "final":
 			return Token.KEYWORD_FINAL;
-			
+
 		case "strictfp":
 			return Token.KEYWORD_STRICTFP;
-			
+
 		case "transient":
 			return Token.KEYWORD_TRANSIENT;
-		
+
 		case "volatile":
 			return Token.KEYWORD_VOLATILE;
-			
+
 		case "synchronized":
 			return Token.KEYWORD_SYNCHRONIZED;
-		
+
 		case "native":
 			return Token.KEYWORD_NATIVE;
-			
+
+		case "if":
+			return Token.KEYWORD_IF;
+
+		case "while":
+			return Token.KEYWORD_WHILE;
+
+		case "do":
+			return Token.KEYWORD_DO;
+
+		case "for":
+			return Token.KEYWORD_FOR;
+
+		case "switch":
+			return Token.KEYWORD_SWITCH;
+
+		case "case":
+			return Token.KEYWORD_CASE;
+
+		case "return":
+			return Token.KEYWORD_RETURN;
+
+		case "continue":
+			return Token.KEYWORD_CONTINUE;
+
+		case "throw":
+			return Token.KEYWORD_THROW;
+
+		case "try":
+			return Token.KEYWORD_TRY;
+
 		case "boolean":
 		case "byte":
 		case "char":
@@ -194,7 +224,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				position = position + 2;
 			}
 			return Token.KEYWORD_TYPE;
-			
+
 		default:
 			return Token.IDENTIFIER;
 

@@ -13,11 +13,11 @@ public class Parser implements ParserInterface{
 	Lexeme nextLexeme;
 
 	/**
-	 * Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
-	 *
-	 * @param inputString
-	 * @throws InvalidInputException
-	 */
+	* Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
+	*
+	* @param inputString
+	* @throws InvalidInputException
+	*/
 	public Parser(String inputString) throws InvalidInputException {
 		lex = new LexicalAnalyzer(inputString);
 		nextLexeme = lex.nextLexeme();
@@ -66,7 +66,7 @@ public class Parser implements ParserInterface{
 		System.out.println("Exit <access modifiers>");
 	}
 
-  // <class modifier>
+	// <class modifier>
 	private void classModifier() throws InvalidInputException {
 		System.out.println("Enter <other modifiers>");
 
@@ -233,15 +233,64 @@ public class Parser implements ParserInterface{
 		System.out.println("Exit <block>");
 	}
 
+	//<statement> rule (Nathan added this)
+	private void statement() throws InvalidInputException {
+		System.out.println("Enter <statement>");
+
+		switch (nextLexeme.getToken()) {//each of the method calls are commented out until they are implemented
+			//should I call processLexeme here?
+		case KEYWORD_IF:
+			//ifStatement();
+			break;
+		case KEYWORD_WHILE:
+			//whileLoop();
+			break;
+		case KEYWORD_DO:
+			//doWhileLoop();
+			break;
+		case KEYWORD_FOR:
+			//forLoop();
+			break;
+		case KEYWORD_SWITCH:
+			//switchCase();
+			break;
+		case KEYWORD_RETURN:
+			//returnCall();
+			break;
+		case KEYWORD_BREAK:
+			//breakStatement();
+			break;
+		case KEYWORD_CONTINUE:
+			//continueStatement();//Only need a method because it could have a label (ie goto workaround in Java)
+			break;
+		case KEYWORD_THROW:
+			//throwStatement();
+			break;
+		case KEYWORD_TRY:
+			//tryBlock();
+			break;
+		case KEYWORD_SYNCHRONIZED:
+			//synchronizedBlock();
+			break;
+		case LEFT_BRACE:
+			//block();//call block method
+			break;
+		default:
+			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+		}//end switch
+		System.out.println("Exit <statement>");
+	}
+
+
 
 	/**
-	 * Checks if the current lexeme's associated token is equal to the given token,
-	 * prints out the current lexeme, and moves to the next lexeme in the input string
-	 *
-	 * @param token Expected token
-	 * @param optional True is this token is optional, false if not
-	 * @throws InvalidInputException
-	 */
+	* Checks if the current lexeme's associated token is equal to the given token,
+	* prints out the current lexeme, and moves to the next lexeme in the input string
+	*
+	* @param token Expected token
+	* @param optional True is this token is optional, false if not
+	* @throws InvalidInputException
+	*/
 	private boolean processLexeme(Token token, boolean optional) throws InvalidInputException {
 		if (nextLexeme.getToken() == token) {
 			System.out.println(nextLexeme);
@@ -254,8 +303,8 @@ public class Parser implements ParserInterface{
 	}
 
 	/**
-	 * Wrapper method for processLexeme, always required, ignores return
-	 */
+	* Wrapper method for processLexeme, always required, ignores return
+	*/
 	private void processLexeme(Token token) throws InvalidInputException {
 		processLexeme(token, false);
 	}
