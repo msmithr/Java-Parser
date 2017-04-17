@@ -238,7 +238,6 @@ public class Parser implements ParserInterface{
 		System.out.println("Enter <statement>");
 
 		switch (nextLexeme.getToken()) {//each of the method calls are commented out until they are implemented
-			//should I call processLexeme here?
 		case KEYWORD_IF:
 			//ifStatement();
 			break;
@@ -279,6 +278,30 @@ public class Parser implements ParserInterface{
 			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
 		}//end switch
 		System.out.println("Exit <statement>");
+	}
+
+	// <break>
+	private void breakStatement() throws InvalidInputException {
+		System.out.println("Enter <break>");
+
+		processLexeme(Token.KEYWORD_BREAK);
+		if (nextLexeme.getToken() == Token.IDENTIFIER)
+			processLexeme(Token.IDENTIFIER);
+		processLexeme(Token.SEMICOLON);
+
+		System.out.println("Exit <break>");
+	}
+
+	// <continue>
+	private void continueStatement() throws InvalidInputException {
+		System.out.println("Enter <continue>");
+
+		processLexeme(Token.KEYWORD_CONTINUE);
+		if (nextLexeme.getToken() == Token.IDENTIFIER)
+			processLexeme(Token.IDENTIFIER);
+		processLexeme(Token.SEMICOLON);
+
+		System.out.println("Exit <continue>");
 	}
 
 

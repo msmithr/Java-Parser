@@ -39,19 +39,10 @@ public enum Token {
 	KEYWORD_TYPE,
 
 	//We don't account for these yet in the parser, but they are all Java keywords
-	//KEYWORD_BOOLEAN,
-	//KEYWORD_BYTE,
-	//KEYWORD_CHAR,
-	//KEYWORD_DOUBLE,
-	//KEYWORD_FLOAT,
-	//KEYWORD_INT,
-	//KEYWORD_LONG,
-	//KEYWORD_SHORT,
 	//KEYWORD_VOID,
 	//KEYWORD_ASSERT,
 	//KEYWORD_CONST, //NOTE:  does nothing in Java, but is a keyword
 	//KEYWORD_ENUM,
-	//KEYWORD_GOTO, //NOTE:  does same thing as break or continue, (can't remember which)
 	//KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_INSTANCEOF,
 	KEYWORD_NATIVE,  //This one is interesting.  Look it up on wikipedia.  It is used in method headers.
