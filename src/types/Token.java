@@ -15,7 +15,7 @@ public enum Token {
 	KEYWORD_IMPLEMENTS,
 	//KEYWORD_INTERFACE, NOTE: need to change EBNF and parser to account for this.  It can be a modifier to a class like abstract, static, and final
 	KEYWORD_IF,
-	//KEYWORD_ELSE,//don't need yet
+	KEYWORD_ELSE,// need now
 	KEYWORD_WHILE,
 	KEYWORD_DO,
 	KEYWORD_FOR,

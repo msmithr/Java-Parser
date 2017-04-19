@@ -182,6 +182,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "if":
 			return Token.KEYWORD_IF;
+			
+		case "else":
+			return Token.KEYWORD_ELSE;
 
 		case "while":
 			return Token.KEYWORD_WHILE;
@@ -212,6 +215,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "throws":
 			return Token.KEYWORD_THROWS;
+			
+		case "break":
+			return Token.KEYWORD_BREAK;
 
 		case "boolean":
 		case "byte":

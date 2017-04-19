@@ -25,7 +25,7 @@ public class Parser implements ParserInterface{
 	public void start() throws InvalidInputException {
 		classRule();
 	}
-
+	
 	// <class>
 	private void classRule() throws InvalidInputException {
 		System.out.println("Enter <class>");
@@ -182,10 +182,14 @@ public class Parser implements ParserInterface{
 	private void fieldDeclaration() throws InvalidInputException {
 		System.out.println("Enter <field_declaration>");
 		
+		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			processLexeme(Token.LEFT_BRACKET);
+			processLexeme(Token.RIGHT_BRACKET);
+		}
+		
 		if (nextLexeme.getToken() == Token.EQUALS) {
 			processLexeme(Token.EQUALS);
-			if (nextLexeme.getToken() == Token.LEFT_BRACE) ; //arrayInit();
-			else ; //expression();
+			variableInit();
 		}
 		
 		while (nextLexeme.getToken() == Token.COMMA) {
@@ -208,8 +212,7 @@ public class Parser implements ParserInterface{
 		
 		if (nextLexeme.getToken() == Token.EQUALS) {
 			processLexeme(Token.EQUALS);
-			if (nextLexeme.getToken() == Token.LEFT_BRACE) ; //arrayInit();
-			else ; //expression();
+			variableInit();
 		}
 		
 		while (nextLexeme.getToken() == Token.COMMA) {
@@ -223,8 +226,7 @@ public class Parser implements ParserInterface{
 			
 			if (nextLexeme.getToken() == Token.EQUALS) {
 				processLexeme(Token.EQUALS);
-				if (nextLexeme.getToken() == Token.LEFT_BRACE) ; //arrayInit();
-				else ; //expression();
+				variableInit();
 			}
 		}
 		
@@ -252,6 +254,10 @@ public class Parser implements ParserInterface{
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
 			switch (nextLexeme.getToken()) {
 			case MODIFIER:
+				if (nextLexeme.getLexeme().equals("synchronized")) {
+					statement();
+					break;
+				}
 				while (nextLexeme.getToken() == Token.MODIFIER) processLexeme(Token.MODIFIER);
 			
 			case KEYWORD_CLASS:
@@ -279,8 +285,7 @@ public class Parser implements ParserInterface{
 				
 				if (nextLexeme.getToken() == Token.EQUALS) {
 					processLexeme(Token.EQUALS);
-					if (nextLexeme.getToken() == Token.LEFT_BRACE) ; //arrayInit();
-					else ; //expression();
+					variableInit();
 				}
 				variableDeclarators();
 				processLexeme(Token.SEMICOLON);
@@ -352,75 +357,114 @@ public class Parser implements ParserInterface{
 
 		switch (nextLexeme.getToken()) {//each of the method calls are commented out until they are implemented
 		case KEYWORD_IF:
-			//ifStatement();
+			processLexeme(Token.KEYWORD_IF);
+			// parenExpression();
+			statement();
+			if (nextLexeme.getToken() == Token.KEYWORD_ELSE) {
+				processLexeme(Token.KEYWORD_ELSE);
+				statement();
+			}
 			break;
+		
 		case KEYWORD_WHILE:
-			//whileLoop();
+			processLexeme(Token.KEYWORD_WHILE);
+			//parenExpression();
+			statement();
 			break;
+			
 		case KEYWORD_DO:
-			//doWhileLoop();
+			processLexeme(Token.KEYWORD_DO);
+			statement();
+			processLexeme(Token.KEYWORD_WHILE);
+			//parenExpression();
+			processLexeme(Token.SEMICOLON);
 			break;
+			
 		case KEYWORD_FOR:
 			//forLoop();
 			break;
 		case KEYWORD_SWITCH:
 			//switchCase();
 			break;
+		
 		case KEYWORD_RETURN:
-			//returnCall();
+			processLexeme(Token.KEYWORD_RETURN);
+			if (nextLexeme.getToken() != Token.SEMICOLON) ;//expression();
+			processLexeme(Token.SEMICOLON);
 			break;
+		
 		case KEYWORD_BREAK:
-			//breakStatement();
+			processLexeme(Token.KEYWORD_BREAK);
+			if (nextLexeme.getToken() == Token.IDENTIFIER)
+				processLexeme(Token.IDENTIFIER);
+			processLexeme(Token.SEMICOLON);
 			break;
+
 		case KEYWORD_CONTINUE:
-			//continueStatement();//Only need a method because it could have a label (ie goto workaround in Java)
+			processLexeme(Token.KEYWORD_CONTINUE);
+			if (nextLexeme.getToken() == Token.IDENTIFIER)
+				processLexeme(Token.IDENTIFIER);
+			processLexeme(Token.SEMICOLON);
 			break;
+
 		case KEYWORD_THROW:
-			//throwStatement();
+			processLexeme(Token.KEYWORD_THROW);
+			//expression();
+			processLexeme(Token.SEMICOLON);
 			break;
+		
 		case KEYWORD_TRY:
-			//tryBlock();
+			// try
 			break;
-		//case KEYWORD_SYNCHRONIZED:
-			//synchronizedBlock();
-			//break;
+		
+		case MODIFIER:
+			processLexeme(Token.MODIFIER);
+			//parenExpression();
+			block();
+			break;
+		
 		case LEFT_BRACE:
-			block();//call block method
+			block();
 			break;
+		
 		case SEMICOLON:
 			processLexeme(Token.SEMICOLON);
 			break;
+		
 		default:
 			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
 		}//end switch
 		System.out.println("Exit <statement>");
 	}
 
-	// <break>
-	private void breakStatement() throws InvalidInputException {
-		System.out.println("Enter <break>");
-
-		processLexeme(Token.KEYWORD_BREAK);
-		if (nextLexeme.getToken() == Token.IDENTIFIER)
-			processLexeme(Token.IDENTIFIER);
-		processLexeme(Token.SEMICOLON);
-
-		System.out.println("Exit <break>");
+	// <variable_init>
+	private void variableInit() throws InvalidInputException {
+		System.out.println("Enter <variable_init>");
+		
+		if (nextLexeme.getToken() == Token.LEFT_BRACE) arrayInit();
+		else ; //expression();
+		
+		System.out.println("Exit <variable_init>");
 	}
-
-	// <continue>
-	private void continueStatement() throws InvalidInputException {
-		System.out.println("Enter <continue>");
-
-		processLexeme(Token.KEYWORD_CONTINUE);
-		if (nextLexeme.getToken() == Token.IDENTIFIER)
-			processLexeme(Token.IDENTIFIER);
-		processLexeme(Token.SEMICOLON);
-
-		System.out.println("Exit <continue>");
-	}
-
-
+	
+	// <array_init>
+	private void arrayInit() throws InvalidInputException {
+		System.out.println("Enter <array_init>");
+		
+		processLexeme(Token.LEFT_BRACE);
+		
+		if (nextLexeme.getToken() != Token.RIGHT_BRACE) {
+			variableInit();
+			while(nextLexeme.getToken() != Token.RIGHT_BRACE) {
+				processLexeme(Token.COMMA);
+				variableInit();
+			} // end while
+		} // end if
+		
+		processLexeme(Token.RIGHT_BRACE);
+		
+		System.out.println("Exit <array_init>");
+	} // end array_init
 
 	/**
 	* Checks if the current lexeme's associated token is equal to the given token,
