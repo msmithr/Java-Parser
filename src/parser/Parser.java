@@ -58,8 +58,10 @@ public class Parser implements ParserInterface{
 	private void extendsRule() throws InvalidInputException {
 		System.out.println("Enter <extends>");
 
-		if (processLexeme(Token.KEYWORD_EXTENDS, true) == true)
+		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS) {
+			processLexeme(Token.KEYWORD_EXTENDS);
 			processLexeme(Token.IDENTIFIER);
+		}
 
 		System.out.println("Exit <extends>");
 	}
@@ -68,12 +70,15 @@ public class Parser implements ParserInterface{
 	private void implementsRule() throws InvalidInputException {
 		System.out.println("Enter <implements>");
 
-		if (processLexeme(Token.KEYWORD_IMPLEMENTS, true) == true) {
+		if (nextLexeme.getToken() == Token.KEYWORD_IMPLEMENTS) {
+			processLexeme(Token.KEYWORD_IMPLEMENTS);
 			processLexeme(Token.IDENTIFIER);
+			
 			while (nextLexeme.getToken() == Token.COMMA) {
 				processLexeme(Token.COMMA);
 				processLexeme(Token.IDENTIFIER);
 			}
+			
 		}
 
 		System.out.println("Exit <implements>");
@@ -430,9 +435,17 @@ public class Parser implements ParserInterface{
 		case SEMICOLON:
 			processLexeme(Token.SEMICOLON);
 			break;
+			
+		case IDENTIFIER:
+			processLexeme(Token.IDENTIFIER);
+			processLexeme(Token.COLON);
+			statement();
+			break;
 		
 		default:
-			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+			//expression();
+			break;
+			
 		}//end switch
 		System.out.println("Exit <statement>");
 	}

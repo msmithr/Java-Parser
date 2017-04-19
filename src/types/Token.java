@@ -20,7 +20,7 @@ public enum Token {
 	KEYWORD_DO,
 	KEYWORD_FOR,
 	KEYWORD_SWITCH,
-	KEYWORD_CASE,//don't need yet
+	KEYWORD_CASE,
 	//KEYWORD_DEFAULT,//don't need yet
 	KEYWORD_RETURN,
 	KEYWORD_BREAK,
