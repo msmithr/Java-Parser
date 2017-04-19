@@ -1,0 +1,32 @@
+<class> = {<modifier>} <class declaration>;
+<class_declaration> = "class" <identifier> <extends> <implements> <class_body>;
+
+<modifier> = "public"
+    | "protected"
+    | "private"
+    | "static"
+    | "abstract"
+    | "final"
+    | "native"
+    | "synchronized"
+    | "transient"
+    | "volatile"
+    | "strictfp";
+
+<extends> = "extends" <identifier>;
+<implements> = "implements" <identifier> {',' <identifier>};
+
+<class body> = '{' {<class body statement>} '}';
+<class body statement> = ';' | {<modifier>} <class_body_declaration> | ["static"] <block>;
+
+<class_body_declaration> = <class_declaration> | "void" <method_declaration> | <identifier> <constructor_declaration> | <type> <method declaration> | <type> <identifier> <field declaration>;
+
+<field_declarators> = <identifier> {"[]"} [= <array_init> | <expression>];
+
+<method_declaration> = <parameters> [<throws>] (<block> | ";");
+
+<parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ;
+
+
+
+<block> = '{' {<modifier>} (<class_declaration> | <identifier>':' <statement> | <type> <variable declarators>);

@@ -13,11 +13,6 @@ public enum Token {
 	KEYWORD_CLASS,
 	KEYWORD_EXTENDS,
 	KEYWORD_IMPLEMENTS,
-	KEYWORD_ACCESSMODIFIER,
-	KEYWORD_ABSTRACT,
-	KEYWORD_STATIC,
-	KEYWORD_FINAL,
-	KEYWORD_STRICTFP,
 	//KEYWORD_INTERFACE, NOTE: need to change EBNF and parser to account for this.  It can be a modifier to a class like abstract, static, and final
 	KEYWORD_IF,
 	//KEYWORD_ELSE,//don't need yet
@@ -31,27 +26,24 @@ public enum Token {
 	KEYWORD_BREAK,
 	KEYWORD_CONTINUE,
 	KEYWORD_THROW,
-	//KEYWORD_THROWS,//don't need yet
+	KEYWORD_THROWS,
 	KEYWORD_TRY,
 	//KEYWORD_CATCH,//don't need yet
 	//KEYWORD_FINALLY,//don't need yet
-	KEYWORD_SYNCHRONIZED,
-	KEYWORD_TYPE,
+	PRIMITIVE_TYPE,
+	MODIFIER,
 
 	//We don't account for these yet in the parser, but they are all Java keywords
-	//KEYWORD_VOID,
+	KEYWORD_VOID,
 	//KEYWORD_ASSERT,
 	//KEYWORD_CONST, //NOTE:  does nothing in Java, but is a keyword
 	//KEYWORD_ENUM,
 	//KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_INSTANCEOF,
-	KEYWORD_NATIVE,  //This one is interesting.  Look it up on wikipedia.  It is used in method headers.
 	//KEYWORD_NEW,
 	//KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_SUPER,
 	//KEYWORD_THIS,
-	KEYWORD_TRANSIENT,
-	KEYWORD_VOLATILE,
 	//KEYWORD_NULL,
 	//KEYWORD_TRUE,
 	//KEYWORD_FALSE,
@@ -72,6 +64,7 @@ public enum Token {
 
 	SEMICOLON,
 	COMMA,
+	COLON,
 
 	// operators and other symbols
 	//PLUS,// +
@@ -84,7 +77,7 @@ public enum Token {
 	//EXCLAIMATION_POINT,// ! (aka NOT, or BANG)
 	//AMPERSAND,// &
 	//PIPE,// |
-	//EQUALS_SIGN,// =
+	EQUALS,// =
 	//COLON,// :
 	//QUESTION_MARK,// ?
 

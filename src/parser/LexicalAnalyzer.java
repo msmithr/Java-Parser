@@ -100,11 +100,23 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = ";";
 			position++;
 			break;
+			
+		case ':':
+			token = Token.COLON;
+			lexeme = ";";
+			position++;
+			break;
 
 		// nextChar is comma
 		case ',':
 			token = Token.COMMA;
 			lexeme = ",";
+			position++;
+			break;
+			
+		case '=':
+			token = Token.EQUALS;
+			lexeme = "=";
 			position++;
 			break;
 
@@ -155,32 +167,19 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "public":
 		case "private":
 		case "protected":
-			return Token.KEYWORD_ACCESSMODIFIER;
-
 		case "abstract":
-			return Token.KEYWORD_ABSTRACT;
-
 		case "static":
-			return Token.KEYWORD_STATIC;
-
 		case "final":
-			return Token.KEYWORD_FINAL;
-
 		case "strictfp":
-			return Token.KEYWORD_STRICTFP;
-
 		case "transient":
-			return Token.KEYWORD_TRANSIENT;
-
 		case "volatile":
-			return Token.KEYWORD_VOLATILE;
-
 		case "synchronized":
-			return Token.KEYWORD_SYNCHRONIZED;
-
 		case "native":
-			return Token.KEYWORD_NATIVE;
-
+			return Token.MODIFIER;
+			
+		case "void":
+			return Token.KEYWORD_VOID;
+			
 		case "if":
 			return Token.KEYWORD_IF;
 
@@ -210,6 +209,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "try":
 			return Token.KEYWORD_TRY;
+			
+		case "throws":
+			return Token.KEYWORD_THROWS;
 
 		case "boolean":
 		case "byte":
@@ -219,11 +221,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "long":
 		case "float":
 		case "double":
-			if ((inputString.length() >= position+1) && inputString.charAt(position) == '[' && inputString.charAt(position+1) == ']') {
-				arrayType = true;
-				position = position + 2;
-			}
-			return Token.KEYWORD_TYPE;
+			return Token.PRIMITIVE_TYPE;
 
 		default:
 			return Token.IDENTIFIER;
