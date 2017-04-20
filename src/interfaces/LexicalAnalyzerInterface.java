@@ -7,7 +7,6 @@
  */
 
 package interfaces;
-import types.InvalidInputException;
 import types.Lexeme;
 
 public interface LexicalAnalyzerInterface {
@@ -19,6 +18,6 @@ public interface LexicalAnalyzerInterface {
 	 * unit in the form of a Lexeme object.
 	 * @throws InvalidInputException
 	 */
-	public Lexeme nextLexeme() throws InvalidInputException;
+	public Lexeme nextLexeme();
 
 }

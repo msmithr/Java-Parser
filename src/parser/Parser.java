@@ -1,7 +1,6 @@
 package parser;
 
 import interfaces.ParserInterface;
-import types.InvalidInputException;
 import types.Lexeme;
 import types.Token;
 
@@ -15,21 +14,21 @@ public class Parser implements ParserInterface{
 	* Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
 	*
 	* @param inputString
-	* @throws InvalidInputException
+	 * @throws InvalidInputException 
 	*/
-	public Parser(String inputString) throws InvalidInputException {
+	public Parser(String inputString) {
 		lex = new LexicalAnalyzer(inputString);
 		nextLexeme = lex.nextLexeme();
 		indentationLevel = 0;
 	}
 
 	@Override
-	public void start() throws InvalidInputException {
+	public void start() {
 		classRule();
 	}
 	
 	// <class>
-	private void classRule() throws InvalidInputException {
+	private void classRule() {
 		printIndented("Enter <class>");
 		indentationLevel++;
 		
@@ -44,7 +43,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <class_declaration>
-	private void classDeclaration() throws InvalidInputException {
+	private void classDeclaration() {
 		printIndented("Enter <class_declaration>");
 		indentationLevel++;
 		
@@ -61,7 +60,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <extends>
-	private void extendsRule() throws InvalidInputException {
+	private void extendsRule() {
 		printIndented("Enter <extends>");
 		indentationLevel++;
 
@@ -73,7 +72,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <implements>
-	private void implementsRule() throws InvalidInputException {
+	private void implementsRule() {
 		printIndented("Enter <implements>");
 		indentationLevel++;
 
@@ -90,7 +89,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <class_body>
-	private void classBody() throws InvalidInputException {
+	private void classBody() {
 		printIndented("Enter <class_body>");
 		indentationLevel++;
 		
@@ -108,7 +107,7 @@ public class Parser implements ParserInterface{
 
 
 	// <class_body_statement>
-	private void classBodyStatement() throws InvalidInputException {
+	private void classBodyStatement() {
 		printIndented("Enter <class_body_statement>");
 		indentationLevel++;
 		
@@ -137,7 +136,7 @@ public class Parser implements ParserInterface{
 	} // end classBodyStatement()
 	
 	// <class_body_declaration>
-	private void classBodyDeclaration() throws InvalidInputException {
+	private void classBodyDeclaration() {
 		printIndented("Enter <class_body_declaration>");
 		indentationLevel++;
 		
@@ -186,7 +185,7 @@ public class Parser implements ParserInterface{
 			break;
 		
 		default:
-			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+			error();
 		
 		} // end switch
 		
@@ -195,7 +194,7 @@ public class Parser implements ParserInterface{
 	} // end classBodyDeclaration
 	
 	// <field_declaration>
-	private void fieldDeclaration() throws InvalidInputException {
+	private void fieldDeclaration() {
 		printIndented("Enter <field_declaration>");
 		indentationLevel++;
 		
@@ -219,7 +218,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <variable_declarators>
-	private void variableDeclarators() throws InvalidInputException {
+	private void variableDeclarators() {
 		printIndented("Enter <variable_declarators>");
 		indentationLevel++;
 		
@@ -254,7 +253,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <method_declaration>
-	private void methodDeclaration() throws InvalidInputException {
+	private void methodDeclaration() {
 		printIndented("Enter <method_declaration>");
 		indentationLevel++;
 		
@@ -269,7 +268,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <parameters>
-	private void parameters() throws InvalidInputException {
+	private void parameters() {
 		printIndented("Enter <parameters>");
 		indentationLevel++;
 		
@@ -293,7 +292,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <block>
-	private void block() throws InvalidInputException {
+	private void block() {
 		printIndented("Enter <block>");
 		indentationLevel++;
 		
@@ -352,7 +351,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <local_variable_declaration>
-	private void localVariableDeclaration() throws InvalidInputException {
+	private void localVariableDeclaration() {
 		printIndented("Enter <local_variable_declaration>");
 		indentationLevel++;
 		
@@ -364,7 +363,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <type>
-	private void type() throws InvalidInputException {
+	private void type() {
 		printIndented("Enter <type>");
 		indentationLevel++;
 		
@@ -384,7 +383,7 @@ public class Parser implements ParserInterface{
 	}
 
 	//<statement> rule (Nathan added this)
-	private void statement() throws InvalidInputException {
+	private void statement() {
 		printIndented("Enter <statement>");
 		indentationLevel++;
 
@@ -452,7 +451,7 @@ public class Parser implements ParserInterface{
 		
 		case MODIFIER:
 			if (!nextLexeme.getLexeme().equals("synchronized"))
-				throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+				error();
 			processLexeme(Token.MODIFIER);
 			//parenExpression();
 			block();
@@ -483,7 +482,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <variable_init>
-	private void variableInit() throws InvalidInputException {
+	private void variableInit() {
 		printIndented("Enter <variable_init>");
 		indentationLevel++;
 		
@@ -495,7 +494,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	// <array_init>
-	private void arrayInit() throws InvalidInputException {
+	private void arrayInit() {
 		printIndented("Enter <array_init>");
 		indentationLevel++;
 		
@@ -520,15 +519,13 @@ public class Parser implements ParserInterface{
 	* prints out the current lexeme, and moves to the next lexeme in the input string
 	*
 	* @param token Expected token
-	* @param optional True is this token is optional, false if not
-	* @throws InvalidInputException
 	*/
-	private void processLexeme(Token token) throws InvalidInputException {
+	private void processLexeme(Token token) {
 		if (nextLexeme.getToken() == token) {
 			printIndented(nextLexeme.toString());
 			nextLexeme = lex.nextLexeme();
 		} else{
-			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
+			error();
 		}
 	}
 	
@@ -537,5 +534,10 @@ public class Parser implements ParserInterface{
 			System.out.print("  ");
 		}
 		System.out.println(toPrint);
+	}
+	
+	private void error() {
+		System.out.printf("ERROR: Invalid input: %s\n", nextLexeme.getLexeme());
+		System.exit(1);
 	}
 }

@@ -1,7 +1,6 @@
 package parser;
 
 import interfaces.LexicalAnalyzerInterface;
-import types.InvalidInputException;
 import types.Lexeme;
 import types.Token;
 
@@ -21,9 +20,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 	}
 
 	@Override
-	public Lexeme nextLexeme() throws InvalidInputException {
-		Token token;
-		String lexeme;
+	public Lexeme nextLexeme() {
+		Token token = null;
+		String lexeme = null;
 		char nextChar;
 
 		if (position >= inputString.length()) return null;
@@ -141,7 +140,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = newLexeme;
 
 			} else {
-				throw new InvalidInputException("Invalid Input: " + inputString.charAt(position));
+				System.out.printf("ERROR: Invalid input: %c\n", inputString.charAt(position));
+				System.exit(1);
 			}
 
 		} // end switch case
