@@ -51,8 +51,8 @@ public class Parser implements ParserInterface{
 		processLexeme(Token.KEYWORD_CLASS);
 		processLexeme(Token.IDENTIFIER);
 
-		extendsRule();
-		implementsRule();
+		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS) extendsRule();
+		if (nextLexeme.getToken() == Token.KEYWORD_IMPLEMENTS) implementsRule();
 
 		classBody();
 		
@@ -65,10 +65,8 @@ public class Parser implements ParserInterface{
 		printIndented("Enter <extends>");
 		indentationLevel++;
 
-		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS) {
-			processLexeme(Token.KEYWORD_EXTENDS);
-			processLexeme(Token.IDENTIFIER);
-		}
+		processLexeme(Token.KEYWORD_EXTENDS);
+		processLexeme(Token.IDENTIFIER);
 
 		indentationLevel--;
 		printIndented("Exit <extends>");
@@ -79,15 +77,12 @@ public class Parser implements ParserInterface{
 		printIndented("Enter <implements>");
 		indentationLevel++;
 
-		if (nextLexeme.getToken() == Token.KEYWORD_IMPLEMENTS) {
-			processLexeme(Token.KEYWORD_IMPLEMENTS);
+		processLexeme(Token.KEYWORD_IMPLEMENTS);
+		processLexeme(Token.IDENTIFIER);
+		
+		while (nextLexeme.getToken() == Token.COMMA) {
+			processLexeme(Token.COMMA);
 			processLexeme(Token.IDENTIFIER);
-			
-			while (nextLexeme.getToken() == Token.COMMA) {
-				processLexeme(Token.COMMA);
-				processLexeme(Token.IDENTIFIER);
-			}
-			
 		}
 
 		indentationLevel--;
@@ -132,9 +127,6 @@ public class Parser implements ParserInterface{
 			
 			if (nextLexeme.getToken() == Token.LEFT_BRACE) block();
 			else {
-				while (nextLexeme.getToken() == Token.MODIFIER) {
-					processLexeme(Token.MODIFIER);
-				}
 				classBodyDeclaration();
 			}
 		
@@ -276,6 +268,30 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <method_declaration>");
 	}
 	
+	// <parameters>
+	private void parameters() throws InvalidInputException {
+		printIndented("Enter <parameters>");
+		indentationLevel++;
+		
+		processLexeme(Token.LEFT_PAREN);
+		
+		while (nextLexeme.getToken() != Token.RIGHT_PAREN) {
+			while (nextLexeme.getToken() == Token.MODIFIER) processLexeme(Token.MODIFIER);
+			type();
+			processLexeme(Token.IDENTIFIER);
+			while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+				processLexeme(Token.LEFT_BRACKET);
+				processLexeme(Token.RIGHT_BRACKET);
+			} // end while
+			if (nextLexeme.getToken() != Token.RIGHT_PAREN) processLexeme(Token.COMMA);
+		} // end while
+		
+		processLexeme(Token.RIGHT_PAREN);
+		
+		indentationLevel--;
+		printIndented("Exit <parameters>");
+	}
+	
 	// <block>
 	private void block() throws InvalidInputException {
 		printIndented("Enter <block>");
@@ -367,30 +383,6 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <type>");
 	}
 
-	// <parameters>
-	private void parameters() throws InvalidInputException {
-		printIndented("Enter <parameters>");
-		indentationLevel++;
-		
-		processLexeme(Token.LEFT_PAREN);
-		
-		while (nextLexeme.getToken() != Token.RIGHT_PAREN) {
-			while (nextLexeme.getToken() == Token.MODIFIER) processLexeme(Token.MODIFIER);
-			type();
-			processLexeme(Token.IDENTIFIER);
-			while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
-				processLexeme(Token.LEFT_BRACKET);
-				processLexeme(Token.RIGHT_BRACKET);
-			} // end while
-			if (nextLexeme.getToken() != Token.RIGHT_PAREN) processLexeme(Token.COMMA);
-		} // end while
-		
-		processLexeme(Token.RIGHT_PAREN);
-		
-		indentationLevel--;
-		printIndented("Exit <parameters>");
-	}
-
 	//<statement> rule (Nathan added this)
 	private void statement() throws InvalidInputException {
 		printIndented("Enter <statement>");
@@ -459,6 +451,8 @@ public class Parser implements ParserInterface{
 			break;
 		
 		case MODIFIER:
+			if (!nextLexeme.getLexeme().equals("synchronized"))
+				throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
 			processLexeme(Token.MODIFIER);
 			//parenExpression();
 			block();

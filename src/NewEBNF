@@ -1,5 +1,5 @@
 <class> = {<modifier>} <class declaration>;
-<class_declaration> = "class" <identifier> <extends> <implements> <class_body>;
+<class_declaration> = "class" <identifier> [<extends>] [<implements>] <class_body>;
 
 <modifier> = "public"
     | "protected"
@@ -13,20 +13,61 @@
     | "volatile"
     | "strictfp";
 
+<primitive_type> = "boolean"
+    | "byte"
+    | "char"
+    | "short"
+    | "int"
+    | "long"
+    | "float"
+    | "double";
+
 <extends> = "extends" <identifier>;
 <implements> = "implements" <identifier> {',' <identifier>};
 
 <class body> = '{' {<class body statement>} '}';
+
 <class body statement> = ';' | {<modifier>} <class_body_declaration> | ["static"] <block>;
 
-<class_body_declaration> = <class_declaration> | "void" <method_declaration> | <identifier> <constructor_declaration> | <type> <method declaration> | <type> <identifier> <field declaration>;
+<class_body_declaration> = <class_declaration>
+    | "void" <identifier> <method_declaration>
+    | <identifier> <method_declaration>
+    | <type> <identifier> <method_declaration>
+    | <type> <identifier> <field_declaration>;
 
-<field_declarators> = <identifier> {"[]"} [= <array_init> | <expression>];
+<field_declaration> = {"[]"} ["=" <variable_init>] {"," <variable_declarators>};
+<variable_declarators> = <identifier> {"[]"} ["=" <variable_init>] {"," <identifier> {"[]"} ["=" <variable_init>]  };
+(*Is this the best way to do this?*)
 
 <method_declaration> = <parameters> [<throws>] (<block> | ";");
-
 <parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ;
 
+<block> = '{' (
+    <class_declaration>
+    | <local_variable_declaration> ";"
+    | [<identifier> ":"] <statement>
+    | <identifier> {"[]"} ["=" <variable_init>] <variable_declarators> ";"
+    ) "}";
 
+<local_variable_declaration> = <type> <variable_declarators>;
 
-<block> = '{' {<modifier>} (<class_declaration> | <identifier>':' <statement> | <type> <variable declarators>);
+<type> = (<primitive_type> | <identifier>) {"[]"};
+
+<variable_init> = <expression> | <array_init>;
+<array_init> = "{" [<variable_init> {"," <variable_init>}] "}";
+
+<statement> = "if" <paren_expression> ["else" <statement>]
+    | "while" <paren_expression> <statement>
+    | "do" <statement> "while" <paren_expression> ";"
+    | (*FOR LOOP*)
+    | (*SWITCH CASE*)
+    | "return" [<expression>] ";"
+    | "break" [<identifier>] ";"
+    | "continue" [<identifier>] ";"
+    | "throw" <expression> ";"
+    | (*TRY*)
+    | "synchronized" <paren_expression> <block>
+    | <block>
+    | ";"
+    | <identifier> ":" <statement>
+    | <expression>;
