@@ -434,6 +434,16 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.RIGHT_BRACE);
 			break;
 		
+		case KEYWORD_ASSERT:
+			processLexeme(Token.KEYWORD_ASSERT);
+			//expression();
+			if (nextLexeme.getToken() == Token.COLON) {
+				processLexeme(Token.COLON);
+				//expression();
+			}
+			processLexeme(Token.SEMICOLON);
+			break;
+
 		case KEYWORD_RETURN:
 			processLexeme(Token.KEYWORD_RETURN);
 			if (nextLexeme.getToken() != Token.SEMICOLON) ;//expression();

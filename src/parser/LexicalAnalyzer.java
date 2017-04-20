@@ -221,6 +221,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "break":
 			return Token.KEYWORD_BREAK;
+			
+		case "assert":
+			return Token.KEYWORD_ASSERT;
 
 		case "boolean":
 		case "byte":

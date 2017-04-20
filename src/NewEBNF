@@ -60,6 +60,7 @@
     | "while" <paren_expression> <statement>
     | "do" <statement> "while" <paren_expression> ";"
     | (*FOR LOOP*)
+    | "assert" <expression> [:<expression>];
     | "switch" <paren_expression> "{" <cases> "}";
     | "return" [<expression>] ";"
     | "break" [<identifier>] ";"
