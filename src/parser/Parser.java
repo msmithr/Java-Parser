@@ -9,7 +9,8 @@ public class Parser implements ParserInterface{
 
 	LexicalAnalyzer lex;
 	Lexeme nextLexeme;
-
+	int indentationLevel;
+	
 	/**
 	* Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
 	*
@@ -19,6 +20,7 @@ public class Parser implements ParserInterface{
 	public Parser(String inputString) throws InvalidInputException {
 		lex = new LexicalAnalyzer(inputString);
 		nextLexeme = lex.nextLexeme();
+		indentationLevel = 0;
 	}
 
 	@Override
@@ -28,20 +30,23 @@ public class Parser implements ParserInterface{
 	
 	// <class>
 	private void classRule() throws InvalidInputException {
-		System.out.println("Enter <class>");
-
+		printIndented("Enter <class>");
+		indentationLevel++;
+		
 		while (nextLexeme.getToken() == Token.MODIFIER) {
 			processLexeme(Token.MODIFIER);
 		}
 
 		classDeclaration();
 		
-		System.out.println("Exit <class>");
+		indentationLevel--;
+		printIndented("Exit <class>");
 	}
 	
 	// <class_declaration>
 	private void classDeclaration() throws InvalidInputException {
-		System.out.println("Enter <class_delcaration>");
+		printIndented("Enter <class_declaration>");
+		indentationLevel++;
 		
 		processLexeme(Token.KEYWORD_CLASS);
 		processLexeme(Token.IDENTIFIER);
@@ -51,24 +56,28 @@ public class Parser implements ParserInterface{
 
 		classBody();
 		
-		System.out.println("Exit <class_delcaration>");
+		indentationLevel--;
+		printIndented("Exit <class_declaration>");
 	}
 
 	// <extends>
 	private void extendsRule() throws InvalidInputException {
-		System.out.println("Enter <extends>");
+		printIndented("Enter <extends>");
+		indentationLevel++;
 
 		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS) {
 			processLexeme(Token.KEYWORD_EXTENDS);
 			processLexeme(Token.IDENTIFIER);
 		}
 
-		System.out.println("Exit <extends>");
+		indentationLevel--;
+		printIndented("Exit <extends>");
 	}
 
 	// <implements>
 	private void implementsRule() throws InvalidInputException {
-		System.out.println("Enter <implements>");
+		printIndented("Enter <implements>");
+		indentationLevel++;
 
 		if (nextLexeme.getToken() == Token.KEYWORD_IMPLEMENTS) {
 			processLexeme(Token.KEYWORD_IMPLEMENTS);
@@ -81,12 +90,15 @@ public class Parser implements ParserInterface{
 			
 		}
 
-		System.out.println("Exit <implements>");
+		indentationLevel--;
+		printIndented("Exit <implements>");
 	}
 
 	// <class_body>
 	private void classBody() throws InvalidInputException {
-		System.out.println("Enter <class_body>");
+		printIndented("Enter <class_body>");
+		indentationLevel++;
+		
 		processLexeme(Token.LEFT_BRACE);
 		
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
@@ -94,13 +106,16 @@ public class Parser implements ParserInterface{
 		}
 		
 		processLexeme(Token.RIGHT_BRACE);
-		System.out.println("Exit <class_body>");
+		
+		indentationLevel--;
+		printIndented("Exit <class_body>");
 	}
 
 
 	// <class_body_statement>
 	private void classBodyStatement() throws InvalidInputException {
-		System.out.println("Enter <class_body_statement>");
+		printIndented("Enter <class_body_statement>");
+		indentationLevel++;
 		
 		switch (nextLexeme.getToken()) {
 		
@@ -125,12 +140,14 @@ public class Parser implements ParserInterface{
 		
 		} // end switch
 
-		System.out.println("Exit <class_body_statement>");
+		indentationLevel--;
+		printIndented("Exit <class_body_statement>");
 	} // end classBodyStatement()
 	
 	// <class_body_declaration>
 	private void classBodyDeclaration() throws InvalidInputException {
-		System.out.println("Enter <class_body_declaration>");
+		printIndented("Enter <class_body_declaration>");
+		indentationLevel++;
 		
 		switch (nextLexeme.getToken()) {
 		
@@ -180,12 +197,15 @@ public class Parser implements ParserInterface{
 			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
 		
 		} // end switch
-		System.out.println("Exit <class_body_declaration>");
+		
+		indentationLevel--;
+		printIndented("Exit <class_body_declaration>");
 	} // end classBodyDeclaration
 	
 	// <field_declaration>
 	private void fieldDeclaration() throws InvalidInputException {
-		System.out.println("Enter <field_declaration>");
+		printIndented("Enter <field_declaration>");
+		indentationLevel++;
 		
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 			processLexeme(Token.LEFT_BRACKET);
@@ -202,12 +222,14 @@ public class Parser implements ParserInterface{
 			variableDeclarators();
 		}
 		
-		System.out.println("Exit <field_declaration>");
+		indentationLevel--;
+		printIndented("Exit <field_declaration>");
 	}
 	
 	// <variable_declarators>
 	private void variableDeclarators() throws InvalidInputException {
-		System.out.println("Enter <variable_declarators>");
+		printIndented("Enter <variable_declarators>");
+		indentationLevel++;
 		
 		processLexeme(Token.IDENTIFIER);
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
@@ -235,12 +257,14 @@ public class Parser implements ParserInterface{
 			}
 		}
 		
-		System.out.println("Exit <variable_declarators>");
+		indentationLevel--;
+		printIndented("Exit <variable_declarators>");
 	}
 	
 	// <method_declaration>
 	private void methodDeclaration() throws InvalidInputException {
-		System.out.println("Enter <method_declaration>");
+		printIndented("Enter <method_declaration>");
+		indentationLevel++;
 		
 		parameters();
 		if (nextLexeme.getToken() == Token.KEYWORD_THROWS) ; //throws();
@@ -248,12 +272,15 @@ public class Parser implements ParserInterface{
 		if (nextLexeme.getToken() == Token.SEMICOLON) processLexeme(Token.SEMICOLON);
 		else block();
 		
-		System.out.println("Exit <method_declaration>");
+		indentationLevel--;
+		printIndented("Exit <method_declaration>");
 	}
 	
 	// <block>
 	private void block() throws InvalidInputException {
-		System.out.println("Enter <block>");
+		printIndented("Enter <block>");
+		indentationLevel++;
+		
 		processLexeme(Token.LEFT_BRACE);
 		
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
@@ -303,22 +330,27 @@ public class Parser implements ParserInterface{
 		}
 		
 		processLexeme(Token.RIGHT_BRACE);
-		System.out.println("Exit <block>");
+		
+		indentationLevel--;
+		printIndented("Exit <block>");
 	}
 	
 	// <local_variable_declaration>
 	private void localVariableDeclaration() throws InvalidInputException {
-		System.out.println("Enter <local_variable_declaration>");
+		printIndented("Enter <local_variable_declaration>");
+		indentationLevel++;
 		
 		type();
 		variableDeclarators();
 		
-		System.out.println("Exit <local_variable_declaration>");
+		indentationLevel--;
+		printIndented("Exit <local_variable_declaration>");
 	}
 	
 	// <type>
 	private void type() throws InvalidInputException {
-		System.out.println("Enter <type>");
+		printIndented("Enter <type>");
+		indentationLevel++;
 		
 		if (nextLexeme.getToken() == Token.PRIMITIVE_TYPE) {
 			processLexeme(Token.PRIMITIVE_TYPE);
@@ -331,12 +363,14 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.RIGHT_BRACKET);
 		}
 		
-		System.out.println("Exit <type>");
+		indentationLevel--;
+		printIndented("Exit <type>");
 	}
 
 	// <parameters>
 	private void parameters() throws InvalidInputException {
-		System.out.println("Enter <parameters>");
+		printIndented("Enter <parameters>");
+		indentationLevel++;
 		
 		processLexeme(Token.LEFT_PAREN);
 		
@@ -353,12 +387,14 @@ public class Parser implements ParserInterface{
 		
 		processLexeme(Token.RIGHT_PAREN);
 		
-		System.out.println("Exit <parameters>");
+		indentationLevel--;
+		printIndented("Exit <parameters>");
 	}
 
 	//<statement> rule (Nathan added this)
 	private void statement() throws InvalidInputException {
-		System.out.println("Enter <statement>");
+		printIndented("Enter <statement>");
+		indentationLevel++;
 
 		switch (nextLexeme.getToken()) {//each of the method calls are commented out until they are implemented
 		case KEYWORD_IF:
@@ -447,22 +483,27 @@ public class Parser implements ParserInterface{
 			break;
 			
 		}//end switch
-		System.out.println("Exit <statement>");
+		
+		indentationLevel--;
+		printIndented("Exit <statement>");
 	}
 
 	// <variable_init>
 	private void variableInit() throws InvalidInputException {
-		System.out.println("Enter <variable_init>");
+		printIndented("Enter <variable_init>");
+		indentationLevel++;
 		
 		if (nextLexeme.getToken() == Token.LEFT_BRACE) arrayInit();
 		else ; //expression();
 		
-		System.out.println("Exit <variable_init>");
+		indentationLevel--;
+		printIndented("Exit <variable_init>");
 	}
 	
 	// <array_init>
 	private void arrayInit() throws InvalidInputException {
-		System.out.println("Enter <array_init>");
+		printIndented("Enter <array_init>");
+		indentationLevel++;
 		
 		processLexeme(Token.LEFT_BRACE);
 		
@@ -476,7 +517,8 @@ public class Parser implements ParserInterface{
 		
 		processLexeme(Token.RIGHT_BRACE);
 		
-		System.out.println("Exit <array_init>");
+		indentationLevel--;
+		printIndented("Exit <array_init>");
 	} // end array_init
 
 	/**
@@ -489,7 +531,7 @@ public class Parser implements ParserInterface{
 	*/
 	private boolean processLexeme(Token token, boolean optional) throws InvalidInputException {
 		if (nextLexeme.getToken() == token) {
-			System.out.println(nextLexeme);
+			printIndented(nextLexeme.toString());
 			nextLexeme = lex.nextLexeme();
 			return true;
 		} else if (optional == false){
@@ -503,5 +545,12 @@ public class Parser implements ParserInterface{
 	*/
 	private void processLexeme(Token token) throws InvalidInputException {
 		processLexeme(token, false);
+	}
+	
+	private void printIndented(String toPrint) {
+		for (int i = 0; i < indentationLevel; i++) {
+			System.out.print("  ");
+		}
+		System.out.println(toPrint);
 	}
 }

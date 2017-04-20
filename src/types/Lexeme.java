@@ -32,7 +32,7 @@ public class Lexeme implements LexemeInterface {
 	
 	@Override
 	public String toString() {
-		return String.format("Next token is: %23s\t\t Next Lexeme is: %s", token, lexeme);
+		return String.format("\"%s\": %s", lexeme, token);
 	}
 	
 }
