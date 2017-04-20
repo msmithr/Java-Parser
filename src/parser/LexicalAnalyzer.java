@@ -102,7 +102,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case ':':
 			token = Token.COLON;
-			lexeme = ";";
+			lexeme = ":";
 			position++;
 			break;
 
@@ -200,6 +200,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "case":
 			return Token.KEYWORD_CASE;
+			
+		case "default":
+			return Token.KEYWORD_DEFAULT;
 
 		case "return":
 			return Token.KEYWORD_RETURN;

@@ -42,12 +42,12 @@
 <method_declaration> = <parameters> [<throws>] (<block> | ";");
 <parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ;
 
-<block> = '{' (
-    <class_declaration>
+<block> = '{' {<block_statement> }"}";
+
+<block_statement> = <class_declaration>
     | <local_variable_declaration> ";"
     | [<identifier> ":"] <statement>
     | <identifier> {"[]"} ["=" <variable_init>] <variable_declarators> ";"
-    ) "}";
 
 <local_variable_declaration> = <type> <variable_declarators>;
 
@@ -60,7 +60,7 @@
     | "while" <paren_expression> <statement>
     | "do" <statement> "while" <paren_expression> ";"
     | (*FOR LOOP*)
-    | (*SWITCH CASE*)
+    | "switch" <paren_expression> "{" <cases> "}";
     | "return" [<expression>] ";"
     | "break" [<identifier>] ";"
     | "continue" [<identifier>] ";"
@@ -71,3 +71,5 @@
     | ";"
     | <identifier> ":" <statement>
     | <expression>;
+
+<cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
