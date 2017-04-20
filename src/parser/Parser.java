@@ -529,22 +529,13 @@ public class Parser implements ParserInterface{
 	* @param optional True is this token is optional, false if not
 	* @throws InvalidInputException
 	*/
-	private boolean processLexeme(Token token, boolean optional) throws InvalidInputException {
+	private void processLexeme(Token token) throws InvalidInputException {
 		if (nextLexeme.getToken() == token) {
 			printIndented(nextLexeme.toString());
 			nextLexeme = lex.nextLexeme();
-			return true;
-		} else if (optional == false){
+		} else{
 			throw new InvalidInputException("Invalid input: " + nextLexeme.getLexeme());
 		}
-		return false;
-	}
-
-	/**
-	* Wrapper method for processLexeme, always required, ignores return
-	*/
-	private void processLexeme(Token token) throws InvalidInputException {
-		processLexeme(token, false);
 	}
 	
 	private void printIndented(String toPrint) {
