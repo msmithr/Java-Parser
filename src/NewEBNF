@@ -1,3 +1,8 @@
+<qualified_identifier> = <identifier> {"." <identifier>};
+
+<program> = "package" <qualified_identifier> ";" {<import>} <class>;
+<import> = "import" ["static"] <identifier> {"." <identifier>} [".*"];
+
 <class> = {<modifier>} <class declaration>;
 <class_declaration> = "class" <identifier> [<extends>] [<implements>] <class_body>;
 
@@ -47,7 +52,7 @@
 <block_statement> = <class_declaration>
     | <local_variable_declaration> ";"
     | [<identifier> ":"] <statement>
-    | <identifier> {"[]"} ["=" <variable_init>] <variable_declarators> ";"
+    | <identifier> {"[]"} ["=" <variable_init>] <variable_declarators> ";";
 
 <local_variable_declaration> = <type> <variable_declarators>;
 

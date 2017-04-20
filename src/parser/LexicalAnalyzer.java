@@ -118,6 +118,18 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = "=";
 			position++;
 			break;
+			
+		case '.':
+			token = Token.DOT;
+			lexeme = ".";
+			position++;
+			break;
+			
+		case '*':
+			token = Token.ASTERISK;
+			lexeme = "*";
+			position++;
+			break;
 
 		// otherwise, next lexeme is either a number or a string
 		default:
@@ -224,6 +236,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "assert":
 			return Token.KEYWORD_ASSERT;
+			
+		case "package":
+			return Token.KEYWORD_PACKAGE;
+			
+		case "import":
+			return Token.KEYWORD_IMPORT;
 
 		case "boolean":
 		case "byte":

@@ -36,12 +36,11 @@ public enum Token {
 	//We don't account for these yet in the parser, but they are all Java keywords
 	KEYWORD_VOID,
 	KEYWORD_ASSERT,
-	//KEYWORD_CONST, //NOTE:  does nothing in Java, but is a keyword
 	//KEYWORD_ENUM,
-	//KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_INSTANCEOF,
 	//KEYWORD_NEW,
-	//KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_SUPER,
 	//KEYWORD_THIS,
 	//KEYWORD_NULL,
@@ -65,11 +64,12 @@ public enum Token {
 	SEMICOLON,
 	COMMA,
 	COLON,
+	DOT,
 
 	// operators and other symbols
 	//PLUS,// +
 	//MINUS,// -
-	//ASTERISK,// *
+	ASTERISK,// *
 	//BACKSLASH,// /
 	//FORWARDSLASH,// \
 	//MODULO,// %

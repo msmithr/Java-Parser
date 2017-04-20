@@ -24,7 +24,64 @@ public class Parser implements ParserInterface{
 
 	@Override
 	public void start() {
+		program();
+	}
+	
+	private void qualifiedIdentifier() {
+		printIndented("Enter <qualified_identifier>");
+		indentationLevel++;
+		
+		processLexeme(Token.IDENTIFIER);
+		while (nextLexeme.getToken() == Token.DOT) {
+			processLexeme(Token.DOT);
+			processLexeme(Token.IDENTIFIER);
+		}
+		
+		indentationLevel--;
+		printIndented("Exit <qualified_identifier>");
+	}
+	
+	private void program() {
+		printIndented("Enter <program>");
+		indentationLevel++;
+		
+		if (nextLexeme.getToken() == Token.KEYWORD_PACKAGE) {
+			processLexeme(Token.KEYWORD_PACKAGE);
+			qualifiedIdentifier();
+		}
+		
+		while (nextLexeme.getToken() == Token.KEYWORD_IMPORT) importRule();
+		
 		classRule();
+		
+		indentationLevel--;
+		printIndented("Exit <program>");
+	}
+	
+	private void importRule() {
+		printIndented("Enter <import>");
+		indentationLevel++;
+		
+		processLexeme(Token.KEYWORD_IMPORT);
+		if (nextLexeme.getLexeme().equals("static"))
+			processLexeme(Token.MODIFIER);
+		
+		processLexeme(Token.IDENTIFIER);
+		
+		while (nextLexeme.getToken() == Token.DOT) {
+			processLexeme(Token.DOT);
+			if (nextLexeme.getToken() == Token.ASTERISK) {
+				processLexeme(Token.ASTERISK);
+				break;
+			} else {
+				processLexeme(Token.IDENTIFIER);
+			}
+		}
+		
+		processLexeme(Token.SEMICOLON);
+		
+		indentationLevel--;
+		printIndented("Exit <import>");
 	}
 	
 	// <class>
