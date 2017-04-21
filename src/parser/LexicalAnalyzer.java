@@ -283,6 +283,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// the most elegant solution possible
 		case '>':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -292,9 +293,15 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			} else if (inputString.charAt(position) == '>') {
 				position++;
 				if (inputString.charAt(position) == '>') {
-					token = Token.INFIX_OPERATOR;
-					lexeme = ">>>";
 					position++;
+					if (inputString.charAt(position) == '=') {
+						token = Token.ASSIGNMENT_OPERATOR;
+						lexeme = ">>>=";
+						position++;
+					} else {
+						token = Token.INFIX_OPERATOR;
+						lexeme = ">>>";
+					}
 				} else {
 					token = Token.INFIX_OPERATOR;
 					lexeme = ">>";
