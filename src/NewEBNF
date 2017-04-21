@@ -79,3 +79,35 @@
     | <expression>;
 
 <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
+
+<expression_unit> = <literal>
+	| <paren_expression>
+	| "this" [<arguments>]
+	| (*Super*)
+	| (*New*)
+	| (*???*)
+	| <identifier> {"." <identifier>} [(*Identifier Suffix?*)]
+	| <primitive_type> {"[]"} "." "class"
+	| "void" "." "class";
+
+<paren_expression> = "(" <expression> ")";
+
+<arguments> = "(" [<expression> {"," <expression>}] ")";
+
+<literal> = <int_lit>
+	| <int_lit>.<int_lit>
+	| '<identifier>'
+	| "<identifier>"
+	| ("true" | "false");
+	| "null";
+
+<infix_operator> = INFIX_OPERATOR;
+
+<prefix_operator> = PREFIX_OPERATOR
+	| OPERATOR_PLUS
+	| OPERATOR_MINUS
+	| OPERATOR_INCREMENT
+	| OPERATOR_DECREMENT;
+
+<postfix_operator> = OPERATOR_INCREMENT
+	| OPERATOR_DECREMENT;

@@ -8,7 +8,6 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 	private String inputString;
 	private int position;
-	private boolean arrayType = false; // flag to indicate lexeme is an array type (such as int[])
 
 	/**
 	 * Constructor sets the input string and initializes the position index to 0.
@@ -43,13 +42,24 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 			// skip forward to next non comment lexeme
 			position++;
+			
 			if (inputString.charAt(position) == '/') { // single line comment
 				while (inputString.charAt(++position) != '\n');
+				return nextLexeme();
 			} else if (inputString.charAt(position) == '*') { // multi line comment /* */
 				while (inputString.charAt(++position) != '*' || inputString.charAt(++position) != '/');
+				return nextLexeme();
+			} 
+			
+			if (inputString.charAt(position) == '=') {
+				token = token.ASSIGNMENT_OPERATOR;
+				lexeme = "/=";
+				position++;
+			} else {
+				token = token.INFIX_OPERATOR;
+				lexeme = "/";
 			}
-
-			return nextLexeme(); // recursively call to return next lexeme
+			break;
 
 		// nextChar is left paren
 		case '(':
@@ -114,9 +124,15 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			break;
 			
 		case '=':
-			token = Token.EQUALS;
-			lexeme = "=";
 			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "==";
+				position++;
+			} else {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "=";
+			}
 			break;
 			
 		case '.':
@@ -126,8 +142,173 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			break;
 			
 		case '*':
-			token = Token.ASTERISK;
-			lexeme = "*";
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "*=";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "*";
+			}
+			
+			break;
+			
+		case '+':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "+=";
+				position++;
+			} else if (inputString.charAt(position) == '+') {
+				token = Token.OPERATOR_INCREMENT;
+				lexeme = "++";
+				position++;
+			} else {
+				token = Token.OPERATOR_PLUS;
+				lexeme = "+";
+			}
+			break;
+			
+		case '-':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "-=";
+				position++;
+			} else if (inputString.charAt(position) == '-') {
+				token = Token.OPERATOR_DECREMENT;
+				lexeme = "--";
+				position++;
+			} else {
+				token = Token.OPERATOR_MINUS;
+				lexeme = "-";
+			}
+			break;
+			
+		case '%':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "%=";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "%";
+			}
+			break;
+
+		case '\'':
+			token = Token.SINGLE_QUOTE;
+			lexeme = "\'";
+			position++;
+			break;
+			
+		case '\"':
+			token = Token.DOUBLE_QUOTE;
+			lexeme = "\"";
+			position++;
+			break;
+			
+		case '|':
+			position++;
+			if (inputString.charAt(position) == '|') {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "||";
+				position++;
+			} else if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "|=";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "|";
+			}
+			break;
+			
+		case '&':
+			position++;
+			if (inputString.charAt(position) == '&') {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "&&";
+				position++;
+			} else if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "&=";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "&";
+			}
+			break;
+			
+		case '^':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "^=";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "^";
+			}
+			break;
+
+		case '!':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "!=";
+				position++;
+			} else {
+				token = Token.PREFIX_OPERATOR;
+				lexeme = "!";
+			}
+			break;
+			
+		case '<':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = "<=";
+				position++;
+			} else if (inputString.charAt(position) == '<') {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "<<";
+				position++;
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = "<";
+				position++;
+			}
+			break;
+			
+		case '>':
+			position++;
+			if (inputString.charAt(position) == '=') {
+				token = Token.ASSIGNMENT_OPERATOR;
+				lexeme = ">=";
+				position++;
+			} else if (inputString.charAt(position) == '>') {
+				position++;
+				if (inputString.charAt(position) == '>') {
+					token = Token.INFIX_OPERATOR;
+					lexeme = ">>>";
+					position++;
+				} else {
+					token = Token.INFIX_OPERATOR;
+					lexeme = ">>";
+				}
+			} else {
+				token = Token.INFIX_OPERATOR;
+				lexeme = ">";
+				position++;
+			}
+			break;
+			
+		case '~':
+			token = Token.PREFIX_OPERATOR;
+			lexeme = "~";
 			position++;
 			break;
 
@@ -145,11 +326,18 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				} // end while
 
 				token = processIdentifier(newLexeme);
-				if (arrayType) {
-					newLexeme += "[]";
-					arrayType = false;
-				}
 				lexeme = newLexeme;
+				
+				
+			} else if (Character.isDigit(nextChar)) {
+				while (position < inputString.length() && Character.isDigit(inputString.charAt(position))) {
+					newLexeme += inputString.charAt(position);
+					position++;
+				} // end while
+				
+				lexeme = newLexeme;
+				token = Token.INT_LITERAL;
+				
 
 			} else {
 				System.out.printf("ERROR: Invalid input: %c\n", inputString.charAt(position));
@@ -242,6 +430,24 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "import":
 			return Token.KEYWORD_IMPORT;
+			
+		case "true":
+			return Token.KEYWORD_TRUE;
+			
+		case "false":
+			return Token.KEYWORD_FALSE;
+			
+		case "null":
+			return Token.KEYWORD_NULL;
+			
+		case "this":
+			return Token.KEYWORD_THIS;
+			
+		case "super":
+			return Token.KEYWORD_SUPER;
+			
+		case "new":
+			return Token.KEYWORD_NEW;
 
 		case "boolean":
 		case "byte":

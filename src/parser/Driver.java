@@ -27,6 +27,7 @@ public class Driver {
 	}//end fileToString method
 
 	public static void main (String args[]) throws IOException{
+		
 		//first get the file name, (as either command line arg, or user input;  I have included both ways)
 
 		//command line version !!!!!!don't know if it works!!!!!
@@ -46,8 +47,16 @@ public class Driver {
 		keyboard.close();
 
 		String inputString = fileToString(aFile);//convert the file to a single string
-
-
+		
+		LexicalAnalyzer lex = new LexicalAnalyzer(inputString);
+		
+		for (int i = 0; i < 20; i++) {
+			System.out.println(lex.nextLexeme());
+		}
+		
+		System.exit(0);
+		
+		
 		Parser parser = new Parser(inputString);
 		parser.start();
 		

@@ -7,6 +7,7 @@ package types;
 
 public enum Token {
 	IDENTIFIER,
+	INT_LITERAL,
 
 
 	// keywords
@@ -39,13 +40,13 @@ public enum Token {
 	//KEYWORD_ENUM,
 	KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	//KEYWORD_INSTANCEOF,
-	//KEYWORD_NEW,
+	KEYWORD_NEW,
 	KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
-	//KEYWORD_SUPER,
-	//KEYWORD_THIS,
-	//KEYWORD_NULL,
-	//KEYWORD_TRUE,
-	//KEYWORD_FALSE,
+	KEYWORD_SUPER,
+	KEYWORD_THIS,
+	KEYWORD_NULL,
+	KEYWORD_TRUE,
+	KEYWORD_FALSE,
 
 
 	// brackets
@@ -57,8 +58,8 @@ public enum Token {
 	RIGHT_BRACKET,
 	//LEFT_ANGLE_BRACKET,// <
 	//RIGHT_ANGLE_BRACKET,// >
-	//DOUBLE_QUOTE,// "
-	//SINGLE_QUOTE,// '
+	DOUBLE_QUOTE,// "
+	SINGLE_QUOTE,// '
 
 
 	SEMICOLON,
@@ -69,17 +70,25 @@ public enum Token {
 	// operators and other symbols
 	//PLUS,// +
 	//MINUS,// -
-	ASTERISK,// *
 	//BACKSLASH,// /
 	//FORWARDSLASH,// \
 	//MODULO,// %
 	//AT,// @
 	//EXCLAIMATION_POINT,// ! (aka NOT, or BANG)
 	//AMPERSAND,// &
-	//PIPE,// |
-	EQUALS,// =
+	BITWISE_OR,// |
+	BITWISE_AND, // &
+	BITWISE_XOR, // ^
+	ASSIGNMENT_OPERATOR,// =
 	//COLON,// :
 	//QUESTION_MARK,// ?
+	
+	INFIX_OPERATOR,
+	PREFIX_OPERATOR,
+	OPERATOR_PLUS,
+	OPERATOR_MINUS,
+	OPERATOR_INCREMENT,
+	OPERATOR_DECREMENT,
 
 
 
