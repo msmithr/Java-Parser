@@ -23,6 +23,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		Token token = null;
 		String lexeme = null;
 		char nextChar;
+		
+
 
 		if (position >= inputString.length()) return null;
 

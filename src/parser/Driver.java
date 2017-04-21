@@ -48,6 +48,7 @@ public class Driver {
 
 		String inputString = fileToString(aFile);//convert the file to a single string
 		
+		/* debug code
 		LexicalAnalyzer lex = new LexicalAnalyzer(inputString);
 		
 		for (int i = 0; i < 20; i++) {
@@ -55,7 +56,7 @@ public class Driver {
 		}
 		
 		System.exit(0);
-		
+		*/
 		
 		Parser parser = new Parser(inputString);
 		parser.start();

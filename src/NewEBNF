@@ -64,7 +64,7 @@
 <statement> = "if" <paren_expression> ["else" <statement>]
     | "while" <paren_expression> <statement>
     | "do" <statement> "while" <paren_expression> ";"
-    | (*FOR LOOP*)
+    | "for" "(" [{<modifier>} <type> <identifier> {"[]"}] ["=" <variable_init>] <for_arguments> ")" <statement>
     | "assert" <expression> [:<expression>] ";"
     | "switch" <paren_expression> "{" <cases> "}"
     | "return" [<expression>] ";"
@@ -79,6 +79,10 @@
     | <expression>;
 
 <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
+
+<for_arguments> = ";" [<expression>] ";" <expression> {"," <expression>}
+	| ":" <expression>;
+
 
 <expression_unit> = <literal>
 	| <paren_expression>

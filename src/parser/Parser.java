@@ -481,7 +481,26 @@ public class Parser implements ParserInterface{
 			break;
 			
 		case KEYWORD_FOR:
-			//forLoop();
+			processLexeme(Token.KEYWORD_FOR);
+			processLexeme(Token.LEFT_PAREN);
+			if (nextLexeme.getToken() != Token.COLON && nextLexeme.getToken() != Token.SEMICOLON) {
+				while (nextLexeme.getToken() == Token.MODIFIER) 
+					processLexeme(Token.MODIFIER);
+				type();
+				processLexeme(Token.IDENTIFIER);
+				while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+					processLexeme(Token.LEFT_BRACKET);
+					processLexeme(Token.RIGHT_BRACKET);
+				}
+				
+				if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR) {
+					processLexeme(Token.ASSIGNMENT_OPERATOR);
+					variableInit();
+				}
+			}
+			forArguments();
+			processLexeme(Token.RIGHT_PAREN);
+			statement();
 			break;
 			
 		case KEYWORD_SWITCH:
@@ -562,6 +581,29 @@ public class Parser implements ParserInterface{
 		
 		indentationLevel--;
 		printIndented("Exit <statement>");
+	}
+	
+	// <for_arguments>
+	private void forArguments() {
+		printIndented("Enter <for_arguments>");
+		indentationLevel++;
+		
+		if (nextLexeme.getToken() == Token.SEMICOLON) {
+			processLexeme(Token.SEMICOLON);
+			if (nextLexeme.getToken() != Token.SEMICOLON) ; //expression()
+			processLexeme(Token.SEMICOLON);
+			// expression();
+			while (nextLexeme.getToken() == Token.COMMA) {
+				processLexeme(Token.COMMA);
+				// expression();
+			}
+		} else {
+			processLexeme(Token.COLON);
+			// expression();
+		}
+		
+		indentationLevel--;
+		printIndented("Exit <for_arguments>");
 	}
 
 	private void cases() {
