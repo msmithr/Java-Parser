@@ -873,7 +873,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	private void error() {
-		System.out.printf("ERROR: Invalid input: %s\n", nextLexeme.getLexeme());
+		System.out.printf("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
 		System.exit(1);
 	}
 

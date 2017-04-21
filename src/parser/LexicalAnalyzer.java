@@ -8,6 +8,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 	private String inputString;
 	private int position;
+	int lineNumber;
 
 	/**
 	 * Constructor sets the input string and initializes the position index to 0.
@@ -16,6 +17,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 	public LexicalAnalyzer(String inputString){
 		this.inputString = inputString;
 		this.position = 0;
+		this.lineNumber = 1;
+	}
+	
+	@Override
+	public int getLineNumber() {
+		return this.lineNumber;
 	}
 
 	@Override
@@ -23,7 +30,6 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		Token token = null;
 		String lexeme = null;
 		char nextChar;
-		
 
 
 		if (position >= inputString.length()) return null;
@@ -33,6 +39,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		// skip to the next non whitespace character
 		while (position < inputString.length() && (nextChar == ' ' || nextChar == '\n' || nextChar == '\t')) {
 			position++;
+			if (nextChar == '\n') lineNumber++;
 			if (position == inputString.length()) return null; // if position reaches the end of the file, return null
 			nextChar = inputString.charAt(position);
 		}

@@ -16,8 +16,15 @@ public interface LexicalAnalyzerInterface {
 	 *
 	 * @return Each time this method is called, it will return the next lexical
 	 * unit in the form of a Lexeme object.
-	 * @throws InvalidInputException
 	 */
 	public Lexeme nextLexeme();
+	
+	
+	/**
+	 * Returns the current line number of the input string
+	 * 
+	 * @return Current line number of the input stirng
+	 */
+	public int getLineNumber();
 
 }
