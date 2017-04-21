@@ -65,8 +65,8 @@
     | "while" <paren_expression> <statement>
     | "do" <statement> "while" <paren_expression> ";"
     | (*FOR LOOP*)
-    | "assert" <expression> [:<expression>];
-    | "switch" <paren_expression> "{" <cases> "}";
+    | "assert" <expression> [:<expression>] ";"
+    | "switch" <paren_expression> "{" <cases> "}"
     | "return" [<expression>] ";"
     | "break" [<identifier>] ";"
     | "continue" [<identifier>] ";"
@@ -95,7 +95,7 @@
 <arguments> = "(" [<expression> {"," <expression>}] ")";
 
 <literal> = <int_lit>
-	| <int_lit>.<int_lit>
+	| <int_lit> "." <int_lit>
 	| '<identifier>'
 	| "<identifier>"
 	| ("true" | "false");

@@ -834,4 +834,5 @@ public class Parser implements ParserInterface{
 		System.out.printf("ERROR: Invalid input: %s\n", nextLexeme.getLexeme());
 		System.exit(1);
 	}
-}
+
+} // end class
