@@ -848,8 +848,13 @@ public class Parser implements ParserInterface{
 			arguments();
 		}
 		
-		assignmentOperator();
-		expression1();
+		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
+				|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+				|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
+			) {
+			assignmentOperator();
+			expression1();
+		}
 		
 		indentationLevel--;
 		printIndented("Exit <expression_half>");
@@ -1048,10 +1053,8 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.SINGLE_QUOTE);
 			break;
 			
-		case DOUBLE_QUOTE:
-			processLexeme(Token.DOUBLE_QUOTE);
-			processLexeme(Token.IDENTIFIER);
-			processLexeme(Token.DOUBLE_QUOTE);
+		case STRING_LITERAL:
+			processLexeme(Token.STRING_LITERAL);
 			break;
 			
 		case KEYWORD_TRUE:

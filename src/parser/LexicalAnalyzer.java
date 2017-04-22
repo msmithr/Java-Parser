@@ -214,8 +214,14 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			break;
 			
 		case '\"':
-			token = Token.DOUBLE_QUOTE;
-			lexeme = "\"";
+			String stringLiteral = "";
+			position++;
+			while (inputString.charAt(position) != '\"') {
+				stringLiteral += inputString.charAt(position);
+				position++;
+			}
+			token = Token.STRING_LITERAL;
+			lexeme = String.format("\"%s\"", stringLiteral);
 			position++;
 			break;
 			

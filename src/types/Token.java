@@ -8,6 +8,7 @@ package types;
 public enum Token {
 	IDENTIFIER,
 	INT_LITERAL,
+	STRING_LITERAL,
 
 
 	// keywords
