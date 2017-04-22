@@ -29,8 +29,8 @@ public enum Token {
 	KEYWORD_THROW,
 	KEYWORD_THROWS,
 	KEYWORD_TRY,
-	//KEYWORD_CATCH,//don't need yet
-	//KEYWORD_FINALLY,//don't need yet
+	KEYWORD_CATCH,
+	KEYWORD_FINALLY,
 	PRIMITIVE_TYPE,
 	MODIFIER,
 
@@ -39,7 +39,7 @@ public enum Token {
 	KEYWORD_ASSERT,
 	//KEYWORD_ENUM,
 	KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
-	//KEYWORD_INSTANCEOF,
+	KEYWORD_INSTANCEOF,
 	KEYWORD_NEW,
 	KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
 	KEYWORD_SUPER,
@@ -80,8 +80,7 @@ public enum Token {
 	BITWISE_AND, // &
 	BITWISE_XOR, // ^
 	ASSIGNMENT_OPERATOR,// =
-	//COLON,// :
-	//QUESTION_MARK,// ?
+	QUESTION_MARK,// ?
 	
 	INFIX_OPERATOR,
 	PREFIX_OPERATOR,

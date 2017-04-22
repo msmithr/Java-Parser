@@ -1,7 +1,7 @@
 <qualified_identifier> = <identifier> {"." <identifier>};
 
 <program> = "package" <qualified_identifier> ";" {<import>} <class>;
-<import> = "import" ["static"] <identifier> {"." <identifier>} [".*"];
+<import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 
 <class> = {<modifier>} <class declaration>;
 <class_declaration> = "class" <identifier> [<extends>] [<implements>] <class_body>;
@@ -38,14 +38,14 @@
     | "void" <identifier> <method_declaration>
     | <identifier> <method_declaration>
     | <type> <identifier> <method_declaration>
-    | <type> <identifier> <field_declaration>;
+    | <type> <identifier> <field_declaration> ";";
 
 <field_declaration> = {"[]"} ["=" <variable_init>] {"," <variable_declarators>};
 <variable_declarators> = <identifier> {"[]"} ["=" <variable_init>] {"," <identifier> {"[]"} ["=" <variable_init>]  };
 (*Is this the best way to do this?*)
 
 <method_declaration> = <parameters> [<throws>] (<block> | ";");
-<parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ;
+<parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ; (*Comma separated*)
 
 <block> = '{' {<block_statement> }"}";
 
@@ -71,7 +71,7 @@
     | "break" [<identifier>] ";"
     | "continue" [<identifier>] ";"
     | "throw" <expression> ";"
-    | (*TRY*)
+    | "try" <block> [<catches>] ["finally" <block>]
     | "synchronized" <paren_expression> <block>
     | <block>
     | ";"
@@ -80,8 +80,20 @@
 
 <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
 
+<catches> = <catch> {<catch>};
+<catch> = "catch" "(" {<modifier>} <qualified_identifier> <identifier> ")" <block>;
+
 <for_arguments> = ";" [<expression>] ";" <expression> {"," <expression>}
 	| ":" <expression>;
+
+<expression> = <expression1> [<assignment_operator> <expression1>];
+<expression1> = <expression2> ["?" <expression> ":" <expression1>];
+<expression2> = <expression3> [("instanceOf" <type> | {<infix_operator> <expression3>})];
+<expression3> = <prefix_operator> <expression3>
+    | "(" (<expression> | <type>) ")" <expression3>
+    | <expression_unit> {<selector>} {<postfix_operator>};
+
+<expressionHalf> = <assignment_operator> <expression1>;
 
 
 <expression_unit> = <literal>

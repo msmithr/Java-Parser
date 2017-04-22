@@ -219,6 +219,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 			
+		case '?':
+			token = Token.QUESTION_MARK;
+			lexeme = "?";
+			position++;
+			break;
+			
 		case '|':
 			position++;
 			if (inputString.charAt(position) == '|') {
@@ -432,6 +438,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "try":
 			return Token.KEYWORD_TRY;
 			
+		case "catch":
+			return Token.KEYWORD_CATCH;
+			
+		case "finally":
+			return Token.KEYWORD_FINALLY;
+			
 		case "throws":
 			return Token.KEYWORD_THROWS;
 			
@@ -464,6 +476,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 		case "new":
 			return Token.KEYWORD_NEW;
+		
+		case "instanceOf":
+			return Token.KEYWORD_INSTANCEOF;
 
 		case "boolean":
 		case "byte":
