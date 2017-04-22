@@ -40,19 +40,26 @@
     | <type> <identifier> <method_declaration>
     | <type> <identifier> <field_declaration> ";";
 
-<field_declaration> = {"[]"} ["=" <variable_init>] {"," <variable_declarators>};
-<variable_declarators> = <identifier> {"[]"} ["=" <variable_init>] {"," <identifier> {"[]"} ["=" <variable_init>]  };
-(*Is this the best way to do this?*)
+<field_declaration> = {"[]"} ["=" <variable_init>] <variable_declarators_half>;
+
+<variable_declarators> = <variable_declarator> <variable_declarators_half>;
+<variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
+<variable_declarators_half> = {"," <variable_declarator>};
 
 <method_declaration> = <parameters> [<throws>] (<block> | ";");
-<parameters> = "(" { {<modifier>} <type> <identifier>{"[]"}   } ")" ; (*Comma separated*)
+
+<parameters> = "(" [<parameter> {, <parameter>}] ")";
+<parameter> = {<modifier>} <type> <identifier>{"[]"};
 
 <block> = '{' {<block_statement> }"}";
 
-<block_statement> = <class_declaration>
-    | <local_variable_declaration> ";"
-    | [<identifier> ":"] <statement>
-    | <identifier> {"[]"} ["=" <variable_init>] <variable_declarators> ";";
+<block_statement> = {<modifier>} (
+	<class_declaration>
+	| <local_variable_declaration>
+	| <identifier> ":" <statement>
+	| <identifier> {"[]"} <variable_declarators>
+);
+(*Problem here in block: <identifier> could also be an expression*)
 
 <local_variable_declaration> = <type> <variable_declarators>;
 
@@ -99,7 +106,7 @@
 <expression_unit> = <literal>
 	| <paren_expression>
 	| "this" [<arguments>]
-	| (*Super*)
+	| "super" (<arguments> | "." <identifier> [<arguments>]);
 	| (*New*)
 	| (*???*)
 	| <identifier> {"." <identifier>} [(*Identifier Suffix?*)]
@@ -117,7 +124,9 @@
 	| ("true" | "false");
 	| "null";
 
-<infix_operator> = INFIX_OPERATOR;
+<infix_operator> = INFIX_OPERATOR
+	| OPERATOR_PLUS
+	| OPERATOR_MINUS;
 
 <prefix_operator> = PREFIX_OPERATOR
 	| OPERATOR_PLUS
