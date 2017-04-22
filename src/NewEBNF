@@ -90,6 +90,7 @@
     | ";"
     | <identifier> ":" <statement>
     | <expression>;
+(*Also here; identifier can be part of an expression*)
 
 <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
 
@@ -106,18 +107,23 @@
     | "(" (<expression> | <type>) ")" <expression3>
     | <expression_unit> {<selector>} {<postfix_operator>};
 
-<expressionHalf> = <assignment_operator> <expression1>;
-
+<expression_half> = {"." <identifier>} [<identifier_rest>] <assignment_operator> <expression1>;
+(*This is not fully implemented*)
 
 <expression_unit> = <literal>
 	| <paren_expression>
 	| "this" [<arguments>]
-	| "super" (<arguments> | "." <identifier> [<arguments>]);
+	| "super" (<arguments> | "." <identifier> [<arguments>])
 	| (*New*)
 	| (*???*)
-	| <identifier> {"." <identifier>} [(*Identifier Suffix?*)]
+	| <identifier> [<identifier_rest>]
 	| <primitive_type> {"[]"} "." "class"
 	| "void" "." "class";
+
+<identifier_rest> = {"." <identifier>} (
+    <arguments>
+    | (*Other*);
+
 
 <paren_expression> = "(" <expression> ")";
 

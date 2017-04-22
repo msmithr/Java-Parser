@@ -691,12 +691,8 @@ public class Parser implements ParserInterface{
 		case IDENTIFIER:
 			processLexeme(Token.IDENTIFIER);
 			
-			if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
-					|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
-					|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
-				) {
+			if (nextLexeme.getToken() != Token.COLON) {
 				expressionHalf();
-				processLexeme(Token.SEMICOLON);
 			} else {
 				processLexeme(Token.COLON);
 				statement();
@@ -842,6 +838,16 @@ public class Parser implements ParserInterface{
 		printIndented("Enter <expression_half>");
 		indentationLevel++;
 		
+		while (nextLexeme.getToken() == Token.DOT) {
+			processLexeme(Token.DOT);
+			if (nextLexeme.getToken() != Token.IDENTIFIER) break;
+			processLexeme(Token.IDENTIFIER);
+		}
+		
+		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+			arguments();
+		}
+		
 		assignmentOperator();
 		expression1();
 		
@@ -941,11 +947,7 @@ public class Parser implements ParserInterface{
 			
 		case IDENTIFIER:
 			processLexeme(Token.IDENTIFIER);
-			while (nextLexeme.getToken() == Token.DOT) {
-				processLexeme(Token.DOT);
-				processLexeme(Token.IDENTIFIER);
-			}
-			//identifier suffix?
+			identifierRest();
 			break;
 			
 		case PRIMITIVE_TYPE:
@@ -971,6 +973,24 @@ public class Parser implements ParserInterface{
 		
 		indentationLevel--;
 		printIndented("Exit <expression_unit>");
+	}
+	
+	private void identifierRest() {
+		printIndented("Enter <identifier_rest>");
+		indentationLevel++;
+		
+		while (nextLexeme.getToken() == Token.DOT) {
+			processLexeme(Token.DOT);
+			if (nextLexeme.getToken() != Token.IDENTIFIER) break;
+			processLexeme(Token.IDENTIFIER);
+		}
+		
+		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+			arguments();
+		}
+		
+		indentationLevel--;
+		printIndented("Exit <identifier_rest>");
 	}
 	
 	//<arguments>
