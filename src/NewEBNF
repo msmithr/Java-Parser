@@ -4,7 +4,7 @@
 <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 
 <class> = {<modifier>} <class declaration>;
-<class_declaration> = "class" <identifier> [<extends>] [<implements>] <class_body>;
+<class_declaration> = "class" <identifier> [<type_arguments>][<extends>] [<implements>] <class_body>;
 
 <modifier> = "public"
     | "protected"
@@ -57,13 +57,19 @@
 	<class_declaration>
 	| <local_variable_declaration>
 	| <identifier> ":" <statement>
-	| <identifier> {"[]"} <variable_declarators>
+	| <identifier> <type_half> <variable_declarators>
 );
 (*Problem here in block: <identifier> could also be an expression*)
 
 <local_variable_declaration> = <type> <variable_declarators>;
 
-<type> = (<primitive_type> | <identifier>) {"[]"};
+<type> = <primitive_type> {"[]"}
+    | <identifier> <type_half>;
+
+<type_half> = [<type_arguments>] {"." <identifier> [type_arguments]}  {"[]"};
+
+<type_arguments> = "<" <type_argument> {"," <type_argument>} ">";
+<type_argument> = <type> | "?" [ ("super" | "extends") <type>];
 
 <variable_init> = <expression> | <array_init>;
 <array_init> = "{" [<variable_init> {"," <variable_init>}] "}";
@@ -124,15 +130,51 @@
 	| ("true" | "false");
 	| "null";
 
-<infix_operator> = INFIX_OPERATOR
-	| OPERATOR_PLUS
-	| OPERATOR_MINUS;
+<assignment_operator> = <ASSIGNMENT_OPERATOR>
+    | ">>="
+    | "<<="
+    | ">>>=";
 
-<prefix_operator> = PREFIX_OPERATOR
-	| OPERATOR_PLUS
-	| OPERATOR_MINUS
-	| OPERATOR_INCREMENT
-	| OPERATOR_DECREMENT;
+<ASSIGNMENT_OPERATOR> = "="
+    | "+="
+    | "-="
+    | "*="
+    | "/="
+    | "&="
+    | "|="
+    | "^="
+    | "%=";
 
-<postfix_operator> = OPERATOR_INCREMENT
-	| OPERATOR_DECREMENT;
+<infix_operator> = <INFIX_OPERATOR>
+	| "+"
+	| "-"
+    | ">"
+    | ">="
+    | ">>"
+    | ">>>"
+    | "<"
+    | "<="
+    | "<<";
+
+<INFIX_OPERATOR> = "||"
+    | "&&"
+    | "|"
+    | "^"
+    | "&"
+    | "=="
+    | "!="
+    | "*"
+    | "/"
+    | "%";
+
+<prefix_operator> = <PREFIX_OPERATOR>
+	| "+"
+	| "-"
+	| "++"
+	| "--";
+
+<PREFIX_OPERATOR> = "!"
+    | "~";
+
+<postfix_operator> = "++"
+	| "--";

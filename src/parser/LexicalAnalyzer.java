@@ -282,50 +282,15 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			break;
 			
 		case '<':
+			token = Token.LEFT_ANGLEBRACKET;
+			lexeme = "<";
 			position++;
-			if (inputString.charAt(position) == '=') {
-				token = Token.ASSIGNMENT_OPERATOR;
-				lexeme = "<=";
-				position++;
-			} else if (inputString.charAt(position) == '<') {
-				token = Token.INFIX_OPERATOR;
-				lexeme = "<<";
-				position++;
-			} else {
-				token = Token.INFIX_OPERATOR;
-				lexeme = "<";
-				position++;
-			}
 			break;
 			
-		// the most elegant solution possible
 		case '>':
+			token = Token.RIGHT_ANGLEBRACKET;
+			lexeme = ">";
 			position++;
-			if (inputString.charAt(position) == '=') {
-				token = Token.ASSIGNMENT_OPERATOR;
-				lexeme = ">=";
-				position++;
-			} else if (inputString.charAt(position) == '>') {
-				position++;
-				if (inputString.charAt(position) == '>') {
-					position++;
-					if (inputString.charAt(position) == '=') {
-						token = Token.ASSIGNMENT_OPERATOR;
-						lexeme = ">>>=";
-						position++;
-					} else {
-						token = Token.INFIX_OPERATOR;
-						lexeme = ">>>";
-					}
-				} else {
-					token = Token.INFIX_OPERATOR;
-					lexeme = ">>";
-				}
-			} else {
-				token = Token.INFIX_OPERATOR;
-				lexeme = ">";
-				position++;
-			}
 			break;
 			
 		case '~':
