@@ -9,6 +9,7 @@ public enum Token {
 	IDENTIFIER,
 	INT_LITERAL,
 	STRING_LITERAL,
+	CHAR_LITERAL,
 
 
 	// keywords
@@ -71,7 +72,7 @@ public enum Token {
 	// operators and other symbols
 	//PLUS,// +
 	//MINUS,// -
-	//BACKSLASH,// /
+	BACKSLASH,// /
 	//FORWARDSLASH,// \
 	//MODULO,// %
 	//AT,// @

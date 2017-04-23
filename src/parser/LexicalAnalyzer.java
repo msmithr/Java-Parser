@@ -47,6 +47,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		switch(nextChar) {
 
 		// next lexeme is a comment and needs to be ignored
+		// need to rework this
 		case '/':
 
 			// skip forward to next non comment lexeme
@@ -56,8 +57,15 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				while (inputString.charAt(++position) != '\n');
 				return nextLexeme();
 			} else if (inputString.charAt(position) == '*') { // multi line comment /* */
-				while (inputString.charAt(++position) != '*' || inputString.charAt(++position) != '/');
-				return nextLexeme();
+				while (position < inputString.length()) {
+					while (inputString.charAt(++position) != '*') {
+						if (inputString.charAt(position) == '\n') lineNumber++;
+					}
+					if (inputString.charAt(++position) == '/') {
+						position+=1;
+						return nextLexeme();
+					}
+				}
 			} 
 			
 			if (inputString.charAt(position) == '=') {
@@ -208,15 +216,27 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			break;
 
 		case '\'':
-			token = Token.SINGLE_QUOTE;
-			lexeme = "\'";
+			String charLiteral = "";
+			position++;
+			while (inputString.charAt(position) != '\'' || inputString.charAt(position-1) == '\\') {
+				charLiteral += inputString.charAt(position);
+				position++;
+			}
+			token = Token.CHAR_LITERAL;
+			lexeme = String.format("\'%s\'", charLiteral);
+			position++;
+			break;
+			
+		case '\\':
+			token = Token.BACKSLASH;
+			lexeme = "\\";
 			position++;
 			break;
 			
 		case '\"':
 			String stringLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\"') {
+			while (inputString.charAt(position) != '\"' || inputString.charAt(position-1) == '\\') {
 				stringLiteral += inputString.charAt(position);
 				position++;
 			}
@@ -313,7 +333,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			if (Character.isAlphabetic(nextChar)) {
 
 				// place the full lexeme in newLexeme
-				while (position < inputString.length() && (Character.isAlphabetic(inputString.charAt(position)) || Character.isDigit(inputString.charAt(position)))) {
+				while (position < inputString.length() && (Character.isAlphabetic(inputString.charAt(position)) || Character.isDigit(inputString.charAt(position)) || inputString.charAt(position) == '_')) {
 					newLexeme += inputString.charAt(position);
 					position++;
 				} // end while

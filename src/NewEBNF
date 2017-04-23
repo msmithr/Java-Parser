@@ -46,7 +46,7 @@
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
 
-<method_declaration> = <parameters> [<throws>] (<block> | ";");
+<method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
 
 <parameters> = "(" [<parameter> {, <parameter>}] ")";
 <parameter> = {<modifier>} <type> <identifier>{"[]"};
@@ -57,9 +57,13 @@
 	<class_declaration>
 	| <local_variable_declaration>
 	| <identifier> ":" <statement>
-	| <identifier> <type_half> <variable_declarators>
+	| <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators>
+    | <identifier> {"." <identifier>} <expression_from_block>
 );
-(*Problem here in block: <identifier> could also be an expression*)
+
+<expression_from_block> = ("." etc | <arguments> ) [<assignment_operator> <expression1>] ";" ;
+(*FIX THIS*)
+(*Also, selectors, etc, after arguments*)
 
 <local_variable_declaration> = <type> <variable_declarators>;
 
@@ -90,7 +94,6 @@
     | ";"
     | <identifier> ":" <statement>
     | <expression>;
-(*Also here; identifier can be part of an expression*)
 
 <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
 
@@ -104,7 +107,7 @@
 <expression1> = <expression2> ["?" <expression> ":" <expression1>];
 <expression2> = <expression3> [("instanceOf" <type> | {<infix_operator> <expression3>})];
 <expression3> = <prefix_operator> <expression3>
-    | "(" (<expression> | <type>) ")" <expression3>
+    (* | "(" (<expression> | <type>) ")" <expression3> *)
     | <expression_unit> {<selector>} {<postfix_operator>};
 
 <expression_half> = {"." <identifier>} [<identifier_rest>] <assignment_operator> <expression1>;
@@ -120,9 +123,17 @@
 	| <primitive_type> {"[]"} "." "class"
 	| "void" "." "class";
 
+<selectors> = "." (
+    <identifier> [<arguments>]
+    | "this"
+    | "super" (<arguments> | "." <identifier> [<arguments>])
+    | "new" [<type_arguments>] (*Inner Creator*)
+    );
+
 <identifier_rest> = {"." <identifier>} (
     <arguments>
-    | (*Other*);
+    | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] (*Inner Creator*))
+    | (*?*);
 
 
 <paren_expression> = "(" <expression> ")";

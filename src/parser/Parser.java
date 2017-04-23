@@ -297,7 +297,6 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <variable_declarators>");
 	}
 	
-	// maybe this is useful?
 	private void variableDeclaratorsHalf() {
 		printIndented("Enter <variable_declarators_half>");
 		indentationLevel++;
@@ -317,7 +316,14 @@ public class Parser implements ParserInterface{
 		indentationLevel++;
 		
 		parameters();
-		if (nextLexeme.getToken() == Token.KEYWORD_THROWS) ; //throws();
+		if (nextLexeme.getToken() == Token.KEYWORD_THROWS) {
+			processLexeme(Token.KEYWORD_THROWS);
+			qualifiedIdentifier();
+			while (nextLexeme.getToken() == Token.COMMA) {
+				processLexeme(Token.COMMA);
+				qualifiedIdentifier();
+			}
+		}
 		
 		if (nextLexeme.getToken() == Token.SEMICOLON) processLexeme(Token.SEMICOLON);
 		else block();
@@ -414,12 +420,49 @@ public class Parser implements ParserInterface{
 			break;
 			
 		case IDENTIFIER:
+			boolean typeArguments = false;
+			
 			processLexeme(Token.IDENTIFIER);
+			
+			if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
+					|| nextLexeme.getToken() == Token.OPERATOR_INCREMENT
+					|| nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
+				expressionFromBlock();
+				break;
+			}
 			if (nextLexeme.getToken() == Token.COLON) {
 				processLexeme(Token.COLON);
 				statement();
 			} else {
-				typeHalf();
+				if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET) {
+					typeArguments();
+					typeArguments = true;
+				}
+				while (nextLexeme.getToken() == Token.DOT) {
+					processLexeme(Token.DOT);
+					if (nextLexeme.getToken() != Token.IDENTIFIER) {
+						//EXPRESSION: IDENTIFIER SUFFIX STARTING WITH DOT
+						if (typeArguments) error(); // if any type arguments have occurred before this, error
+						expressionFromBlock();
+						break;
+					}
+					processLexeme(Token.IDENTIFIER);
+					if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET) {
+						typeArguments();
+						typeArguments = true;
+					}
+				} // end while
+				
+				if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+					// EXPRESSION: IDENTIFIER SUFFIX STARTING WITH LEFT PAREN
+					if (typeArguments) error();
+					expressionFromBlock();
+					break;
+				}
+				while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+					processLexeme(Token.LEFT_BRACKET);
+					processLexeme(Token.RIGHT_BRACKET);
+				} // end while
 				variableDeclarators();
 			}
 			break;
@@ -432,6 +475,34 @@ public class Parser implements ParserInterface{
 		
 		indentationLevel--;
 		printIndented("Exit <block_statement>");
+	}
+	
+	private void expressionFromBlock() {
+		printIndented("Enter <expression_from_block>");
+		indentationLevel++;
+		
+		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+			arguments();
+		} else if (nextLexeme.getToken() == Token.DOT) {
+			// etc
+		}
+		
+		if (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
+			postfixOperator();
+		}
+		
+		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR 
+			|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+			|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
+		) {
+			assignmentOperator();
+			expression1();
+		}
+		
+		processLexeme(Token.SEMICOLON);
+		
+		indentationLevel--;
+		printIndented("Exit <expression_from_block>");
 	}
 	
 	// <local_variable_declaration>
@@ -848,6 +919,10 @@ public class Parser implements ParserInterface{
 			arguments();
 		}
 		
+		if (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
+			postfixOperator();
+		}
+		
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
 				|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
 				|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
@@ -890,13 +965,6 @@ public class Parser implements ParserInterface{
 		
 		switch (nextLexeme.getToken()) {
 			
-		case LEFT_PAREN:
-			processLexeme(Token.LEFT_PAREN);
-			type(); // type or expression here:::
-			processLexeme(Token.RIGHT_PAREN);
-			expression3();
-			break;
-			
 		case PREFIX_OPERATOR:
 		case OPERATOR_PLUS:
 		case OPERATOR_MINUS:
@@ -908,7 +976,9 @@ public class Parser implements ParserInterface{
 			
 		default:
 			expressionUnit();
-			// {<selector>}
+			while (nextLexeme.getToken() == Token.DOT) {
+				selector();
+			}
 			while (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
 				postfixOperator();
 			}
@@ -1047,10 +1117,8 @@ public class Parser implements ParserInterface{
 			}
 			break;
 			
-		case SINGLE_QUOTE:
-			processLexeme(Token.SINGLE_QUOTE);
-			processLexeme(Token.IDENTIFIER);
-			processLexeme(Token.SINGLE_QUOTE);
+		case CHAR_LITERAL:
+			processLexeme(Token.CHAR_LITERAL);
 			break;
 			
 		case STRING_LITERAL:
@@ -1071,6 +1139,41 @@ public class Parser implements ParserInterface{
 			
 		default:
 			error();
+		}
+		
+		indentationLevel--;
+		printIndented("Exit <literal>");
+	}
+	
+	private void selector() {
+		printIndented("Enter <infix_operator>");
+		indentationLevel++;
+		
+		processLexeme(Token.DOT);
+		
+		switch (nextLexeme.getToken()) {
+		case IDENTIFIER:
+			processLexeme(Token.IDENTIFIER);
+			if (nextLexeme.getToken() == Token.LEFT_PAREN) arguments();
+			break;
+		case KEYWORD_THIS:
+			processLexeme(Token.KEYWORD_THIS);
+			break;
+		case KEYWORD_SUPER:
+			processLexeme(Token.KEYWORD_SUPER);
+			if (nextLexeme.getToken() == Token.LEFT_PAREN) arguments();
+			else {
+				processLexeme(Token.DOT);
+				processLexeme(Token.IDENTIFIER);
+				if (nextLexeme.getToken() == Token.LEFT_PAREN) arguments();
+			}
+			break;
+		case KEYWORD_NEW:
+			// to be implemented
+			break;
+		default:
+			error();
+			// could something else be here?
 		}
 		
 		indentationLevel--;
