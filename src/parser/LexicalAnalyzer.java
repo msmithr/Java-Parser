@@ -218,7 +218,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case '\'':
 			String charLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\'' || inputString.charAt(position-1) == '\\') {
+			while (inputString.charAt(position) != '\'' || (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				charLiteral += inputString.charAt(position);
 				position++;
 			}
@@ -236,7 +236,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case '\"':
 			String stringLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\"' || inputString.charAt(position-1) == '\\') {
+			while (inputString.charAt(position) != '\"' || (inputString.charAt(position-1) == '\\' && inputString.charAt(position-1) != '\\')) {
 				stringLiteral += inputString.charAt(position);
 				position++;
 			}
