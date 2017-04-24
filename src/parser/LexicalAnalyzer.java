@@ -1,7 +1,7 @@
 /**
  * Implementation of a lexical analyzer for the Java programming language.
  * 
- * @author Michael Smith and Nathan Jean
+ * @author Michael Smith and N
  */
 
 package parser;
@@ -55,33 +55,41 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		// next lexeme is a comment and needs to be ignored
 		// need to rework this
 		case '/':
-
-			// skip forward to next non comment lexeme
 			position++;
 			
-			if (inputString.charAt(position) == '/') { // single line comment
-				while (inputString.charAt(++position) != '\n');
-				return nextLexeme();
-			} else if (inputString.charAt(position) == '*') { // multi line comment /* */
-				while (position < inputString.length()) {
-					while (inputString.charAt(++position) != '*') {
-						if (inputString.charAt(position) == '\n') lineNumber++;
-					}
-					if (inputString.charAt(++position) == '/') {
-						position+=1;
-						return nextLexeme();
-					}
-				}
-			} 
-			
-			if (inputString.charAt(position) == '=') {
-				token = token.ASSIGNMENT_OPERATOR;
-				lexeme = "/=";
+			// single line comment
+			if (inputString.charAt(position) == '/') {
+				while (inputString.charAt(position) != '\n') {
+					//System.out.println(inputString.charAt(position));
+					position++;
+				} // end while
 				position++;
-			} else {
-				token = token.INFIX_OPERATOR;
-				lexeme = "/";
+				lineNumber++;
+				return nextLexeme();
+			} // end if
+			
+			// multiline comment
+			if (inputString.charAt(position) == '*') {
+				while (inputString.charAt(position) != '*' || inputString.charAt(position+1) != '/') {
+					if (inputString.charAt(position) == '\n')
+						lineNumber++;
+					position++;
+				}
+				position+=2;
+				System.out.println(inputString.charAt(position));
+				return nextLexeme();
 			}
+			
+			// not a comment
+			if (inputString.charAt(position) == '=') {
+				position++;
+				lexeme = "/=";
+				token = Token.ASSIGNMENT_OPERATOR;
+			} else {
+				lexeme = "/";
+				token = Token.INFIX_OPERATOR;
+			}
+			
 			break;
 
 		// nextChar is left paren

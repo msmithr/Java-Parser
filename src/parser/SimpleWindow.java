@@ -4,7 +4,6 @@
 //Name: SimpleWindow
 //Purpose:  This is a GUI for our project
 //**********************************************************************
-
 package parser;
 
 import javax.swing.*;
@@ -21,16 +20,18 @@ public class SimpleWindow{
 	JLabel instructionLabel = new JLabel(
 		"Welcome to the Java Syntax Checker!  Enter the path of the file to check, or select \"Find File\" to select a file.  Click \"Check\" to see the parse tree.");
 	JTextField inputTextField = new JTextField(20);//Create a text field for the input file
-	JTextArea outputField = new JTextArea(100, 50);//create a output field
+	JTextArea outputField = new JTextArea(40, 75);//create a output field
 	JButton checkButton = new JButton("Check Syntax");//create button to check syntax
 	JButton clearButton = new JButton("Clear");//create clear button
 	JButton findButton = new JButton("Find File");//create find file button
 	JPanel northPanel = new JPanel();//north panel
 	//JPanel southPanel = new JPanel();//south panel
-	JPanel centerPanel = new JPanel();//center panel
+	JPanel centerPanel = new JPanel();//centerPanel
+	JScrollPane scrollPane = new JScrollPane(outputField);//Scrollable text field
 	JPanel northPanelUpper = new JPanel();//upper part of north panel
 	JPanel northPanelMid = new JPanel();//middle part of north panel
 	JPanel northPanelLower = new JPanel();//lower part of north panel
+
 
 	JFrame window = new JFrame();//Create a window.
 
@@ -57,7 +58,8 @@ public class SimpleWindow{
 		northPanel.add(northPanelMid, BorderLayout.CENTER);
 		northPanel.add(northPanelLower, BorderLayout.SOUTH);
 
-		centerPanel.add(outputField);
+		centerPanel.add(scrollPane);
+		outputField.setEditable(false);//make output read only
 
 
 		//make mainPanel with stuff in it
@@ -129,8 +131,8 @@ public class SimpleWindow{
 				inputString = fileToString(aFile);//convert the file to a single string
 			}
 			catch(IOException exception){
-				System.out.println("IO Error.");
-				System.exit(1);
+				outputField.setText("IO Error.");
+
 			}
 			//System.out.println("Starting parser.");
 			//System.out.printf("Here is the file to parse.\n%s\n", inputString);
@@ -144,7 +146,7 @@ public class SimpleWindow{
 			String returnString = "";//the string to return
 			Scanner fileReader = new Scanner(theFile);//set up a Scanner to read from the file
 			while(fileReader.hasNext()){//while the file still has a next line
-				returnString = returnString + fileReader.nextLine();
+				returnString = returnString + fileReader.nextLine() + '\n';
 			}
 			fileReader.close();//close the file
 
