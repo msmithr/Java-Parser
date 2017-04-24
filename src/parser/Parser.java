@@ -2,7 +2,7 @@
  * Implementation of a recursive descent parser for the Java programming
  * language. 
  * 
- * @author Michael Smith and Natan Jean
+ * @author Michael Smith and Nathan Jean
  */
 
 package parser;
