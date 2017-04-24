@@ -60,6 +60,7 @@ public class Driver {
 		
 		Parser parser = new Parser(inputString);
 		parser.start();
+		System.out.println(parser.getReturnString());
 		
 	} //end of main
 

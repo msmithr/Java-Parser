@@ -9,6 +9,7 @@ public class Parser implements ParserInterface{
 	LexicalAnalyzer lex;
 	Lexeme nextLexeme;
 	int indentationLevel;
+	String returnString = "";
 	
 	/**
 	* Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
@@ -1316,16 +1317,31 @@ public class Parser implements ParserInterface{
 		}
 	}
 	
+	//terminial printing version of printIndented
+	/*
 	private void printIndented(String toPrint) {
 		for (int i = 0; i < indentationLevel; i++) {
 			System.out.print("  ");
 		}
 		System.out.println(toPrint);
 	}
+	*/
+	
+	//GUI version of printIndented
+	private void printIndented(String toPrint) {
+		for (int i = 0; i < indentationLevel; i++) {
+			returnString = returnString + "  ";
+		}
+		returnString = returnString + toPrint + "\n";
+	}
 	
 	private void error() {
 		System.out.printf("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
 		System.exit(1);
+	}
+	
+	public String getReturnString(){
+		return returnString;
 	}
 
 } // end class
