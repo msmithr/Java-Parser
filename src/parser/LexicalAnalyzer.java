@@ -52,8 +52,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		switch(nextChar) {
 
-		// next lexeme is a comment and needs to be ignored
-		// need to rework this
+		// next lexeme is either a comment, infix operator, or assignment operator
 		case '/':
 			position++;
 			
@@ -64,11 +63,10 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 					position++;
 				} // end while
 				position++;
-				lineNumber++;
 				return nextLexeme();
 			} // end if
 			
-			// multiline comment
+			// multi-line comment
 			if (inputString.charAt(position) == '*') {
 				while (inputString.charAt(position) != '*' || inputString.charAt(position+1) != '/') {
 					if (inputString.charAt(position) == '\n')
@@ -92,68 +90,70 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 			break;
 
-		// nextChar is left paren
+		// left paren
 		case '(':
 			token = Token.LEFT_PAREN;
 			lexeme = "(";
 			position++;
 			break;
 
-		// nextChar is right paren
+		// right paren
 		case ')':
 			token = Token.RIGHT_PAREN;
 			lexeme = ")";
 			position++;
 			break;
 
-		// nextChar is left brace
+		// left brace
 		case '{':
 			token = Token.LEFT_BRACE;
 			lexeme = "{";
 			position++;
 			break;
 
-		// nextChar is right brace
+		// is right brace
 		case '}':
 			token = Token.RIGHT_BRACE;
 			lexeme = "}";
 			position++;
 			break;
 
-		// nextChar is left bracket
+		// is left bracket
 		case '[':
 			token = Token.LEFT_BRACKET;
 			lexeme = "[";
 			position++;
 			break;
 
-		// nextChar is right bracket
+		// right bracket
 		case ']':
 			token = Token.RIGHT_BRACKET;
 			lexeme = "]";
 			position++;
 			break;
 
-		// nextChar is semicolon
+		// semicolon
 		case ';':
 			token = Token.SEMICOLON;
 			lexeme = ";";
 			position++;
 			break;
 			
+		// colon
 		case ':':
 			token = Token.COLON;
 			lexeme = ":";
 			position++;
 			break;
 
-		// nextChar is comma
+		// comma
 		case ',':
 			token = Token.COMMA;
 			lexeme = ",";
 			position++;
 			break;
 			
+		// = or ==
 		case '=':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -166,12 +166,14 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// dot	
 		case '.':
 			token = Token.DOT;
 			lexeme = ".";
 			position++;
 			break;
 			
+		// * or *=
 		case '*':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -185,6 +187,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			
 			break;
 			
+		// +=, +, or ++
 		case '+':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -201,6 +204,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// -, -=, or --	
 		case '-':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -217,6 +221,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// % or %=	
 		case '%':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -228,7 +233,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "%";
 			}
 			break;
-
+			
+		// FIX THIS
 		case '\'':
 			String charLiteral = "";
 			position++;
@@ -241,12 +247,14 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 			
+		// \	
 		case '\\':
 			token = Token.BACKSLASH;
 			lexeme = "\\";
 			position++;
 			break;
 			
+		// FIX THIS	
 		case '\"':
 			String stringLiteral = "";
 			position++;
@@ -259,12 +267,14 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 			
+		// ?	
 		case '?':
 			token = Token.QUESTION_MARK;
 			lexeme = "?";
 			position++;
 			break;
 			
+		// ||, |=, |	
 		case '|':
 			position++;
 			if (inputString.charAt(position) == '|') {
@@ -281,6 +291,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// &, &=, &&	
 		case '&':
 			position++;
 			if (inputString.charAt(position) == '&') {
@@ -297,6 +308,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// ^ or ^=	
 		case '^':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -309,6 +321,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 
+		// ! or !!
 		case '!':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -321,18 +334,21 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
+		// <	
 		case '<':
 			token = Token.LEFT_ANGLEBRACKET;
 			lexeme = "<";
 			position++;
 			break;
 			
+		// >
 		case '>':
 			token = Token.RIGHT_ANGLEBRACKET;
 			lexeme = ">";
 			position++;
 			break;
 			
+		// ~
 		case '~':
 			token = Token.PREFIX_OPERATOR;
 			lexeme = "~";
