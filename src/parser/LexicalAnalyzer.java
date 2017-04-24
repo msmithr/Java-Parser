@@ -1,3 +1,9 @@
+/**
+ * Implementation of a lexical analyzer for the Java programming language.
+ * 
+ * @author Michael Smith and Nathan Jean
+ */
+
 package parser;
 
 import interfaces.LexicalAnalyzerInterface;

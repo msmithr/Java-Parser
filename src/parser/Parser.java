@@ -1,3 +1,10 @@
+/**
+ * Implementation of a recursive descent parser for the Java programming
+ * language. 
+ * 
+ * @author Michael Smith and Natan Jean
+ */
+
 package parser;
 
 import interfaces.ParserInterface;
@@ -1365,6 +1372,7 @@ public class Parser implements ParserInterface{
 		if (direction > 0) indentationLevel++;
 	}
 
+	
 	private void error() {
 		System.out.printf("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
 		System.exit(1);

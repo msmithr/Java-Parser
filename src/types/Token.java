@@ -11,14 +11,13 @@ public enum Token {
 	STRING_LITERAL,
 	CHAR_LITERAL,
 
-
 	// keywords
 	KEYWORD_CLASS,
 	KEYWORD_EXTENDS,
 	KEYWORD_IMPLEMENTS,
 	//KEYWORD_INTERFACE, NOTE: need to change EBNF and parser to account for this.  It can be a modifier to a class like abstract, static, and final
 	KEYWORD_IF,
-	KEYWORD_ELSE,// need now
+	KEYWORD_ELSE,
 	KEYWORD_WHILE,
 	KEYWORD_DO,
 	KEYWORD_FOR,
@@ -35,8 +34,6 @@ public enum Token {
 	KEYWORD_FINALLY,
 	PRIMITIVE_TYPE,
 	MODIFIER,
-
-	//We don't account for these yet in the parser, but they are all Java keywords
 	KEYWORD_VOID,
 	KEYWORD_ASSERT,
 	//KEYWORD_ENUM,
@@ -77,7 +74,6 @@ public enum Token {
 	//MODULO,// %
 	//AT,// @
 	//EXCLAIMATION_POINT,// ! (aka NOT, or BANG)
-	//AMPERSAND,// &
 	BITWISE_OR,// |
 	BITWISE_AND, // &
 	BITWISE_XOR, // ^
