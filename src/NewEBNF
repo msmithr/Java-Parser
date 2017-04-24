@@ -1,6 +1,6 @@
 <qualified_identifier> = <identifier> {"." <identifier>};
 
-<program> = "package" <qualified_identifier> ";" {<import>} <class>;
+<program> = ["package" <qualified_identifier>] ";" {<import>} <class>;
 <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 
 <class> = {<modifier>} <class declaration>;
@@ -30,9 +30,9 @@
 <extends> = "extends" <identifier>;
 <implements> = "implements" <identifier> {',' <identifier>};
 
-<class body> = '{' {<class body statement>} '}';
+<class_body> = '{' {<class body statement>} '}';
 
-<class body statement> = ';' | {<modifier>} <class_body_declaration> | ["static"] <block>;
+<class_body_statement> = ';' | {<modifier>} <class_body_declaration> | ["static"] <block>;
 
 <class_body_declaration> = <class_declaration>
     | "void" <identifier> <method_declaration>
