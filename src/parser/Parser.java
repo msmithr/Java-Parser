@@ -32,8 +32,7 @@ public class Parser implements ParserInterface{
 
 	// <qualified_identifier> = <identifier> {"." <identifier>};
 	private void qualifiedIdentifier() {
-		printIndented("Enter <qualified_identifier>");
-		indentationLevel++;
+		printIndented("Enter <qualified_identifier>", 1);
 
 		processLexeme(Token.IDENTIFIER);
 
@@ -43,13 +42,12 @@ public class Parser implements ParserInterface{
 		} // end while
 
 		indentationLevel--;
-		printIndented("Exit <qualified_identifier>");
+		printIndented("Exit <qualified_identifier>", -1);
 	} // end qualifiedIdentifier()
 
 	// <program> = ["package" <qualified_identifier>] ";" {<import>} <class>;
 	private void program() {
-		printIndented("Enter <program>");
-		indentationLevel++;
+		printIndented("Enter <program>", 1);
 
 		if (nextLexeme.getToken() == Token.KEYWORD_PACKAGE) {
 			processLexeme(Token.KEYWORD_PACKAGE);
@@ -63,14 +61,12 @@ public class Parser implements ParserInterface{
 
 		classRule(); // <class>
 
-		indentationLevel--;
-		printIndented("Exit <program>");
+		printIndented("Exit <program>", -1);
 	} // end program()
 
 	// <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 	private void importRule() {
-		printIndented("Enter <import>");
-		indentationLevel++;
+		printIndented("Enter <import>", 1);
 
 		processLexeme(Token.KEYWORD_IMPORT);
 		// must check lexeme itself as "static" is a modifier
@@ -93,14 +89,12 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.SEMICOLON);
 
-		indentationLevel--;
-		printIndented("Exit <import>");
+		printIndented("Exit <import>", -1);
 	} // end importRule()
 
 	// <class> = {<modifier>} <class declaration>;
 	private void classRule() {
-		printIndented("Enter <class>");
-		indentationLevel++;
+		printIndented("Enter <class>", 1);
 
 		while (nextLexeme.getToken() == Token.MODIFIER) {
 			processLexeme(Token.MODIFIER);
@@ -108,15 +102,13 @@ public class Parser implements ParserInterface{
 
 		classDeclaration(); // <class_declaration>
 
-		indentationLevel--;
-		printIndented("Exit <class>");
+		printIndented("Exit <class>", -1);
 	} // end classRule()
 
 	// <class_declaration> = "class" <identifier> [<type_arguments>][<extends>]
 	// [<implements>] <class_body>;
 	private void classDeclaration() {
-		printIndented("Enter <class_declaration>");
-		indentationLevel++;
+		printIndented("Enter <class_declaration>", 1);
 
 		processLexeme(Token.KEYWORD_CLASS);
 		processLexeme(Token.IDENTIFIER);
@@ -130,26 +122,22 @@ public class Parser implements ParserInterface{
 
 		classBody(); // <class_body>
 
-		indentationLevel--;
-		printIndented("Exit <class_declaration>");
+		printIndented("Exit <class_declaration>", -1);
 	}
 
 	// <extends> = "extends" <identifier>;
 	private void extendsRule() {
-		printIndented("Enter <extends>");
-		indentationLevel++;
+		printIndented("Enter <extends>", 1);
 
 		processLexeme(Token.KEYWORD_EXTENDS);
 		processLexeme(Token.IDENTIFIER);
 
-		indentationLevel--;
-		printIndented("Exit <extends>");
+		printIndented("Exit <extends>", -1);
 	} // end extendsRule()
 
 	// <implements> = "implements" <identifier> {',' <identifier>};
 	private void implementsRule() {
-		printIndented("Enter <implements>");
-		indentationLevel++;
+		printIndented("Enter <implements>", 1);
 
 		processLexeme(Token.KEYWORD_IMPLEMENTS);
 		processLexeme(Token.IDENTIFIER);
@@ -159,14 +147,12 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.IDENTIFIER);
 		} // end while
 
-		indentationLevel--;
-		printIndented("Exit <implements>");
+		printIndented("Exit <implements>", -1);
 	} // end implementsRule()
 
 	// <class_body> = '{' {<class body statement>} '}';
 	private void classBody() {
-		printIndented("Enter <class_body>");
-		indentationLevel++;
+		printIndented("Enter <class_body>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
 
@@ -176,16 +162,14 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_BRACE);
 
-		indentationLevel--;
-		printIndented("Exit <class_body>");
+		printIndented("Exit <class_body>", -1);
 	} // end <class_body>
 
 	// <class_body_statement> = ';'
 	//   | ["static"] <block>;
 	//   | {<modifier>} <class_body_declaration>
 	private void classBodyStatement() {
-		printIndented("Enter <class_body_statement>");
-		indentationLevel++;
+		printIndented("Enter <class_body_statement>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -213,8 +197,7 @@ public class Parser implements ParserInterface{
 
 		} // end switch
 
-		indentationLevel--;
-		printIndented("Exit <class_body_statement>");
+		printIndented("Exit <class_body_statement>", -1);
 	} // end classBodyStatement()
 
 	// <class_body_declaration> = <class_declaration>
@@ -223,8 +206,7 @@ public class Parser implements ParserInterface{
 	//    | <type> <identifier> <method_declaration>
 	//    | <type> <identifier> <field_declaration> ";";
 	private void classBodyDeclaration() {
-		printIndented("Enter <class_body_declaration>");
-		indentationLevel++;
+		printIndented("Enter <class_body_declaration>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -276,14 +258,12 @@ public class Parser implements ParserInterface{
 
 		} // end switch
 
-		indentationLevel--;
-		printIndented("Exit <class_body_declaration>");
+		printIndented("Exit <class_body_declaration>", -1);
 	} // end classBodyDeclaration()
 
 	// <field_declaration> = {"[]"} ["=" <variable_init>] <variable_declarators_half>;
 	private void fieldDeclaration() {
-		printIndented("Enter <field_declaration>");
-		indentationLevel++;
+		printIndented("Enter <field_declaration>", 1);
 
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 			processLexeme(Token.LEFT_BRACKET);
@@ -297,14 +277,12 @@ public class Parser implements ParserInterface{
 
 		variableDeclaratorsHalf(); // <variable_declarators_half>
 
-		indentationLevel--;
-		printIndented("Exit <field_declaration>");
+		printIndented("Exit <field_declaration>", -1);
 	} // end fieldDeclaration()
 
 	// <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 	private void variableDeclarator() {
-		printIndented("Enter <variable_declarator>");
-		indentationLevel++;
+		printIndented("Enter <variable_declarator>", 1);
 
 		processLexeme(Token.IDENTIFIER);
 
@@ -318,42 +296,36 @@ public class Parser implements ParserInterface{
 			variableInit(); // <variable_init>
 		}
 
-		indentationLevel--;
-		printIndented("Exit <variable_declarators>");
+		printIndented("Exit <variable_declarators>", -1);
 	} // end variableDeclarator()
 
 	// <variable_declarators> = <variable_declarator> <variable_declarators_half>;
 	private void variableDeclarators() {
-		printIndented("Enter <variable_declarators>");
-		indentationLevel++;
+		printIndented("Enter <variable_declarators>", 1);
 
 		variableDeclarator(); // <variable_declarator>
 
 		variableDeclaratorsHalf(); // <variable_declarators_half>
 
-		indentationLevel--;
-		printIndented("Exit <variable_declarators>");
+		printIndented("Exit <variable_declarators>", -1);
 	} // end variableDeclarators()
 
 	// <variable_declarators_half> = {"," <variable_declarator>};
 	private void variableDeclaratorsHalf() {
-		printIndented("Enter <variable_declarators_half>");
-		indentationLevel++;
+		printIndented("Enter <variable_declarators_half>", 1);
 
 		while (nextLexeme.getToken() == Token.COMMA) {
 			processLexeme(Token.COMMA);
 			variableDeclarator(); // <variable_declarator>
 		}
 
-		indentationLevel--;
-		printIndented("Exit <variable_declarators_half>");
+		printIndented("Exit <variable_declarators_half>", -1);
 	}
 
 	// <method_declaration> = <parameters>
 	// ["throws" <qualified_identifier> {"," <qualified_identifier>}]
 	private void methodDeclaration() {
-		printIndented("Enter <method_declaration>");
-		indentationLevel++;
+		printIndented("Enter <method_declaration>", 1);
 
 		parameters(); // <parameters>
 
@@ -374,14 +346,12 @@ public class Parser implements ParserInterface{
 			block(); // <block>
 		}
 
-		indentationLevel--;
-		printIndented("Exit <method_declaration>");
+		printIndented("Exit <method_declaration>", -1);
 	}
 
 	// <parameters> = "(" [<parameter> {, <parameter>}] ")";
 	private void parameters() {
-		printIndented("Enter <parameters>");
-		indentationLevel++;
+		printIndented("Enter <parameters>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
 
@@ -397,14 +367,12 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_PAREN);
 
-		indentationLevel--;
-		printIndented("Exit <parameters>");
+		printIndented("Exit <parameters>", -1);
 	}
 
 	// <parameter> = {<modifier>} <type> <identifier>{"[]"};
 	private void parameter() {
-		printIndented("Enter <parameter>");
-		indentationLevel++;
+		printIndented("Enter <parameter>", 1);
 
 		while (nextLexeme.getToken() == Token.MODIFIER) {
 			processLexeme(Token.MODIFIER);
@@ -419,14 +387,12 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.RIGHT_BRACKET);
 		}
 
-		indentationLevel--;
-		printIndented("Exit <parameter>");
+		printIndented("Exit <parameter>", -1);
 	} // end parameter()
 
 	// <block> = '{' {<block_statement> }"}";
 	private void block() {
-		printIndented("Enter <block>");
-		indentationLevel++;
+		printIndented("Enter <block>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
 
@@ -436,8 +402,7 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_BRACE);
 
-		indentationLevel--;
-		printIndented("Exit <block>");
+		printIndented("Exit <block>", -1);
 	} // end block()
 
 	// <block_statement> = {<modifier>} (
@@ -447,8 +412,7 @@ public class Parser implements ParserInterface{
 	//   | <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators>
 	//   | <identifier> {"." <identifier>} <expression_from_block>
 	private void blockStatement() {
-		printIndented("Enter <block_statement>");
-		indentationLevel++;
+		printIndented("Enter <block_statement>", 1);
 
 		// if the first lexeme is "synchronized," this is a synchronized block
 		// which is handled in statement();
@@ -456,8 +420,7 @@ public class Parser implements ParserInterface{
 			statement(); // <statement>
 
 			// exit the method
-			indentationLevel--;
-			printIndented("Exit <block_statement>");
+			printIndented("Exit <block_statement>", -1);
 
 			return;
 		} // end if
@@ -536,14 +499,12 @@ public class Parser implements ParserInterface{
 
 		} // end switch
 
-		indentationLevel--;
-		printIndented("Exit <block_statement>");
+		printIndented("Exit <block_statement>", -1);
 	}
 
 	// this needs to be finished
 	private void expressionFromBlock() {
-		printIndented("Enter <expression_from_block>");
-		indentationLevel++;
+		printIndented("Enter <expression_from_block>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
 			arguments();
@@ -565,27 +526,23 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.SEMICOLON);
 
-		indentationLevel--;
-		printIndented("Exit <expression_from_block>");
+		printIndented("Exit <expression_from_block>", -1);
 	} // end expressionFromBlock()
 
 	// <local_variable_declaration> = <type> <variable_declarators>;
 	private void localVariableDeclaration() {
-		printIndented("Enter <local_variable_declaration>");
-		indentationLevel++;
+		printIndented("Enter <local_variable_declaration>", 1);
 
 		type(); // <type>
 		variableDeclarators(); // <variable_declarators>
 
-		indentationLevel--;
-		printIndented("Exit <local_variable_declaration>");
+		printIndented("Exit <local_variable_declaration>", -1);
 	} // end <local_variable_declaration>
 
 	// <type> = <primitive_type> {"[]"}
 	//   | <identifier> <type_half>;
 	private void type() {
-		printIndented("Enter <type>");
-		indentationLevel++;
+		printIndented("Enter <type>", 1);
 
 		if (nextLexeme.getToken() == Token.PRIMITIVE_TYPE) {
 			processLexeme(Token.PRIMITIVE_TYPE);
@@ -598,14 +555,12 @@ public class Parser implements ParserInterface{
 			typeHalf(); // <type_half>
 		} // end else
 
-		indentationLevel--;
-		printIndented("Exit <type>");
+		printIndented("Exit <type>", -1);
 	} // end type()
 
 	// <type_half> = [<type_arguments>] {"." <identifier> [type_arguments]}  {"[]"};
 	private void typeHalf() {
-		printIndented("Enter <type_half>");
-		indentationLevel++;
+		printIndented("Enter <type_half>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET)
 			typeArguments(); // <type_arguments>
@@ -622,14 +577,12 @@ public class Parser implements ParserInterface{
 			processLexeme(Token.RIGHT_BRACKET);
 		} // end while
 
-		indentationLevel--;
-		printIndented("Exit <type_half>");
+		printIndented("Exit <type_half>", -1);
 	} // end typeHalf()
 
 	// <type_arguments> = "<" <type_argument> {"," <type_argument>} ">";
 	private void typeArguments() {
-		printIndented("Enter <type_arguments>");
-		indentationLevel++;
+		printIndented("Enter <type_arguments>", 1);
 
 		processLexeme(Token.LEFT_ANGLEBRACKET);
 
@@ -642,14 +595,12 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_ANGLEBRACKET);
 
-		indentationLevel--;
-		printIndented("Exit <type_arguments>");
+		printIndented("Exit <type_arguments>", -1);
 	} // end typeArguments()
 
 	// <type_argument> = <type> | "?" [ ("super" | "extends") <type>];
 	private void typeArgument() {
-		printIndented("Enter <type_argument>");
-		indentationLevel++;
+		printIndented("Enter <type_argument>", 1);
 
 		if (nextLexeme.getToken() == Token.QUESTION_MARK) {
 			processLexeme(Token.QUESTION_MARK);
@@ -661,14 +612,12 @@ public class Parser implements ParserInterface{
 			type(); // <type>
 		}
 
-		indentationLevel--;
-		printIndented("Exit <type_argument>");
+		printIndented("Exit <type_argument>", -1);
 	} // end typeArgument()
 
 	// <variable_init> = <expression> | <array_init>;
 	private void variableInit() {
-		printIndented("Enter <variable_init>");
-		indentationLevel++;
+		printIndented("Enter <variable_init>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_BRACE) {
 			arrayInit(); // <array_init>
@@ -676,14 +625,12 @@ public class Parser implements ParserInterface{
 			expression(); // <expression>
 		}
 
-		indentationLevel--;
-		printIndented("Exit <variable_init>");
+		printIndented("Exit <variable_init>", -1);
 	} // end variableInit()
 
 	// <array_init> = "{" [<variable_init> {"," <variable_init>}] "}";
 	private void arrayInit() {
-		printIndented("Enter <array_init>");
-		indentationLevel++;
+		printIndented("Enter <array_init>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
 
@@ -697,8 +644,7 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_BRACE);
 
-		indentationLevel--;
-		printIndented("Exit <array_init>");
+		printIndented("Exit <array_init>", -1);
 	} // end array_init
 
 	// <statement> = "if" <paren_expression> ["else" <statement>]
@@ -719,8 +665,7 @@ public class Parser implements ParserInterface{
 	//    | <identifier> <expression_half> ";"
 	//    | <expression> ";" ;
 	private void statement() {
-		printIndented("Enter <statement>");
-		indentationLevel++;
+		printIndented("Enter <statement>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -887,27 +832,23 @@ public class Parser implements ParserInterface{
 
 		}//end switch
 
-		indentationLevel--;
-		printIndented("Exit <statement>");
+		printIndented("Exit <statement>", -1);
 	} // end statement()
 
 	// <catches> = <catch> {<catch>};
 	private void catches() {
-		printIndented("Enter <catches>");
-		indentationLevel++;
+		printIndented("Enter <catches>", 1);
 
 		while (nextLexeme.getToken() == Token.KEYWORD_CATCH) {
 			catchRule(); // <catch>
 		} // end while
 
-		indentationLevel--;
-		printIndented("Exit <catches>");
+		printIndented("Exit <catches>", -1);
 	} // end catches()
 
 	// <catch> = "catch" "(" {<modifier>} <qualified_identifier> <identifier> ")" <block>;
 	private void catchRule() {
-		printIndented("Enter <catch>");
-		indentationLevel++;
+		printIndented("Enter <catch>", 1);
 
 		processLexeme(Token.KEYWORD_CATCH);
 		processLexeme(Token.LEFT_PAREN);
@@ -921,15 +862,13 @@ public class Parser implements ParserInterface{
 		processLexeme(Token.RIGHT_PAREN);
 		block(); // <block>
 
-		indentationLevel--;
-		printIndented("Exit <catch>");
+		printIndented("Exit <catch>", -1);
 	}
 
 	// <for_arguments> = ";" [<expression>] ";" <expression> {"," <expression>}
 	//    | ":" <expression>;
 	private void forArguments() {
-		printIndented("Enter <for_arguments>");
-		indentationLevel++;
+		printIndented("Enter <for_arguments>", 1);
 
 		if (nextLexeme.getToken() == Token.SEMICOLON) {
 			processLexeme(Token.SEMICOLON);
@@ -947,14 +886,12 @@ public class Parser implements ParserInterface{
 			expression(); // <expression>
 		} // end else
 
-		indentationLevel--;
-		printIndented("Exit <for_arguments>");
+		printIndented("Exit <for_arguments>", -1);
 	} // end forArguments()
 
 	// <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
 	private void cases() {
-		printIndented("Enter <cases>");
-		indentationLevel++;
+		printIndented("Enter <cases>", 1);
 
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
 			switch (nextLexeme.getToken()) {
@@ -984,13 +921,11 @@ public class Parser implements ParserInterface{
 			}
 		} // end cases
 
-		indentationLevel--;
-		printIndented("Exit <cases>");
+		printIndented("Exit <cases>", -1);
 	} // end cases()
 
 	private void expression() {
-		printIndented("Enter <expression>");
-		indentationLevel++;
+		printIndented("Enter <expression>", 1);
 
 		expression1();
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
@@ -1001,13 +936,11 @@ public class Parser implements ParserInterface{
 			expression1();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression>");
+		printIndented("Exit <expression>", -1);
 	} // end <expression>
 
 	private void expression1() {
-		printIndented("Enter <expression1>");
-		indentationLevel++;
+		printIndented("Enter <expression1>", 1);
 
 		expression2();
 		if (nextLexeme.getToken() == Token.QUESTION_MARK) {
@@ -1017,13 +950,11 @@ public class Parser implements ParserInterface{
 			expression1();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression1>");
+		printIndented("Exit <expression1>", -1);
 	}
 
 	private void expressionHalf() {
-		printIndented("Enter <expression_half>");
-		indentationLevel++;
+		printIndented("Enter <expression_half>", 1);
 
 		while (nextLexeme.getToken() == Token.DOT) {
 			processLexeme(Token.DOT);
@@ -1047,13 +978,11 @@ public class Parser implements ParserInterface{
 			expression1();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression_half>");
+		printIndented("Exit <expression_half>", -1);
 	}
 
 	private void expression2() {
-		printIndented("Enter <expression2>");
-		indentationLevel++;
+		printIndented("Enter <expression2>", 1);
 
 		expression3();
 
@@ -1071,13 +1000,11 @@ public class Parser implements ParserInterface{
 			}
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression2>");
+		printIndented("Exit <expression2>", -1);
 	}
 
 	private void expression3() {
-		printIndented("Enter <expression3>");
-		indentationLevel++;
+		printIndented("Enter <expression3>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -1102,13 +1029,11 @@ public class Parser implements ParserInterface{
 
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression3>");
+		printIndented("Exit <expression3>", -1);
 	}
 
 	private void expressionUnit() {
-		printIndented("Enter <expression_unit>");
-		indentationLevel++;
+		printIndented("Enter <expression_unit>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -1162,13 +1087,11 @@ public class Parser implements ParserInterface{
 			break;
 		}
 
-		indentationLevel--;
-		printIndented("Exit <expression_unit>");
+		printIndented("Exit <expression_unit>", -1);
 	}
 
 	private void identifierRest() {
-		printIndented("Enter <identifier_rest>");
-		indentationLevel++;
+		printIndented("Enter <identifier_rest>", 1);
 
 		while (nextLexeme.getToken() == Token.DOT) {
 			processLexeme(Token.DOT);
@@ -1180,14 +1103,12 @@ public class Parser implements ParserInterface{
 			arguments();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <identifier_rest>");
+		printIndented("Exit <identifier_rest>", -1);
 	}
 
 	//<arguments>
 	private void arguments() {
-		printIndented("Enter <arguments>");
-		indentationLevel++;
+		printIndented("Enter <arguments>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
 
@@ -1201,27 +1122,23 @@ public class Parser implements ParserInterface{
 
 		processLexeme(Token.RIGHT_PAREN);
 
-		indentationLevel--;
-		printIndented("Exit <arguments>");
+		printIndented("Exit <arguments>", -1);
 	}
 
 	// <paren_expression>
 	private void parenExpression() {
-		printIndented("Enter <paren_expression>");
-		indentationLevel++;
+		printIndented("Enter <paren_expression>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
 		expression();
 		processLexeme(Token.RIGHT_PAREN);
 
-		indentationLevel--;
-		printIndented("Exit <paren_expression>");
+		printIndented("Exit <paren_expression>", -1);
 	}
 
 	// <literal>
 	private void literal() {
-		printIndented("Enter <literal>");
-		indentationLevel++;
+		printIndented("Enter <literal>", 1);
 
 		switch (nextLexeme.getToken()) {
 
@@ -1257,13 +1174,11 @@ public class Parser implements ParserInterface{
 			error();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <literal>");
+		printIndented("Exit <literal>", -1);
 	}
 
 	private void selector() {
-		printIndented("Enter <infix_operator>");
-		indentationLevel++;
+		printIndented("Enter <infix_operator>", 1);
 
 		processLexeme(Token.DOT);
 
@@ -1292,16 +1207,14 @@ public class Parser implements ParserInterface{
 			// could something else be here?
 		}
 
-		indentationLevel--;
-		printIndented("Exit <literal>");
+		printIndented("Exit <literal>", -1);
 	}
 
 
 	// OPERATORS
 
 	private void infixOperator() {
-		printIndented("Enter <infix_operator>");
-		indentationLevel++;
+		printIndented("Enter <infix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
 		case INFIX_OPERATOR:
@@ -1348,13 +1261,11 @@ public class Parser implements ParserInterface{
 			error();
 		} // end switch
 
-		indentationLevel--;
-		printIndented("Exit <infix_operator>");
+		printIndented("Exit <infix_operator>", -1);
 	}
 
 	private void prefixOperator() {
-		printIndented("Enter <prefix_operator>");
-		indentationLevel++;
+		printIndented("Enter <prefix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
 		case PREFIX_OPERATOR:
@@ -1368,13 +1279,11 @@ public class Parser implements ParserInterface{
 			error();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <prefix_operator>");
+		printIndented("Exit <prefix_operator>", -1);
 	}
 
 	private void postfixOperator() {
-		printIndented("Enter <postfix_operator>");
-		indentationLevel++;
+		printIndented("Enter <postfix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
 		case OPERATOR_INCREMENT:
@@ -1385,13 +1294,11 @@ public class Parser implements ParserInterface{
 			error();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <postfix_operator>");
+		printIndented("Exit <postfix_operator>", -1);
 	}
 
 	private void assignmentOperator() {
-		printIndented("Enter <assignment_operator>");
-		indentationLevel++;
+		printIndented("Enter <assignment_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
 		case ASSIGNMENT_OPERATOR:
@@ -1413,8 +1320,7 @@ public class Parser implements ParserInterface{
 			error();
 		}
 
-		indentationLevel--;
-		printIndented("Exit <assignment_operator>");
+		printIndented("Exit <assignment_operator>", -1);
 	}
 
 	/**
@@ -1425,7 +1331,7 @@ public class Parser implements ParserInterface{
 	*/
 	private void processLexeme(Token token) {
 		if (nextLexeme.getToken() == token) {
-			printIndented(nextLexeme.toString());
+			printIndented(nextLexeme.toString(), 0);
 			nextLexeme = lex.nextLexeme();
 		} else{
 			error();
@@ -1442,12 +1348,21 @@ public class Parser implements ParserInterface{
 	}
 	*/
 
-	//GUI version of printIndented
-	private void printIndented(String toPrint) {
+	/**
+	 * Modified print statement to maintain proper indentation
+	 * @param toPrint String to print
+	 * @param direction Positive integer to decrease indentation, negative to decrease,
+	 *  or 0 to leave it the same.
+	 */
+	private void printIndented(String toPrint, int direction) {
+		if (direction < 0) indentationLevel--;
+		
 		for (int i = 0; i < indentationLevel; i++) {
 			returnString = returnString + "  ";
 		}
 		returnString = returnString + toPrint + "\n";
+		
+		if (direction > 0) indentationLevel++;
 	}
 
 	private void error() {
