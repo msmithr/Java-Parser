@@ -1,3 +1,9 @@
+package parser;
+
+import interfaces.ParserInterface;
+import types.Lexeme;
+import types.Token;
+
 public class Parser implements ParserInterface{
 
 	LexicalAnalyzer lex;
