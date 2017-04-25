@@ -7,6 +7,9 @@
 package parser;
 
 import javax.swing.*;
+
+import types.InvalidInputException;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -138,8 +141,13 @@ public class SimpleWindow{
 			//System.out.printf("Here is the file to parse.\n%s\n", inputString);
 			Parser parser = new Parser(inputString);//this is where it has problems
 			//System.out.println("created parser.");
-			parser.start();
-			outputField.setText(parser.getReturnString());
+			try {
+				parser.start();
+				outputField.setText(parser.getReturnString());
+			} catch (InvalidInputException e1) {
+				outputField.setText(parser.getErrorMessage());
+			}
+			
 		}
 
 		public String fileToString(File theFile) throws IOException{

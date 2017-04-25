@@ -9,10 +9,14 @@
 
 package interfaces;
 
+import types.InvalidInputException;
+
 public interface ParserInterface {
 	/**
 	 * Method acts as a starting point for the recursive descent
 	 */
-	public void start();
+	public void start() throws InvalidInputException;
+	
+	public String getErrorMessage();
 	
 }

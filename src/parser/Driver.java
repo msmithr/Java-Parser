@@ -6,6 +6,8 @@ package parser;
 import java.io.*;//needed for file support
 import java.util.Scanner;//needed for Scanner
 
+import types.InvalidInputException;
+
 public class Driver {
 
 	/**
@@ -26,7 +28,7 @@ public class Driver {
 		return returnString;
 	}//end fileToString method
 
-	public static void main (String args[]) throws IOException{
+	public static void main (String args[]) throws IOException, InvalidInputException{
 		
 		//first get the file name, (as either command line arg, or user input;  I have included both ways)
 

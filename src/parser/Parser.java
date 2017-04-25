@@ -8,6 +8,7 @@
 package parser;
 
 import interfaces.ParserInterface;
+import types.InvalidInputException;
 import types.Lexeme;
 import types.Token;
 
@@ -30,15 +31,19 @@ public class Parser implements ParserInterface{
 		indentationLevel = 0;
 		returnString = "";
 	} // end constructor
-
+	
+	public String getErrorMessage() {
+		return String.format("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
+	}
+	
 	@Override
 	// begin the recursive descent process
-	public void start() {
+	public void start() throws InvalidInputException {
 		program(); // <program>
 	} // end start()
 
 	// <qualified_identifier> = <identifier> {"." <identifier>};
-	private void qualifiedIdentifier() {
+	private void qualifiedIdentifier() throws InvalidInputException {
 		printIndented("Enter <qualified_identifier>", 1);
 
 		processLexeme(Token.IDENTIFIER);
@@ -53,7 +58,7 @@ public class Parser implements ParserInterface{
 	} // end qualifiedIdentifier()
 
 	// <program> = ["package" <qualified_identifier>] ";" {<import>} <class>;
-	private void program() {
+	private void program() throws InvalidInputException {
 		printIndented("Enter <program>", 1);
 
 		if (nextLexeme.getToken() == Token.KEYWORD_PACKAGE) {
@@ -72,7 +77,7 @@ public class Parser implements ParserInterface{
 	} // end program()
 
 	// <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
-	private void importRule() {
+	private void importRule() throws InvalidInputException {
 		printIndented("Enter <import>", 1);
 
 		processLexeme(Token.KEYWORD_IMPORT);
@@ -100,7 +105,7 @@ public class Parser implements ParserInterface{
 	} // end importRule()
 
 	// <class> = {<modifier>} <class declaration>;
-	private void classRule() {
+	private void classRule() throws InvalidInputException {
 		printIndented("Enter <class>", 1);
 
 		while (nextLexeme.getToken() == Token.MODIFIER) {
@@ -114,7 +119,7 @@ public class Parser implements ParserInterface{
 
 	// <class_declaration> = "class" <identifier> [<type_arguments>][<extends>]
 	// [<implements>] <class_body>;
-	private void classDeclaration() {
+	private void classDeclaration() throws InvalidInputException {
 		printIndented("Enter <class_declaration>", 1);
 
 		processLexeme(Token.KEYWORD_CLASS);
@@ -133,7 +138,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <extends> = "extends" <identifier>;
-	private void extendsRule() {
+	private void extendsRule() throws InvalidInputException {
 		printIndented("Enter <extends>", 1);
 
 		processLexeme(Token.KEYWORD_EXTENDS);
@@ -143,7 +148,7 @@ public class Parser implements ParserInterface{
 	} // end extendsRule()
 
 	// <implements> = "implements" <identifier> {',' <identifier>};
-	private void implementsRule() {
+	private void implementsRule() throws InvalidInputException {
 		printIndented("Enter <implements>", 1);
 
 		processLexeme(Token.KEYWORD_IMPLEMENTS);
@@ -158,7 +163,7 @@ public class Parser implements ParserInterface{
 	} // end implementsRule()
 
 	// <class_body> = '{' {<class body statement>} '}';
-	private void classBody() {
+	private void classBody() throws InvalidInputException {
 		printIndented("Enter <class_body>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
@@ -175,7 +180,7 @@ public class Parser implements ParserInterface{
 	// <class_body_statement> = ';'
 	//   | ["static"] <block>;
 	//   | {<modifier>} <class_body_declaration>
-	private void classBodyStatement() {
+	private void classBodyStatement() throws InvalidInputException {
 		printIndented("Enter <class_body_statement>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -212,7 +217,7 @@ public class Parser implements ParserInterface{
 	//    | <identifier> <method_declaration>
 	//    | <type> <identifier> <method_declaration>
 	//    | <type> <identifier> <field_declaration> ";";
-	private void classBodyDeclaration() {
+	private void classBodyDeclaration() throws InvalidInputException {
 		printIndented("Enter <class_body_declaration>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -269,7 +274,7 @@ public class Parser implements ParserInterface{
 	} // end classBodyDeclaration()
 
 	// <field_declaration> = {"[]"} ["=" <variable_init>] <variable_declarators_half>;
-	private void fieldDeclaration() {
+	private void fieldDeclaration() throws InvalidInputException {
 		printIndented("Enter <field_declaration>", 1);
 
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
@@ -288,7 +293,7 @@ public class Parser implements ParserInterface{
 	} // end fieldDeclaration()
 
 	// <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
-	private void variableDeclarator() {
+	private void variableDeclarator() throws InvalidInputException {
 		printIndented("Enter <variable_declarator>", 1);
 
 		processLexeme(Token.IDENTIFIER);
@@ -307,7 +312,7 @@ public class Parser implements ParserInterface{
 	} // end variableDeclarator()
 
 	// <variable_declarators> = <variable_declarator> <variable_declarators_half>;
-	private void variableDeclarators() {
+	private void variableDeclarators() throws InvalidInputException {
 		printIndented("Enter <variable_declarators>", 1);
 
 		variableDeclarator(); // <variable_declarator>
@@ -318,7 +323,7 @@ public class Parser implements ParserInterface{
 	} // end variableDeclarators()
 
 	// <variable_declarators_half> = {"," <variable_declarator>};
-	private void variableDeclaratorsHalf() {
+	private void variableDeclaratorsHalf() throws InvalidInputException {
 		printIndented("Enter <variable_declarators_half>", 1);
 
 		while (nextLexeme.getToken() == Token.COMMA) {
@@ -331,7 +336,7 @@ public class Parser implements ParserInterface{
 
 	// <method_declaration> = <parameters>
 	// ["throws" <qualified_identifier> {"," <qualified_identifier>}]
-	private void methodDeclaration() {
+	private void methodDeclaration() throws InvalidInputException {
 		printIndented("Enter <method_declaration>", 1);
 
 		parameters(); // <parameters>
@@ -357,7 +362,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <parameters> = "(" [<parameter> {, <parameter>}] ")";
-	private void parameters() {
+	private void parameters() throws InvalidInputException {
 		printIndented("Enter <parameters>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
@@ -378,7 +383,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <parameter> = {<modifier>} <type> <identifier>{"[]"};
-	private void parameter() {
+	private void parameter() throws InvalidInputException {
 		printIndented("Enter <parameter>", 1);
 
 		while (nextLexeme.getToken() == Token.MODIFIER) {
@@ -398,7 +403,7 @@ public class Parser implements ParserInterface{
 	} // end parameter()
 
 	// <block> = '{' {<block_statement> }"}";
-	private void block() {
+	private void block() throws InvalidInputException {
 		printIndented("Enter <block>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
@@ -418,7 +423,7 @@ public class Parser implements ParserInterface{
 	//   | <identifier> ":" <statement>
 	//   | <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators>
 	//   | <identifier> {"." <identifier>} <expression_from_block>
-	private void blockStatement() {
+	private void blockStatement() throws InvalidInputException {
 		printIndented("Enter <block_statement>", 1);
 
 		// if the first lexeme is "synchronized," this is a synchronized block
@@ -510,7 +515,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// this needs to be finished
-	private void expressionFromBlock() {
+	private void expressionFromBlock() throws InvalidInputException {
 		printIndented("Enter <expression_from_block>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
@@ -537,7 +542,7 @@ public class Parser implements ParserInterface{
 	} // end expressionFromBlock()
 
 	// <local_variable_declaration> = <type> <variable_declarators>;
-	private void localVariableDeclaration() {
+	private void localVariableDeclaration() throws InvalidInputException {
 		printIndented("Enter <local_variable_declaration>", 1);
 
 		type(); // <type>
@@ -548,7 +553,7 @@ public class Parser implements ParserInterface{
 
 	// <type> = <primitive_type> {"[]"}
 	//   | <identifier> <type_half>;
-	private void type() {
+	private void type() throws InvalidInputException {
 		printIndented("Enter <type>", 1);
 
 		if (nextLexeme.getToken() == Token.PRIMITIVE_TYPE) {
@@ -566,7 +571,7 @@ public class Parser implements ParserInterface{
 	} // end type()
 
 	// <type_half> = [<type_arguments>] {"." <identifier> [type_arguments]}  {"[]"};
-	private void typeHalf() {
+	private void typeHalf() throws InvalidInputException {
 		printIndented("Enter <type_half>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET)
@@ -588,7 +593,7 @@ public class Parser implements ParserInterface{
 	} // end typeHalf()
 
 	// <type_arguments> = "<" <type_argument> {"," <type_argument>} ">";
-	private void typeArguments() {
+	private void typeArguments() throws InvalidInputException {
 		printIndented("Enter <type_arguments>", 1);
 
 		processLexeme(Token.LEFT_ANGLEBRACKET);
@@ -606,7 +611,7 @@ public class Parser implements ParserInterface{
 	} // end typeArguments()
 
 	// <type_argument> = <type> | "?" [ ("super" | "extends") <type>];
-	private void typeArgument() {
+	private void typeArgument() throws InvalidInputException {
 		printIndented("Enter <type_argument>", 1);
 
 		if (nextLexeme.getToken() == Token.QUESTION_MARK) {
@@ -623,7 +628,7 @@ public class Parser implements ParserInterface{
 	} // end typeArgument()
 
 	// <variable_init> = <expression> | <array_init>;
-	private void variableInit() {
+	private void variableInit() throws InvalidInputException {
 		printIndented("Enter <variable_init>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_BRACE) {
@@ -636,7 +641,7 @@ public class Parser implements ParserInterface{
 	} // end variableInit()
 
 	// <array_init> = "{" [<variable_init> {"," <variable_init>}] "}";
-	private void arrayInit() {
+	private void arrayInit() throws InvalidInputException {
 		printIndented("Enter <array_init>", 1);
 
 		processLexeme(Token.LEFT_BRACE);
@@ -671,7 +676,7 @@ public class Parser implements ParserInterface{
 	//    | <identifier> ":" <statement>
 	//    | <identifier> <expression_half> ";"
 	//    | <expression> ";" ;
-	private void statement() {
+	private void statement() throws InvalidInputException {
 		printIndented("Enter <statement>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -843,7 +848,7 @@ public class Parser implements ParserInterface{
 	} // end statement()
 
 	// <catches> = <catch> {<catch>};
-	private void catches() {
+	private void catches() throws InvalidInputException {
 		printIndented("Enter <catches>", 1);
 
 		while (nextLexeme.getToken() == Token.KEYWORD_CATCH) {
@@ -854,7 +859,7 @@ public class Parser implements ParserInterface{
 	} // end catches()
 
 	// <catch> = "catch" "(" {<modifier>} <qualified_identifier> <identifier> ")" <block>;
-	private void catchRule() {
+	private void catchRule() throws InvalidInputException {
 		printIndented("Enter <catch>", 1);
 
 		processLexeme(Token.KEYWORD_CATCH);
@@ -874,7 +879,7 @@ public class Parser implements ParserInterface{
 
 	// <for_arguments> = ";" [<expression>] ";" <expression> {"," <expression>}
 	//    | ":" <expression>;
-	private void forArguments() {
+	private void forArguments() throws InvalidInputException {
 		printIndented("Enter <for_arguments>", 1);
 
 		if (nextLexeme.getToken() == Token.SEMICOLON) {
@@ -897,7 +902,7 @@ public class Parser implements ParserInterface{
 	} // end forArguments()
 
 	// <cases> = { ("case" (<identifier> | <expression>) | "default") ":" {<block_statement>} };
-	private void cases() {
+	private void cases() throws InvalidInputException {
 		printIndented("Enter <cases>", 1);
 
 		while (nextLexeme.getToken() != Token.RIGHT_BRACE) {
@@ -931,7 +936,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <cases>", -1);
 	} // end cases()
 
-	private void expression() {
+	private void expression() throws InvalidInputException {
 		printIndented("Enter <expression>", 1);
 
 		expression1();
@@ -946,7 +951,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression>", -1);
 	} // end <expression>
 
-	private void expression1() {
+	private void expression1() throws InvalidInputException {
 		printIndented("Enter <expression1>", 1);
 
 		expression2();
@@ -960,7 +965,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression1>", -1);
 	}
 
-	private void expressionHalf() {
+	private void expressionHalf() throws InvalidInputException {
 		printIndented("Enter <expression_half>", 1);
 
 		while (nextLexeme.getToken() == Token.DOT) {
@@ -988,7 +993,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression_half>", -1);
 	}
 
-	private void expression2() {
+	private void expression2() throws InvalidInputException {
 		printIndented("Enter <expression2>", 1);
 
 		expression3();
@@ -1010,7 +1015,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression2>", -1);
 	}
 
-	private void expression3() {
+	private void expression3() throws InvalidInputException {
 		printIndented("Enter <expression3>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1039,7 +1044,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression3>", -1);
 	}
 
-	private void expressionUnit() {
+	private void expressionUnit() throws InvalidInputException {
 		printIndented("Enter <expression_unit>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1097,7 +1102,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <expression_unit>", -1);
 	}
 
-	private void identifierRest() {
+	private void identifierRest() throws InvalidInputException {
 		printIndented("Enter <identifier_rest>", 1);
 
 		while (nextLexeme.getToken() == Token.DOT) {
@@ -1114,7 +1119,7 @@ public class Parser implements ParserInterface{
 	}
 
 	//<arguments>
-	private void arguments() {
+	private void arguments() throws InvalidInputException {
 		printIndented("Enter <arguments>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
@@ -1133,7 +1138,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <paren_expression>
-	private void parenExpression() {
+	private void parenExpression() throws InvalidInputException {
 		printIndented("Enter <paren_expression>", 1);
 
 		processLexeme(Token.LEFT_PAREN);
@@ -1144,7 +1149,7 @@ public class Parser implements ParserInterface{
 	}
 
 	// <literal>
-	private void literal() {
+	private void literal() throws InvalidInputException {
 		printIndented("Enter <literal>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1184,7 +1189,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <literal>", -1);
 	}
 
-	private void selector() {
+	private void selector() throws InvalidInputException {
 		printIndented("Enter <infix_operator>", 1);
 
 		processLexeme(Token.DOT);
@@ -1220,7 +1225,7 @@ public class Parser implements ParserInterface{
 
 	// OPERATORS
 
-	private void infixOperator() {
+	private void infixOperator() throws InvalidInputException {
 		printIndented("Enter <infix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1271,7 +1276,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <infix_operator>", -1);
 	}
 
-	private void prefixOperator() {
+	private void prefixOperator() throws InvalidInputException {
 		printIndented("Enter <prefix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1289,7 +1294,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <prefix_operator>", -1);
 	}
 
-	private void postfixOperator() {
+	private void postfixOperator() throws InvalidInputException {
 		printIndented("Enter <postfix_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1304,7 +1309,7 @@ public class Parser implements ParserInterface{
 		printIndented("Exit <postfix_operator>", -1);
 	}
 
-	private void assignmentOperator() {
+	private void assignmentOperator() throws InvalidInputException {
 		printIndented("Enter <assignment_operator>", 1);
 
 		switch (nextLexeme.getToken()) {
@@ -1335,8 +1340,9 @@ public class Parser implements ParserInterface{
 	* prints out the current lexeme, and moves to the next lexeme in the input string
 	*
 	* @param token Expected token
+	 * @throws InvalidInputException 
 	*/
-	private void processLexeme(Token token) {
+	private void processLexeme(Token token) throws InvalidInputException {
 		if (nextLexeme.getToken() == token) {
 			printIndented(nextLexeme.toString(), 0);
 			nextLexeme = lex.nextLexeme();
@@ -1373,9 +1379,9 @@ public class Parser implements ParserInterface{
 	}
 
 	
-	private void error() {
-		System.out.printf("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
-		System.exit(1);
+	private void error() throws InvalidInputException {
+		String message = String.format("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
+		throw new InvalidInputException(message);
 	}
 
 	public String getReturnString(){
