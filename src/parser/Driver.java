@@ -1,5 +1,4 @@
-//Programmer:  Nathan Jean
-//Purpose:  This will take a file and turn it into a single string.
+// old driver file
 
 package parser;
 

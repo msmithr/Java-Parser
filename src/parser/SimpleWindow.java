@@ -145,7 +145,8 @@ public class SimpleWindow{
 				parser.start();
 				outputField.setText(parser.getReturnString());
 			} catch (InvalidInputException e1) {
-				outputField.setText(parser.getErrorMessage());
+				outputField.setText(parser.getReturnString());
+				outputField.append(parser.getErrorMessage());
 			}
 			
 		}

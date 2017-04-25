@@ -12,11 +12,17 @@ package interfaces;
 import types.InvalidInputException;
 
 public interface ParserInterface {
+	
 	/**
 	 * Method acts as a starting point for the recursive descent
 	 */
 	public void start() throws InvalidInputException;
 	
+	/**
+	 * Generates an error message containing the current lexeme and 
+	 * line number
+	 * @return Returns an error message as a String
+	 */
 	public String getErrorMessage();
 	
 }

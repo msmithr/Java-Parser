@@ -1,7 +1,7 @@
 /**
  * Implementation of a lexical analyzer for the Java programming language.
  * 
- * @author Michael Smith and N
+ * @author Michael Smith and Nathan Jean
  */
 
 package parser;
@@ -37,15 +37,17 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		String lexeme = null;
 		char nextChar;
 
-
-		if (position >= inputString.length()) return null;
+		// if we are at the end of the file, return null
+		if (position >= inputString.length()) {
+			return null;
+		}
 
 		nextChar = inputString.charAt(position);
 
 		// skip to the next non whitespace character
 		while (position < inputString.length() && (nextChar == ' ' || nextChar == '\n' || nextChar == '\t')) {
-			position++;
 			if (nextChar == '\n') lineNumber++;
+			position++;
 			if (position == inputString.length()) return null; // if position reaches the end of the file, return null
 			nextChar = inputString.charAt(position);
 		}
@@ -111,7 +113,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 
-		// is right brace
+		// right brace
 		case '}':
 			token = Token.RIGHT_BRACE;
 			lexeme = "}";
@@ -234,11 +236,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			}
 			break;
 			
-		// FIX THIS
+		// '<character_ literal>'
 		case '\'':
 			String charLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\'' || (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
+			while (inputString.charAt(position) != '\"' 
+					|| (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				charLiteral += inputString.charAt(position);
 				position++;
 			}
@@ -254,11 +257,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 			
-		// FIX THIS	
+		// "<string literal>"
 		case '\"':
 			String stringLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\"' || (inputString.charAt(position-1) == '\\' && inputString.charAt(position-1) != '\\')) {
+			while (inputString.charAt(position) != '\"' 
+					|| (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				stringLiteral += inputString.charAt(position);
 				position++;
 			}
@@ -355,11 +359,11 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			position++;
 			break;
 
-		// otherwise, next lexeme is either a number or a string
+		// otherwise, next lexeme is either an int literal, identifier, or keyword
 		default:
 			String newLexeme = "";
 
-			// if nextChar is alphabetic, lexeme is identifier or a reserved word
+			// if nextChar is alphabetic, lexeme is identifier or a keyword
 			if (Character.isAlphabetic(nextChar)) {
 
 				// place the full lexeme in newLexeme
@@ -371,8 +375,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				token = processIdentifier(newLexeme);
 				lexeme = newLexeme;
 				
-				
-			} else if (Character.isDigit(nextChar)) {
+			} else if (Character.isDigit(nextChar)) { // lexeme is an int literal
 				while (position < inputString.length() && Character.isDigit(inputString.charAt(position))) {
 					newLexeme += inputString.charAt(position);
 					position++;
@@ -381,10 +384,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = newLexeme;
 				token = Token.INT_LITERAL;
 				
-
 			} else {
-				System.out.printf("ERROR: Invalid input: %c\n", inputString.charAt(position));
-				System.exit(1);
+				position++;
+				return nextLexeme();
 			}
 
 		} // end switch case

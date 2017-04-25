@@ -1,11 +1,14 @@
 /**
  * Enum for valid token types, used for lexical analyzer and recursive desecent parser for the Java
  * programming language class definition
+ * 
+ * @author Michael Smith and Nathan Jean
  */
 
 package types;
 
 public enum Token {
+	
 	IDENTIFIER,
 	INT_LITERAL,
 	STRING_LITERAL,
@@ -15,7 +18,7 @@ public enum Token {
 	KEYWORD_CLASS,
 	KEYWORD_EXTENDS,
 	KEYWORD_IMPLEMENTS,
-	//KEYWORD_INTERFACE, NOTE: need to change EBNF and parser to account for this.  It can be a modifier to a class like abstract, static, and final
+	// KEYWORD_INTERFACE
 	KEYWORD_IF,
 	KEYWORD_ELSE,
 	KEYWORD_WHILE,
@@ -32,20 +35,21 @@ public enum Token {
 	KEYWORD_TRY,
 	KEYWORD_CATCH,
 	KEYWORD_FINALLY,
-	PRIMITIVE_TYPE,
-	MODIFIER,
 	KEYWORD_VOID,
 	KEYWORD_ASSERT,
 	//KEYWORD_ENUM,
-	KEYWORD_IMPORT, //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	KEYWORD_IMPORT, 	
 	KEYWORD_INSTANCEOF,
 	KEYWORD_NEW,
-	KEYWORD_PACKAGE,  //NOTE:  we probably don't need to account for this one, but I went ahead and put it in here, since I put every other Java keyword in here
+	KEYWORD_PACKAGE,
 	KEYWORD_SUPER,
 	KEYWORD_THIS,
 	KEYWORD_NULL,
 	KEYWORD_TRUE,
 	KEYWORD_FALSE,
+	
+	MODIFIER,
+	PRIMITIVE_TYPE,
 
 
 	// brackets
