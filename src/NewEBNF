@@ -16,7 +16,8 @@
     | "synchronized"
     | "transient"
     | "volatile"
-    | "strictfp";
+    | "strictfp"
+	| "@" <identifier>;
 
 <primitive_type> = "boolean"
     | "byte"

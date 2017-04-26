@@ -21,6 +21,7 @@ public class Parser implements ParserInterface{
 	int indentationLevel;
 	String returnString; //string to return (only needed for GUI)
 	ArrayDeque<String> outputQueue;
+	int lineNumber;
 
 	/**
 	* Constructor creates the lexical analyzer and initializes nextLexeme, given an input string
@@ -33,6 +34,7 @@ public class Parser implements ParserInterface{
 		nextLexeme = lex.nextLexeme();
 		indentationLevel = 0;
 		outputQueue = new ArrayDeque<String>();
+		lineNumber = 1;
 	} // end constructor
 	
 	public String getErrorMessage() {
@@ -1482,7 +1484,8 @@ public class Parser implements ParserInterface{
 	private void printIndented(String toPrint, int direction) {
 		if (direction < 0) indentationLevel--;
 		
-		String output = "";
+		String output = lineNumber + ": ";
+		lineNumber++;
 		
 		for (int i = 0; i < indentationLevel; i++) {
 			output = output + "    ";

@@ -151,6 +151,7 @@ public class SimpleWindow{
 				}
 			} catch (InvalidInputException e1) {
 				outputQueue = parser.getOutputQueue();
+				outputField.setText("");
 				while (!outputQueue.isEmpty()) {
 					outputField.append(outputQueue.remove());
 				}
