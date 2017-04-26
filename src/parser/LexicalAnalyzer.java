@@ -358,6 +358,16 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = "~";
 			position++;
 			break;
+			
+		case '@':
+			String newAnnotation = "@";
+			position++;
+			while (Character.isAlphabetic(inputString.charAt(position))) {
+				position++;
+				newAnnotation += inputString.charAt(position);
+			}
+			lexeme = newAnnotation;
+			token = Token.MODIFIER;
 
 		// otherwise, next lexeme is either an int literal, identifier, or keyword
 		default:

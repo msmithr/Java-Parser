@@ -241,6 +241,11 @@ public class Parser implements ParserInterface{
 		case IDENTIFIER:
 		case PRIMITIVE_TYPE:
 			processLexeme(nextLexeme.getToken());
+			
+			if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET) {
+				typeArguments();
+			}
+			
 			if (nextLexeme.getToken() == Token.LEFT_PAREN) {
 				// if immediately followed by a left paren,
 				// this must be a constructor delcaration
@@ -1480,12 +1485,11 @@ public class Parser implements ParserInterface{
 		String output = "";
 		
 		for (int i = 0; i < indentationLevel; i++) {
-			output = output + " ";
+			output = output + "    ";
 		}
 		output = output + toPrint + "\n";
 		
 		outputQueue.add(output);
-		
 		if (direction > 0) indentationLevel++;
 	}
 
