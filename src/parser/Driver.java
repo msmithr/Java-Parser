@@ -3,6 +3,7 @@
 package parser;
 
 import java.io.*;//needed for file support
+import java.util.ArrayDeque;
 import java.util.Scanner;//needed for Scanner
 
 import types.InvalidInputException;
@@ -39,6 +40,7 @@ public class Driver {
 		//end command line version
 
 		//user input version
+		
 		Scanner keyboard = new Scanner(System.in);//for keyboard input
 		System.out.println("Please enter the name (or path) of the file to open.  ");
 		String filename = keyboard.nextLine();//get input
@@ -46,6 +48,7 @@ public class Driver {
 		//end user input version
 
 		keyboard.close();
+		
 
 		String inputString = fileToString(aFile);//convert the file to a single string
 		
@@ -61,7 +64,12 @@ public class Driver {
 		
 		Parser parser = new Parser(inputString);
 		parser.start();
-		System.out.println(parser.getReturnString());
+		
+		ArrayDeque<String> outputQueue = parser.getOutputQueue();
+		
+		while (!outputQueue.isEmpty()) {
+			System.out.print(outputQueue.remove());
+		}
 		
 	} //end of main
 

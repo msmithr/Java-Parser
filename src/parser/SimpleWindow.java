@@ -38,6 +38,7 @@ public class SimpleWindow{
 
 	JFrame window = new JFrame();//Create a window.
 
+	ArrayDeque<String> outputQueue;
 
 	public void buildWindow() throws IOException {
 
@@ -143,9 +144,16 @@ public class SimpleWindow{
 			//System.out.println("created parser.");
 			try {
 				parser.start();
-				outputField.setText(parser.getReturnString());
+				outputQueue = parser.getOutputQueue();
+				outputField.setText("");
+				while (!outputQueue.isEmpty()) {
+					outputField.append(outputQueue.remove());
+				}
 			} catch (InvalidInputException e1) {
-				outputField.setText(parser.getReturnString());
+				outputQueue = parser.getOutputQueue();
+				while (!outputQueue.isEmpty()) {
+					outputField.append(outputQueue.remove());
+				}
 				outputField.append(parser.getErrorMessage());
 			}
 			
