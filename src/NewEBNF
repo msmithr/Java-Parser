@@ -41,10 +41,6 @@
     | <identifier> {"." <identifier>} <expression_from_block>
 );
 
-<expression_from_block> = ("." etc | <arguments> ) [<assignment_operator> <expression1>] ";" ;
-(*FIX THIS*)
-(*Also, selectors, etc, after arguments*)
-
 <local_variable_declaration> = <type> <variable_declarators>;
 
 <type> = <primitive_type> {"[]"}
@@ -91,8 +87,12 @@
     | "(" <expression> ")" (*implemented ebnf *)
     | <expression_unit> {<selector>} {<postfix_operator>};
 
-<expression_half> = {"." <identifier>} [<identifier_rest>] <assignment_operator> <expression1>;
-(*This is not fully implemented*)
+<expression_half> = [<identifier_rest>] [<postfix_operator>] [<assignment_operator> <expression1>];
+
+<expression_from_block> = ( <arguments>
+        | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
+    )
+    [<postfix_operator>] [<assignment_operator> <expression1>] ";";
 
 <expression_unit> = <literal>
 	| <paren_expression>
@@ -121,9 +121,8 @@
 
 <identifier_rest> = {"." <identifier>} (
     <arguments>
-    | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] (*Inner Creator*))
+    | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
     | (*?*);
-
 
 <paren_expression> = "(" <expression> ")";
 

@@ -546,26 +546,49 @@ public class Parser implements ParserInterface{
 		output("Exit <block_statement>", -1);
 	} // end blockStatement()
 
-	// this needs to be finished
+	// <expression_from_block> = ( <arguments>
+    //    | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
+	// )
+	// [<postfix_operator>] [<assignment_operator> <expression1>] ";";
 	private void expressionFromBlock() throws InvalidInputException {
 		output("Enter <expression_from_block>", 1);
 
 		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
 			arguments();
 		} else if (nextLexeme.getToken() == Token.DOT) {
-			// etc
-		}
+			switch (nextLexeme.getToken()) {
+			
+			case KEYWORD_CLASS:
+			case KEYWORD_THIS:
+				parseLexeme(nextLexeme.getToken());
+				break;
+			
+			case KEYWORD_SUPER:
+				parseLexeme(Token.KEYWORD_SUPER);
+				arguments(); // <arguments>
+				break;
+			
+			case KEYWORD_NEW:
+				parseLexeme(Token.KEYWORD_NEW);
+				if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET)
+					typeArguments(); // <type_arguments>
+				innerAllocator(); // <inner_allocator>
+			
+			default:
+				error();
+			} // end switch/case
+		} // end if/else
 
 		if (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
-			postfixOperator();
-		}
+			postfixOperator(); // <postfix_operator>
+		} // end if
 
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
 			|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
 			|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
 		) {
-			assignmentOperator();
-			expression1();
+			assignmentOperator(); // <assignment_operator>
+			expression1(); // <assignment_operator>
 		}
 
 		parseLexeme(Token.SEMICOLON);
@@ -1062,30 +1085,29 @@ public class Parser implements ParserInterface{
 		output("Exit <expression3>", -1);
 	} // end expression3()
 
+	// <expression_half> = [<identifier_rest>] [<postfix_operator>] [<assignment_operator> <expression1>];
 	private void expressionHalf() throws InvalidInputException {
 		output("Enter <expression_half>", 1);
 
-		while (nextLexeme.getToken() == Token.DOT) {
+		/*
+		if (nextLexeme.getToken() == Token.DOT) {
 			parseLexeme(Token.DOT);
-			if (nextLexeme.getToken() != Token.IDENTIFIER) break;
-			parseLexeme(Token.IDENTIFIER);
-		}
+		} // end if
+		*/
 
-		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
-			arguments();
-		}
+		identifierRest(); // <identifier_rest>
 
 		if (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
-			postfixOperator();
-		}
+			postfixOperator(); // <postfix_operator>
+		} // end if
 
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
 				|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
 				|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
 			) {
-			assignmentOperator();
-			expression1();
-		}
+			assignmentOperator(); // <assignment_operator>
+			expression1(); // <expression1>
+		} // end if
 
 		output("Exit <expression_half>", -1);
 	} // end expressionHalf()
@@ -1334,11 +1356,16 @@ public class Parser implements ParserInterface{
 	//    	| "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_allocator>)
 	private void identifierRest() throws InvalidInputException {
 		output("Enter <identifier_rest>", 1);
-
+		
 		while (nextLexeme.getToken() == Token.DOT) {
 			parseLexeme(Token.DOT);
 			if (nextLexeme.getToken() != Token.IDENTIFIER) break;
 			parseLexeme(Token.IDENTIFIER);
+		}
+		
+		if (nextLexeme.getToken() != Token.DOT && nextLexeme.getToken() != Token.LEFT_PAREN) {
+			output("Exit <identifier_rest>", -1);
+			return;
 		}
 
 		if (nextLexeme.getToken() == Token.LEFT_PAREN) {
@@ -1608,7 +1635,7 @@ public class Parser implements ParserInterface{
 	/**
 	 * Modified print statement to maintain proper indentation, and redirect output
 	 * to an output queue
-	 * 
+	 *
 	 * @param toPrint String to print
 	 * @param direction Positive integer to decrease indentation, negative to decrease,
 	 *  or 0 to leave it the same.
