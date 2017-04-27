@@ -14,6 +14,7 @@ public enum Token {
 	INT_LITERAL,		// numbers
 	STRING_LITERAL,		// string of characters surrounded by double quotes
 	CHAR_LITERAL,		// character surrounded by single quotes
+	RESERVED_WORD,		// goto, const
 	PRIMITIVE_TYPE,		// boolean, byte, char, short, int, long, float, double
 	MODIFIER,			/* public, private, protected, static, abstract, final, native,
 						synchronized, transient, volatile, scrictfp, @IDENTIFIER */

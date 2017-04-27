@@ -450,6 +450,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "class":
 			return Token.KEYWORD_CLASS;
 			
+		case "const":
+			return Token.RESERVED_WORD;
+			
 		case "continue":
 			return Token.KEYWORD_CONTINUE;
 			
@@ -476,6 +479,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "for":
 			return Token.KEYWORD_FOR;
+			
+		case "goto":
+			return Token.RESERVED_WORD;
 			
 		case "if":
 			return Token.KEYWORD_IF;
