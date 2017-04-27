@@ -1054,7 +1054,7 @@ public class Parser implements ParserInterface{
 
 		default:
 			expressionUnit(); // <expression_unit>
-			while (nextLexeme.getToken() == Token.DOT) {
+			while (nextLexeme.getToken() == Token.DOT || nextLexeme.getToken() == Token.LEFT_BRACKET) {
 				selector(); // <selector>
 			}
 			while (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
@@ -1215,43 +1215,54 @@ public class Parser implements ParserInterface{
 	private void selector() throws InvalidInputException {
 		printIndented("Enter <selector>", 1);
 
-		processLexeme(Token.DOT);
-
-		switch (nextLexeme.getToken()) {
-		
-		case IDENTIFIER:
-			processLexeme(Token.IDENTIFIER);
-			if (nextLexeme.getToken() == Token.LEFT_PAREN) arguments();
-			break;
-
-		case KEYWORD_THIS:
-			processLexeme(Token.KEYWORD_THIS);
-			break;
-
-		case KEYWORD_SUPER:
-			processLexeme(Token.KEYWORD_SUPER);
-			if (nextLexeme.getToken() == Token.LEFT_PAREN) { 
-				arguments(); // <arguments>
-			} else {
-				processLexeme(Token.DOT);
+		if (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			processLexeme(Token.LEFT_BRACKET);
+			expression();
+			processLexeme(Token.RIGHT_BRACKET);
+		} else {
+			
+			processLexeme(Token.DOT);
+	
+			switch (nextLexeme.getToken()) {
+			
+			case IDENTIFIER:
 				processLexeme(Token.IDENTIFIER);
-				if (nextLexeme.getToken() == Token.LEFT_PAREN) {
-					arguments();
-				} // end if
-			} // end if/else
-			break;
-
-		case KEYWORD_NEW:
-			processLexeme(Token.KEYWORD_NEW);
-			// ??
-			break;
-
-		default:
-			error();
-		}
+				if (nextLexeme.getToken() == Token.LEFT_PAREN) arguments();
+				break;
+	
+			case KEYWORD_THIS:
+				processLexeme(Token.KEYWORD_THIS);
+				break;
+	
+			case KEYWORD_SUPER:
+				processLexeme(Token.KEYWORD_SUPER);
+				if (nextLexeme.getToken() == Token.LEFT_PAREN) { 
+					arguments(); // <arguments>
+				} else {
+					processLexeme(Token.DOT);
+					processLexeme(Token.IDENTIFIER);
+					if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+						arguments();
+					} // end if
+				} // end if/else
+				break;
+	
+			case KEYWORD_NEW:
+				processLexeme(Token.KEYWORD_NEW);
+				if (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+					typeArguments();
+				}
+				innerAllocator();
+				break;
+	
+			default:
+				error();
+			} // end switch case
+		
+		} // end if/else
 
 		printIndented("Exit <selector>", -1);
-	}
+	} // end selector()
 
 	// <allocator> = <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} (<class_allocator> | <array_allocator>);
 	private void allocator() throws InvalidInputException {
@@ -1335,6 +1346,21 @@ public class Parser implements ParserInterface{
 		
 		printIndented("Exit <array_allocator>", -1);
 	} // end arrayAllocator()
+	
+	// <inner_allocator> = <identifier> [<type_arguments>] <class_allocator>;
+	private void innerAllocator() throws InvalidInputException {
+		printIndented("Enter <inner_allocator>", 1);
+		
+		processLexeme(Token.IDENTIFIER);
+		
+		if (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			typeArguments(); // <type_arguments>
+		}
+		
+		classAllocator(); // <class_allocator>
+		
+		printIndented("Exit <inner_allocator>", -1);
+	}
 	
 	
 	// OPERATORS
