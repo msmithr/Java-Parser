@@ -1,6 +1,6 @@
 /**
  * Implementation of a lexical analyzer for the Java programming language.
- * 
+ *
  * @author Michael Smith and Nathan Jean
  */
 
@@ -25,7 +25,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		this.position = 0;
 		this.lineNumber = 1;
 	}
-	
+
 	@Override
 	public int getLineNumber() {
 		return this.lineNumber;
@@ -57,7 +57,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		// next lexeme is either a comment, infix operator, or assignment operator
 		case '/':
 			position++;
-			
+
 			// single line comment
 			if (inputString.charAt(position) == '/') {
 				while (inputString.charAt(position) != '\n') {
@@ -68,7 +68,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				position++;
 				return nextLexeme();
 			} // end if
-			
+
 			// multi-line comment
 			if (inputString.charAt(position) == '*') {
 				while (inputString.charAt(position) != '*' || inputString.charAt(position+1) != '/') {
@@ -80,7 +80,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				System.out.println(inputString.charAt(position));
 				return nextLexeme();
 			}
-			
+
 			// not a comment
 			if (inputString.charAt(position) == '=') {
 				position++;
@@ -90,7 +90,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "/";
 				token = Token.INFIX_OPERATOR;
 			}
-			
+
 			break;
 
 		// left paren
@@ -141,7 +141,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = ";";
 			position++;
 			break;
-			
+
 		// colon
 		case ':':
 			token = Token.COLON;
@@ -155,7 +155,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = ",";
 			position++;
 			break;
-			
+
 		// = or ==
 		case '=':
 			position++;
@@ -168,14 +168,14 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "=";
 			}
 			break;
-			
-		// dot	
+
+		// dot
 		case '.':
 			token = Token.DOT;
 			lexeme = ".";
 			position++;
 			break;
-			
+
 		// * or *=
 		case '*':
 			position++;
@@ -187,9 +187,9 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				token = Token.INFIX_OPERATOR;
 				lexeme = "*";
 			}
-			
+
 			break;
-			
+
 		// +=, +, or ++
 		case '+':
 			position++;
@@ -206,8 +206,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "+";
 			}
 			break;
-			
-		// -, -=, or --	
+
+		// -, -=, or --
 		case '-':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -223,8 +223,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "-";
 			}
 			break;
-			
-		// % or %=	
+
+		// % or %=
 		case '%':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -236,12 +236,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "%";
 			}
 			break;
-			
+
 		// '<character_ literal>'
 		case '\'':
 			String charLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\'' 
+			while (inputString.charAt(position) != '\''
 					|| (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				charLiteral += inputString.charAt(position);
 				position++;
@@ -250,19 +250,19 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = String.format("\'%s\'", charLiteral);
 			position++;
 			break;
-			
-		// \	
+
+		// \
 		case '\\':
 			token = Token.BACKSLASH;
 			lexeme = "\\";
 			position++;
 			break;
-			
+
 		// "<string literal>"
 		case '\"':
 			String stringLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\"' 
+			while (inputString.charAt(position) != '\"'
 					|| (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				stringLiteral += inputString.charAt(position);
 				position++;
@@ -271,15 +271,15 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			lexeme = String.format("\"%s\"", stringLiteral);
 			position++;
 			break;
-			
-		// ?	
+
+		// ?
 		case '?':
 			token = Token.QUESTION_MARK;
 			lexeme = "?";
 			position++;
 			break;
-			
-		// ||, |=, |	
+
+		// ||, |=, |
 		case '|':
 			position++;
 			if (inputString.charAt(position) == '|') {
@@ -295,8 +295,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "|";
 			}
 			break;
-			
-		// &, &=, &&	
+
+		// &, &=, &&
 		case '&':
 			position++;
 			if (inputString.charAt(position) == '&') {
@@ -312,8 +312,8 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "&";
 			}
 			break;
-			
-		// ^ or ^=	
+
+		// ^ or ^=
 		case '^':
 			position++;
 			if (inputString.charAt(position) == '=') {
@@ -338,28 +338,28 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 				lexeme = "!";
 			}
 			break;
-			
-		// <	
+
+		// <
 		case '<':
 			token = Token.LEFT_ANGLEBRACKET;
 			lexeme = "<";
 			position++;
 			break;
-			
+
 		// >
 		case '>':
 			token = Token.RIGHT_ANGLEBRACKET;
 			lexeme = ">";
 			position++;
 			break;
-			
+
 		// ~
 		case '~':
 			token = Token.PREFIX_OPERATOR;
 			lexeme = "~";
 			position++;
 			break;
-			
+
 		case '@':
 			String newAnnotation = "@";
 			position++;
@@ -386,16 +386,16 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 				token = processIdentifier(newLexeme);
 				lexeme = newLexeme;
-				
+
 			} else if (Character.isDigit(nextChar)) { // lexeme is an int literal
 				while (position < inputString.length() && Character.isDigit(inputString.charAt(position))) {
 					newLexeme += inputString.charAt(position);
 					position++;
 				} // end while
-				
+
 				lexeme = newLexeme;
 				token = Token.INT_LITERAL;
-				
+
 			} else {
 				position++;
 				return nextLexeme();
@@ -412,15 +412,16 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 	private Token processIdentifier(String newLexeme) {
 		switch (newLexeme) {
 
-		case "class":
-			return Token.KEYWORD_CLASS;
-
-		case "extends":
-			return Token.KEYWORD_EXTENDS;
-
-		case "implements":
-			return Token.KEYWORD_IMPLEMENTS;
-
+		case "boolean":
+		case "byte":
+		case "char":
+		case "short":
+		case "int":
+		case "long":
+		case "float":
+		case "double":
+			return Token.PRIMITIVE_TYPE;
+		
 		case "public":
 		case "private":
 		case "protected":
@@ -434,96 +435,101 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "native":
 			return Token.MODIFIER;
 			
-		case "void":
-			return Token.KEYWORD_VOID;
-			
-		case "if":
-			return Token.KEYWORD_IF;
-			
-		case "else":
-			return Token.KEYWORD_ELSE;
-
-		case "while":
-			return Token.KEYWORD_WHILE;
-
-		case "do":
-			return Token.KEYWORD_DO;
-
-		case "for":
-			return Token.KEYWORD_FOR;
-
-		case "switch":
-			return Token.KEYWORD_SWITCH;
-
-		case "case":
-			return Token.KEYWORD_CASE;
-			
-		case "default":
-			return Token.KEYWORD_DEFAULT;
-
-		case "return":
-			return Token.KEYWORD_RETURN;
-
-		case "continue":
-			return Token.KEYWORD_CONTINUE;
-
-		case "throw":
-			return Token.KEYWORD_THROW;
-
-		case "try":
-			return Token.KEYWORD_TRY;
-			
-		case "catch":
-			return Token.KEYWORD_CATCH;
-			
-		case "finally":
-			return Token.KEYWORD_FINALLY;
-			
-		case "throws":
-			return Token.KEYWORD_THROWS;
+		case "assert":
+			return Token.KEYWORD_ASSERT;
 			
 		case "break":
 			return Token.KEYWORD_BREAK;
 			
-		case "assert":
-			return Token.KEYWORD_ASSERT;
+		case "case":
+			return Token.KEYWORD_CASE;
 			
-		case "package":
-			return Token.KEYWORD_PACKAGE;
+		case "catch":
+			return Token.KEYWORD_CATCH;
+		
+		case "class":
+			return Token.KEYWORD_CLASS;
+			
+		case "continue":
+			return Token.KEYWORD_CONTINUE;
+			
+		case "default":
+			return Token.KEYWORD_DEFAULT;
+		
+		case "do":
+			return Token.KEYWORD_DO;
+			
+		case "else":
+			return Token.KEYWORD_ELSE;
+			
+		case "enum":
+			return Token.KEYWORD_ENUM;
+
+		case "extends":
+			return Token.KEYWORD_EXTENDS;
+
+		case "false":
+			return Token.KEYWORD_FALSE;
+			
+		case "finally":
+			return Token.KEYWORD_FINALLY;
+
+		case "for":
+			return Token.KEYWORD_FOR;
+			
+		case "if":
+			return Token.KEYWORD_IF;
+
+		case "implements":
+			return Token.KEYWORD_IMPLEMENTS;
 			
 		case "import":
 			return Token.KEYWORD_IMPORT;
 			
-		case "true":
-			return Token.KEYWORD_TRUE;
+		case "instanceof":
+			return Token.KEYWORD_INSTANCEOF;
 			
-		case "false":
-			return Token.KEYWORD_FALSE;
-			
-		case "null":
-			return Token.KEYWORD_NULL;
-			
-		case "this":
-			return Token.KEYWORD_THIS;
-			
-		case "super":
-			return Token.KEYWORD_SUPER;
+		case "interface":
+			return Token.KEYWORD_INTERFACE;
 			
 		case "new":
 			return Token.KEYWORD_NEW;
-		
-		case "instanceOf":
-			return Token.KEYWORD_INSTANCEOF;
+			
+		case "null":
+			return Token.KEYWORD_NULL;
 
-		case "boolean":
-		case "byte":
-		case "char":
-		case "short":
-		case "int":
-		case "long":
-		case "float":
-		case "double":
-			return Token.PRIMITIVE_TYPE;
+		case "package":
+			return Token.KEYWORD_PACKAGE;
+			
+		case "return":
+			return Token.KEYWORD_RETURN;
+			
+		case "super":
+			return Token.KEYWORD_SUPER;
+
+		case "switch":
+			return Token.KEYWORD_SWITCH;
+
+		case "this":
+			return Token.KEYWORD_THIS;
+
+		case "throw":
+			return Token.KEYWORD_THROW;
+
+		case "throws":
+			return Token.KEYWORD_THROWS;
+			
+		case "true":
+			return Token.KEYWORD_TRUE;
+		
+		case "try":
+			return Token.KEYWORD_TRY;
+
+		case "void":
+			return Token.KEYWORD_VOID;
+
+		case "while":
+			return Token.KEYWORD_WHILE;
 
 		default:
 			return Token.IDENTIFIER;

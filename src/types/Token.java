@@ -1,96 +1,83 @@
 /**
  * Enum for valid token types, used for lexical analyzer and recursive desecent parser for the Java
  * programming language class definition
- * 
+ *
  * @author Michael Smith and Nathan Jean
  */
 
 package types;
 
 public enum Token {
-	
-	IDENTIFIER,
-	INT_LITERAL,
-	STRING_LITERAL,
-	CHAR_LITERAL,
 
-	// keywords
-	KEYWORD_CLASS,
-	KEYWORD_EXTENDS,
-	KEYWORD_IMPLEMENTS,
-	// KEYWORD_INTERFACE
-	KEYWORD_IF,
-	KEYWORD_ELSE,
-	KEYWORD_WHILE,
-	KEYWORD_DO,
-	KEYWORD_FOR,
-	KEYWORD_SWITCH,
-	KEYWORD_CASE,
-	KEYWORD_DEFAULT,
-	KEYWORD_RETURN,
-	KEYWORD_BREAK,
-	KEYWORD_CONTINUE,
-	KEYWORD_THROW,
-	KEYWORD_THROWS,
-	KEYWORD_TRY,
-	KEYWORD_CATCH,
-	KEYWORD_FINALLY,
-	KEYWORD_VOID,
-	KEYWORD_ASSERT,
-	//KEYWORD_ENUM,
-	KEYWORD_IMPORT, 	
-	KEYWORD_INSTANCEOF,
-	KEYWORD_NEW,
-	KEYWORD_PACKAGE,
-	KEYWORD_SUPER,
-	KEYWORD_THIS,
-	KEYWORD_NULL,
-	KEYWORD_TRUE,
-	KEYWORD_FALSE,
-	
-	MODIFIER,
-	PRIMITIVE_TYPE,
+	/* literals and generic tokens */
+	IDENTIFIER,			// simple string of characters
+	INT_LITERAL,		// numbers
+	STRING_LITERAL,		// string of characters surrounded by double quotes
+	CHAR_LITERAL,		// character surrounded by single quotes
+	PRIMITIVE_TYPE,		// boolean, byte, char, short, int, long, float, double
+	MODIFIER,			/* public, private, protected, static, abstract, final, native,
+						synchronized, transient, volatile, scrictfp, @IDENTIFIER */
 
-
-	// brackets
-	LEFT_PAREN,
-	RIGHT_PAREN,
-	LEFT_BRACE,
-	RIGHT_BRACE,
-	LEFT_BRACKET,
-	RIGHT_BRACKET,
-	LEFT_ANGLEBRACKET,// <
-	RIGHT_ANGLEBRACKET,// >
-	DOUBLE_QUOTE,// "
-	SINGLE_QUOTE,// '
+	/* keywords */
+	KEYWORD_ASSERT,		// assert
+	KEYWORD_BREAK,		// break
+	KEYWORD_CASE,		// case
+	KEYWORD_CATCH,		// catch
+	KEYWORD_CLASS,		// class
+	KEYWORD_CONTINUE,	// continue
+	KEYWORD_DEFAULT,	// default
+	KEYWORD_DO,			// do
+	KEYWORD_ELSE,		// else
+	KEYWORD_ENUM,		// enum
+	KEYWORD_EXTENDS,	// extends
+	KEYWORD_FALSE,		// false
+	KEYWORD_FINALLY,	// finally
+	KEYWORD_FOR,		// for
+	KEYWORD_IF,			// if
+	KEYWORD_IMPLEMENTS,	// implements
+	KEYWORD_IMPORT,		// import
+	KEYWORD_INSTANCEOF,	// instanceof
+	KEYWORD_INTERFACE,	// interface
+	KEYWORD_NEW,		// new
+	KEYWORD_NULL,		// null
+	KEYWORD_PACKAGE,	// package
+	KEYWORD_RETURN,		// return
+	KEYWORD_SUPER,		// super
+	KEYWORD_SWITCH,		// switch
+	KEYWORD_THIS,		// this
+	KEYWORD_THROW,		// throw
+	KEYWORD_THROWS,		// throws
+	KEYWORD_TRUE,		// true
+	KEYWORD_TRY,		// try
+	KEYWORD_VOID,		// void
+	KEYWORD_WHILE,		// while
 
 
-	SEMICOLON,
-	COMMA,
-	COLON,
-	DOT,
+	/* brackets */
+	LEFT_PAREN, 		// (
+	RIGHT_PAREN,		// )
+	LEFT_BRACE,			// {
+	RIGHT_BRACE,		// }
+	LEFT_BRACKET,		// [
+	RIGHT_BRACKET,		// ]
+	LEFT_ANGLEBRACKET,	// <
+	RIGHT_ANGLEBRACKET,	// >
 
-	// operators and other symbols
-	//PLUS,// +
-	//MINUS,// -
-	BACKSLASH,// /
-	//FORWARDSLASH,// \
-	//MODULO,// %
-	//AT,// @
-	//EXCLAIMATION_POINT,// ! (aka NOT, or BANG)
-	BITWISE_OR,// |
-	BITWISE_AND, // &
-	BITWISE_XOR, // ^
-	ASSIGNMENT_OPERATOR,// =
-	QUESTION_MARK,// ?
-	
-	INFIX_OPERATOR,
-	PREFIX_OPERATOR,
-	OPERATOR_PLUS,
-	OPERATOR_MINUS,
-	OPERATOR_INCREMENT,
-	OPERATOR_DECREMENT,
+	/* operators */
+	ASSIGNMENT_OPERATOR,// =, +=, -=, *=, /=, &=, |=, ^=, %=
+	INFIX_OPERATOR,		// ||, &&, |, ^, &, ==, !=, *, /, %
+	PREFIX_OPERATOR,	// !, ~
+	OPERATOR_PLUS,		// +
+	OPERATOR_MINUS,		// -
+	OPERATOR_INCREMENT, // ++
+	OPERATOR_DECREMENT, // --
+	QUESTION_MARK,		// ?
 
+	/* other symbols */
+	SEMICOLON,			// ;
+	COMMA,				// ,
+	COLON,				// :
+	DOT,				// .
+	BACKSLASH,			// /
 
-
-}
+} // end enum
