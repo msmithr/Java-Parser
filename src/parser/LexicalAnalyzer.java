@@ -64,6 +64,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 					//System.out.println(inputString.charAt(position));
 					position++;
 				} // end while
+				lineNumber++;
 				position++;
 				return nextLexeme();
 			} // end if
@@ -363,11 +364,12 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 			String newAnnotation = "@";
 			position++;
 			while (Character.isAlphabetic(inputString.charAt(position))) {
-				position++;
 				newAnnotation += inputString.charAt(position);
+				position++;
 			}
 			lexeme = newAnnotation;
 			token = Token.MODIFIER;
+			break;
 
 		// otherwise, next lexeme is either an int literal, identifier, or keyword
 		default:

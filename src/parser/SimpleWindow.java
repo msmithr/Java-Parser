@@ -138,14 +138,14 @@ public class SimpleWindow{
 				outputField.setText("IO Error.");
 
 			}
-			//System.out.println("Starting parser.");
-			//System.out.printf("Here is the file to parse.\n%s\n", inputString);
-			Parser parser = new Parser(inputString);//this is where it has problems
-			//System.out.println("created parser.");
+			
+			outputField.setText("");
+			
+			Parser parser = new Parser(inputString);
 			try {
 				parser.start();
 				outputQueue = parser.getOutputQueue();
-				outputField.setText("");
+				
 				while (!outputQueue.isEmpty()) {
 					outputField.append(outputQueue.remove());
 				}
