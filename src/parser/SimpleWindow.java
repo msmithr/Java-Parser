@@ -136,27 +136,31 @@ public class SimpleWindow{
 			}
 			catch(IOException exception){
 				outputField.setText("IO Error.");
-
 			}
 			
 			outputField.setText("");
 			
 			Parser parser = new Parser(inputString);
+			int lineNumber = 1;
+			
 			try {
 				parser.start();
 				outputQueue = parser.getOutputQueue();
 				
 				while (!outputQueue.isEmpty()) {
-					outputField.append(outputQueue.remove());
+					outputField.append(lineNumber + ": " + outputQueue.remove());
+					lineNumber++;
 				}
 			} catch (InvalidInputException e1) {
 				outputQueue = parser.getOutputQueue();
 				outputField.setText("");
 				while (!outputQueue.isEmpty()) {
-					outputField.append(outputQueue.remove());
+					outputField.append(lineNumber + ": " + outputQueue.remove());
+					lineNumber++;
 				}
 				outputField.append(parser.getErrorMessage());
-			}
+			} // end try/catch
+			
 			
 		}
 
