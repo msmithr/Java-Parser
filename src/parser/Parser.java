@@ -430,7 +430,7 @@ public class Parser implements ParserInterface{
 	// <class_declaration>
 	//   | <local_variable_declaration>
 	//   | <identifier> ":" <statement>
-	//   | <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators>
+	//   | <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators_afterID>
 	//   | <identifier> {"." <identifier>} <expression_from_block>
 	private void blockStatement() throws InvalidInputException {
 		printIndented("Enter <block_statement>", 1);
@@ -503,14 +503,15 @@ public class Parser implements ParserInterface{
 				if (nextLexeme.getToken() == Token.LEFT_PAREN) {
 					// EXPRESSION: IDENTIFIER SUFFIX STARTING WITH LEFT PAREN
 					if (typeArguments) error();
-					expressionFromBlock();
+					expressionFromBlock(); // <expression_from_block
 					break;
 				}
 				while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 					processLexeme(Token.LEFT_BRACKET);
 					processLexeme(Token.RIGHT_BRACKET);
 				} // end while
-				variableDeclarators(); // <variable_declarators>
+				//variableDeclarators(); // <variable_declarators>
+				variableDeclaratorsAfterID(); // <variable_declarators_afterID>
 			}
 			break;
 
@@ -522,6 +523,25 @@ public class Parser implements ParserInterface{
 
 		printIndented("Exit <block_statement>", -1);
 	}
+	
+	//<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
+	private void variableDeclaratorsAfterID() throws InvalidInputException {
+		printIndented("Enter <variable_declarators_afterID", 1);
+		
+		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			processLexeme(Token.LEFT_BRACKET);
+			processLexeme(Token.RIGHT_BRACKET);
+		} // end while
+		
+		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR) {
+			processLexeme(Token.ASSIGNMENT_OPERATOR);
+			variableInit(); // <variable_init>
+		}
+		
+		variableDeclaratorsHalf(); // <variable_declarators_half>
+		
+		printIndented("Exit <variable_declarators_afterID", -1);
+	} // end variableDeclaratorsAfterID();
 
 	// this needs to be finished
 	private void expressionFromBlock() throws InvalidInputException {

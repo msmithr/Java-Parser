@@ -47,6 +47,9 @@
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
 
+(*Try this out*)
+<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
+
 <method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
 
 <parameters> = "(" [<parameter> {, <parameter>}] ")";
