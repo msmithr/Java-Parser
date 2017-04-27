@@ -241,7 +241,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case '\'':
 			String charLiteral = "";
 			position++;
-			while (inputString.charAt(position) != '\"' 
+			while (inputString.charAt(position) != '\'' 
 					|| (inputString.charAt(position-1) == '\\') && inputString.charAt(position-2) != '\\') {
 				charLiteral += inputString.charAt(position);
 				position++;

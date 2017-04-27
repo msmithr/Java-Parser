@@ -108,8 +108,8 @@
 <expression1> = <expression2> ["?" <expression> ":" <expression1>];
 <expression2> = <expression3> [("instanceOf" <type> | {<infix_operator> <expression3>})];
 <expression3> = <prefix_operator> <expression3>
-    (* | "(" (<expression> | <type>) ")" <expression3> *) (* correct ebnf *)
-    | "(" <type> ")" <expression3> (*implemented ebnf *)
+    (* | "(" (<expression> | <type>) ")" <expression3> *) (* "correct ebnf" *)
+    | "(" <expression> ")" (*implemented ebnf *)
     | <expression_unit> {<selector>} {<postfix_operator>};
 
 <expression_half> = {"." <identifier>} [<identifier_rest>] <assignment_operator> <expression1>;

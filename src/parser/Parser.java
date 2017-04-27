@@ -1048,7 +1048,7 @@ public class Parser implements ParserInterface{
 			
 		case LEFT_PAREN:
 			processLexeme(Token.LEFT_PAREN);
-			type(); // <type>
+			expression();
 			processLexeme(Token.RIGHT_PAREN);
 			break;
 
