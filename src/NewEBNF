@@ -6,28 +6,6 @@
 <class> = {<modifier>} <class declaration>;
 <class_declaration> = "class" <identifier> [<type_arguments>][<extends>] [<implements>] <class_body>;
 
-<modifier> = "public"
-    | "protected"
-    | "private"
-    | "static"
-    | "abstract"
-    | "final"
-    | "native"
-    | "synchronized"
-    | "transient"
-    | "volatile"
-    | "strictfp"
-	| "@" <identifier>;
-
-<primitive_type> = "boolean"
-    | "byte"
-    | "char"
-    | "short"
-    | "int"
-    | "long"
-    | "float"
-    | "double";
-
 <extends> = "extends" <identifier>;
 <implements> = "implements" <identifier> {',' <identifier>};
 
@@ -46,8 +24,6 @@
 <variable_declarators> = <variable_declarator> <variable_declarators_half>;
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
-
-(*Try this out*)
 <variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
 
 <method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
@@ -129,11 +105,12 @@
 	| "void" "." "class";
 
 <selector> = "." (
-    <identifier> [<arguments>]
-    | "this"
-    | "super" (<arguments> | "." <identifier> [<arguments>])
-    | "new" [<type_arguments>] (*Inner Creator*)
-    );
+<identifier> [<arguments>]
+        | "this"
+        | "super" (<arguments> | "." <identifier> [<arguments>])
+        | "new" [<type_arguments>] <inner_allocator>
+)
+	| "[" <expression> "]";
 
 <allocator> = <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} (<class_allocator> | <array_allocator>);
 <class_allocator> = <arguments> [<class_body>];
@@ -207,3 +184,25 @@
 
 <postfix_operator> = "++"
 	| "--";
+
+<modifier> = "public"
+    | "protected"
+    | "private"
+    | "static"
+    | "abstract"
+    | "final"
+    | "native"
+    | "synchronized"
+    | "transient"
+    | "volatile"
+    | "strictfp"
+	| "@" <identifier>;
+
+<primitive_type> = "boolean"
+    | "byte"
+    | "char"
+    | "short"
+    | "int"
+    | "long"
+    | "float"
+    | "double";

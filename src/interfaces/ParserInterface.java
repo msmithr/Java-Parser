@@ -9,6 +9,8 @@
 
 package interfaces;
 
+import java.util.ArrayDeque;
+
 import types.InvalidInputException;
 
 public interface ParserInterface {
@@ -24,5 +26,11 @@ public interface ParserInterface {
 	 * @return Returns an error message as a String
 	 */
 	public String getErrorMessage();
+
+	/**
+	 * Gets a queue containing the output of the parser in order, to be used after calling start()
+	 * @return Returns a queue containing all of the output strings of the parser
+	 */
+	ArrayDeque<String> getOutputQueue();
 	
 }
