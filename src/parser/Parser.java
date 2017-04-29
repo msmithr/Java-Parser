@@ -124,7 +124,7 @@ public class Parser implements ParserInterface{
 		output("Exit <class>", -1);
 	} // end classRule()
 
-	// <class_declaration> = "class" <identifier> [<type_arguments>][<extends>]
+	// <class_declaration> = "class" <identifier> [<type_parameters>][<extends>]
 	// [<implements>] <class_body>;
 	private void classDeclaration() throws InvalidInputException {
 		output("Enter <class_declaration>", 1);
@@ -133,7 +133,7 @@ public class Parser implements ParserInterface{
 		parseLexeme(Token.IDENTIFIER);
 
 		if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET)
-			typeArguments(); // <type_arguments>
+			typeParameters(); // <type_parameters>
 		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS)
 			extendsRule(); // <extends>
 		if (nextLexeme.getToken() == Token.KEYWORD_IMPLEMENTS)
@@ -144,26 +144,26 @@ public class Parser implements ParserInterface{
 		output("Exit <class_declaration>", -1);
 	} // end classDeclaration()
 
-	// <extends> = "extends" <identifier>;
+	// <extends> = "extends" <type>;
 	private void extendsRule() throws InvalidInputException {
 		output("Enter <extends>", 1);
 
 		parseLexeme(Token.KEYWORD_EXTENDS);
-		parseLexeme(Token.IDENTIFIER);
+		type(); // <type>
 
 		output("Exit <extends>", -1);
 	} // end extendsRule()
 
-	// <implements> = "implements" <identifier> {',' <identifier>};
+	// <implements> = "implements" <type> {',' <type>};
 	private void implementsRule() throws InvalidInputException {
 		output("Enter <implements>", 1);
 
 		parseLexeme(Token.KEYWORD_IMPLEMENTS);
-		parseLexeme(Token.IDENTIFIER);
+		type(); // <type>
 
 		while (nextLexeme.getToken() == Token.COMMA) {
 			parseLexeme(Token.COMMA);
-			parseLexeme(Token.IDENTIFIER);
+			type(); // <type>
 		} // end while
 
 		output("Exit <implements>", -1);
@@ -346,9 +346,18 @@ public class Parser implements ParserInterface{
 		output("Exit <variable_declarators_half>", -1);
 	} // end variableDeclaratorsHalf()
 
-	//<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
+	//<variable_declarators_afterID> = {'[]'} [<identifier> ['{}'] ["=" <variable_init>] <variable_declarators_half>;
 	private void variableDeclaratorsAfterID() throws InvalidInputException {
-		output("Enter <variable_declarators_afterID", 1);
+		output("Enter <variable_declarators_afterID>", 1);
+		
+		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			parseLexeme(Token.LEFT_BRACKET);
+			parseLexeme(Token.RIGHT_BRACKET);
+		} // end while
+		
+		if (nextLexeme.getToken() == Token.IDENTIFIER) {
+			parseLexeme(Token.IDENTIFIER);
+		} // end if
 
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 			parseLexeme(Token.LEFT_BRACKET);
@@ -358,7 +367,7 @@ public class Parser implements ParserInterface{
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR) {
 			parseLexeme(Token.ASSIGNMENT_OPERATOR);
 			variableInit(); // <variable_init>
-		}
+		} // end if	
 
 		variableDeclaratorsHalf(); // <variable_declarators_half>
 
@@ -530,6 +539,10 @@ public class Parser implements ParserInterface{
 				}
 				while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 					parseLexeme(Token.LEFT_BRACKET);
+					if (nextLexeme.getToken() != Token.RIGHT_BRACKET) {
+						selectorFromBlock();
+						break;
+					}
 					parseLexeme(Token.RIGHT_BRACKET);
 				} // end while
 				//variableDeclarators(); // <variable_declarators>
@@ -547,9 +560,12 @@ public class Parser implements ParserInterface{
 	} // end blockStatement()
 
 	// <expression_from_block> = ( <arguments>
-    //    | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
-	// )
-	// [<postfix_operator>] [<assignment_operator> <expression1>] ";";
+    // 	 | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
+	// 	 )
+	// 	 {<selector>} {<postfix_operator>}
+	// 	 [("instanceOf" <type> | {<infix_operator> <expression3>})]
+	// 	 ["?" <expression> ":" <expression1>]
+	// 	 [<assignment_operator> <expression1>];
 	private void expressionFromBlock() throws InvalidInputException {
 		output("Enter <expression_from_block>", 1);
 
@@ -579,17 +595,41 @@ public class Parser implements ParserInterface{
 			} // end switch/case
 		} // end if/else
 
-		if (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
+		while (nextLexeme.getToken() == Token.DOT || nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			selector(); // <selector>
+		} // end while
+		
+		while (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
 			postfixOperator(); // <postfix_operator>
+		} // end while
+		
+		if (nextLexeme.getToken() == Token.KEYWORD_INSTANCEOF) {
+			parseLexeme(Token.KEYWORD_INSTANCEOF);
+			type(); // <type>
+		} else {
+			while (nextLexeme.getToken() == Token.INFIX_OPERATOR
+					|| nextLexeme.getToken() == Token.OPERATOR_PLUS
+					|| nextLexeme.getToken() == Token.OPERATOR_MINUS
+					|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+					|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET ) {
+				infixOperator(); // <infix_operator>
+				expression3(); // <expression3>
+			} // end while
+		} // end if/else
+		
+		if (nextLexeme.getToken() == Token.QUESTION_MARK) {
+			parseLexeme(Token.QUESTION_MARK);
+			expression(); // <expression>
+			parseLexeme(Token.COLON);
+			expression1(); // <expression1>
 		} // end if
-
+		
 		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
-			|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
-			|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET
-		) {
+				|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+				|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET) {
 			assignmentOperator(); // <assignment_operator>
-			expression1(); // <assignment_operator>
-		}
+			expression1(); // <expression1>
+		} // end if
 
 		parseLexeme(Token.SEMICOLON);
 
@@ -647,11 +687,17 @@ public class Parser implements ParserInterface{
 		output("Exit <type_half>", -1);
 	} // end typeHalf()
 
-	// <type_arguments> = "<" <type_argument> {"," <type_argument>} ">";
+	// <type_arguments> = "<" <type_argument> {"," <type_argument>} ">" | "<>;
 	private void typeArguments() throws InvalidInputException {
 		output("Enter <type_arguments>", 1);
 
 		parseLexeme(Token.LEFT_ANGLEBRACKET);
+		
+		if (nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET) {
+			parseLexeme(Token.RIGHT_ANGLEBRACKET);
+			output("Exit <type_arguments>", -1);
+			return;
+		}
 
 		typeArgument(); // <type_argument>
 
@@ -681,6 +727,42 @@ public class Parser implements ParserInterface{
 
 		output("Exit <type_argument>", -1);
 	} // end typeArgument()
+	
+	// <type_parameters> = "<" <type_parameter> {"," <type_parameter>} ">";
+	private void typeParameters() throws InvalidInputException {
+		output("Enter <type_parameters>", 1);
+		
+		parseLexeme(Token.LEFT_ANGLEBRACKET);
+		
+		typeParameter(); // <type_parameter>
+		while (nextLexeme.getToken() == Token.COMMA) {
+			parseLexeme(Token.COMMA);
+			typeParameter(); // <type_parameter>
+		} // end while
+		
+		parseLexeme(Token.RIGHT_ANGLEBRACKET);
+		
+		output("Exit <type_parameters>", -1);
+	} // end typeParameters()
+	
+	// <type_parameter> = <identifier> ["extends" <type> {"&" <type>}];
+	private void typeParameter() throws InvalidInputException {
+		output("Enter <type_parameter>", 1);
+		
+		parseLexeme(Token.IDENTIFIER);
+		if (nextLexeme.getToken() == Token.KEYWORD_EXTENDS) {
+			parseLexeme(Token.KEYWORD_EXTENDS);
+			type(); // <type>
+			
+			while (nextLexeme.getLexeme().equals("&")) {
+				parseLexeme(Token.INFIX_OPERATOR); // "&" is an infix operator
+				type(); // <type>
+			} // end while
+			
+		} // end if
+		
+		output("Exit <type_parameter>", -1);
+	} // end typeParameter()
 
 	// <variable_init> = <expression> | <array_init>;
 	private void variableInit() throws InvalidInputException {
@@ -1252,6 +1334,56 @@ public class Parser implements ParserInterface{
 
 		output("Exit <selector>", -1);
 	} // end selector()
+	
+	
+	//<selector_from_block> = <expression> "]" {<selector>} {<postfix_operator>}
+    //	[("instanceof" <type> | {<infix_operator> <expression3>})]
+    //	["?" <expression> ":" <expression1>]
+    //	[<assignment_operator> <expression1>];
+	private void selectorFromBlock() throws InvalidInputException {
+		output("Enter <selector_from_block>", 1);
+		
+		expression(); // <expression>
+		parseLexeme(Token.RIGHT_BRACKET);
+		
+		while (nextLexeme.getToken() == Token.DOT || nextLexeme.getToken() == Token.LEFT_BRACKET) {
+			selector(); // <selector>
+		} // end while
+		
+		while (nextLexeme.getToken() == Token.OPERATOR_INCREMENT || nextLexeme.getToken() == Token.OPERATOR_DECREMENT) {
+			postfixOperator(); // <postfix_operator>
+		} // end while
+		
+		if (nextLexeme.getToken() == Token.KEYWORD_INSTANCEOF) {
+			parseLexeme(Token.KEYWORD_INSTANCEOF);
+			type(); // <type>
+		} else {
+			while (nextLexeme.getToken() == Token.INFIX_OPERATOR
+					|| nextLexeme.getToken() == Token.OPERATOR_PLUS
+					|| nextLexeme.getToken() == Token.OPERATOR_MINUS
+					|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+					|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET ) {
+				infixOperator(); // <infix_operator>
+				expression3(); // <expression3>
+			} // end while
+		} // end if/else
+		
+		if (nextLexeme.getToken() == Token.QUESTION_MARK) {
+			parseLexeme(Token.QUESTION_MARK);
+			expression(); // <expression>
+			parseLexeme(Token.COLON);
+			expression1(); // <expression1>
+		} // end if
+		
+		if (nextLexeme.getToken() == Token.ASSIGNMENT_OPERATOR
+				|| nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET
+				|| nextLexeme.getToken() == Token.RIGHT_ANGLEBRACKET) {
+			assignmentOperator(); // <assignment_operator>
+			expression1(); // <expression1>
+		} // end if
+		
+		output("Exit <selector_from_block>", -1);
+	}
 
 	// <allocator> = <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} (<class_allocator> | <array_allocator>);
 	private void allocator() throws InvalidInputException {
