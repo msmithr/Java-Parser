@@ -53,7 +53,6 @@ public enum Token {
 	KEYWORD_VOID,		// void
 	KEYWORD_WHILE,		// while
 
-
 	/* brackets */
 	LEFT_PAREN, 		// (
 	RIGHT_PAREN,		// )

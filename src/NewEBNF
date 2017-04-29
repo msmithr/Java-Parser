@@ -1,6 +1,6 @@
 <qualified_identifier> = <identifier> {"." <identifier>};
 
-<program> = ["package" <qualified_identifier>] ";" {<import>} <class>;
+<program> = ["package" <qualified_identifier>  ";"] {<import>} <class>;
 <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 
 <class> = {<modifier>} <class declaration>;
