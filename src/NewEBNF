@@ -4,10 +4,10 @@
 <import> = "import" ["static"] <identifier> {"." <identifier>} [".*"] ";" ;
 
 <class> = {<modifier>} <class declaration>;
-<class_declaration> = "class" <identifier> [<type_arguments>][<extends>] [<implements>] <class_body>;
+<class_declaration> = "class" <identifier> [<type_parameters>][<extends>] [<implements>] <class_body>;
 
-<extends> = "extends" <identifier>;
-<implements> = "implements" <identifier> {',' <identifier>};
+<extends> = "extends" <type>;
+<implements> = "implements" <type> {',' <type>};
 
 <class_body> = '{' {<class body statement>} '}';
 
@@ -24,7 +24,7 @@
 <variable_declarators> = <variable_declarator> <variable_declarators_half>;
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
-<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
+<variable_declarators_afterID> = {'[]'} [<identifier> ['{}'] ["=" <variable_init>] <variable_declarators_half>;
 
 <method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
 
@@ -48,8 +48,11 @@
 
 <type_half> = [<type_arguments>] {"." <identifier> [type_arguments]}  {"[]"};
 
-<type_arguments> = "<" <type_argument> {"," <type_argument>} ">";
+<type_arguments> = "<" <type_argument> {"," <type_argument>} ">" | "<>";
 <type_argument> = <type> | "?" [ ("super" | "extends") <type>];
+
+<type_parameters> = "<" <type_parameter> {"," <type_parameter>} ">";
+<type_parameter> = <identifier> ["extends" <type> {"&" <type>}];
 
 <variable_init> = <expression> | <array_init>;
 <array_init> = "{" [<variable_init> {"," <variable_init>}] "}";
@@ -92,7 +95,11 @@
 <expression_from_block> = ( <arguments>
         | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
     )
-    [<postfix_operator>] [<assignment_operator> <expression1>] ";";
+    {<selector>} {<postfix_operator>}
+    [("instanceOf" <type> | {<infix_operator> <expression3>})]
+    ["?" <expression> ":" <expression1>]
+    [<assignment_operator> <expression1>];
+
 
 <expression_unit> = <literal>
 	| <paren_expression>
@@ -111,6 +118,11 @@
         | "new" [<type_arguments>] <inner_allocator>
 )
 	| "[" <expression> "]";
+
+<selector_from_block> = <expression> "]" {<selector>} {<postfix_operator>}
+    [("instanceOf" <type> | {<infix_operator> <expression3>})]
+    ["?" <expression> ":" <expression1>]
+    [<assignment_operator> <expression1>];
 
 <allocator> = <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} (<class_allocator> | <array_allocator>);
 <class_allocator> = <arguments> [<class_body>];
