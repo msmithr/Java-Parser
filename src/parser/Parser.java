@@ -480,6 +480,7 @@ public class Parser implements ParserInterface{
 
 		case PRIMITIVE_TYPE:
 			localVariableDeclaration(); // <local_variable_declaration>
+			parseLexeme(Token.SEMICOLON);
 			break;
 
 		// identifier could either be a type or the start of an expression
