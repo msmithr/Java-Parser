@@ -20,22 +20,22 @@ public class ParserWindow{
     private final int WINDOW_HEIGHT = 750;//height of the window
     
     //components
-    private JLabel messageLabel;//gives instructions for inputing file name
-    private JLabel instructionLabel;//gives instructions for using application
-    private JTextField inputTextField;//field to get filename
-    public JTextArea outputField;//field to display parsed results
-    private JButton checkButton;//button to check syntax
-    private JButton clearButton;//button to clear fields
-    private JButton findButton;//button to select a file from a file browser window
-    private JPanel northPanel;//panel to contain instructions, buttons, and inputTextField
-    private JPanel centerPanel;//panel to contain outputField
-    private JScrollPane scrollPane;//to make the outputField scrollable
-    private JPanel northPanelUpper;//subpanel for arranging instructions
-    private JPanel northPanelMid;//subpanel for arranging instructions and inputTextField
-    private JPanel northPanelLower;//subpanel for arranging buttons
-    private JPanel mainPanel;//main panel for holding north and center panels
-    private JFrame window;//window to hold all content
-    private ArrayDeque<String> outputQueue;//queue to hold the lines of output
+    private JLabel messageLabel;		//gives instructions for inputing file name
+    private JLabel instructionLabel;	//gives instructions for using application
+    private JTextField inputTextField;	//field to get filename
+    public JTextArea outputField;		//field to display parsed results
+    private JButton checkButton;		//button to check syntax
+    private JButton clearButton;		//button to clear fields
+    private JButton findButton;			//button to select a file from a file browser window
+    private JPanel northPanel;			//panel to contain instructions, buttons, and inputTextField
+    private JPanel centerPanel;			//panel to contain outputField
+    private JScrollPane scrollPane;		//to make the outputField scrollable
+    private JPanel northPanelUpper;		//subpanel for arranging instructions
+    private JPanel northPanelMid;		//subpanel for arranging instructions and inputTextField
+    private JPanel northPanelLower;		//subpanel for arranging buttons
+    private JPanel mainPanel;			//main panel for holding north and center panels
+    private JFrame window;				//window to hold all content
+    private ArrayDeque<String> outputQueue; //queue to hold the lines of output
     
     
     /**
@@ -43,23 +43,23 @@ public class ParserWindow{
      */ 
     public ParserWindow(){
         
-        messageLabel = new JLabel("Enter the path of the file to check:");//
+        messageLabel = new JLabel("Enter the path of the file to check:");
         instructionLabel = new JLabel(
             "Welcome to the Java Syntax Checker!  Enter the path of the file to check, or select \"Find File\" to select a file.  Click \"Check\" to see the parse tree.");
-        inputTextField = new JTextField(20);//Create a text field for the input file
-        outputField = new JTextArea(40, 75);//create a output field
-        checkButton = new JButton("Check Syntax");//create button to check syntax
-        clearButton = new JButton("Clear");//create clear button
-        findButton = new JButton("Find File");//create find file button
-        northPanel = new JPanel();//north panel
-        centerPanel = new JPanel();//centerPanel
-        scrollPane = new JScrollPane(outputField);//Scrollable text field
-        northPanelUpper = new JPanel();//upper part of north panel
-        northPanelMid = new JPanel();//middle part of north panel
-        northPanelLower = new JPanel();//lower part of north panel
-        window = new JFrame();//Create a window.
-        mainPanel = new JPanel();//create a mainPanel to squish everything in
-    }//end constructor
+        inputTextField = new JTextField(20); //Create a text field for the input file
+        outputField = new JTextArea(40, 75); //create a output field
+        checkButton = new JButton("Check Syntax"); //create button to check syntax
+        clearButton = new JButton("Clear"); //create clear button
+        findButton = new JButton("Find File"); //create find file button
+        northPanel = new JPanel(); //north panel
+        centerPanel = new JPanel(); //centerPanel
+        scrollPane = new JScrollPane(outputField); //Scrollable text field
+        northPanelUpper = new JPanel(); //upper part of north panel
+        northPanelMid = new JPanel(); //middle part of north panel
+        northPanelLower = new JPanel(); //lower part of north panel
+        window = new JFrame(); //Create a window.
+        mainPanel = new JPanel(); //create a mainPanel to squish everything in
+    } //end constructor
     
     
     public void buildWindow() throws IOException {

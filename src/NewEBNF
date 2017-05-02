@@ -24,7 +24,7 @@
 <variable_declarators> = <variable_declarator> <variable_declarators_half>;
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
-<variable_declarators_afterID> = {'{}'} ["=" <variable_init>] <variable_declarators_half>;
+<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
 
 <method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
 
@@ -38,7 +38,8 @@
 	| <local_variable_declaration>
 	| <identifier> ":" <statement>
 	| <identifier> [<type_arguments>] {"." <identifier> [<type_arguments>]} {"[]"} <variable_declarators>
-    | <identifier> {"." <identifier>} <expression_from_block>
+    | <identifier> {"." <identifier>} <expression_afterID>
+    | <identifier> {"." <identifier>} {"[]"} "[" <selector_half>;
 );
 
 <local_variable_declaration> = <type> <variable_declarators>;
@@ -92,7 +93,7 @@
 
 <expression_half> = [<identifier_rest>] [<postfix_operator>] [<assignment_operator> <expression1>];
 
-<expression_from_block> = ( <arguments>
+<expression_afterID> = ( <arguments>
         | "." ("class" | "this" | "super" <arguments> | "new" [<type_arguments>] <inner_creator>)
     )
     {<selector>} {<postfix_operator>}
@@ -119,7 +120,7 @@
 )
 	| "[" <expression> "]";
 
-<selector_from_block> = <expression> "]" {<selector>} {<postfix_operator>}
+<selector_half> = <expression> "]" {<selector>} {<postfix_operator>}
     [("instanceOf" <type> | {<infix_operator> <expression3>})]
     ["?" <expression> ":" <expression1>]
     [<assignment_operator> <expression1>];
