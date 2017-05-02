@@ -43,7 +43,7 @@ public class ParserWindow{
      */ 
     public ParserWindow(){
         
-        messageLabel = new JLabel("Enter the path of the file to check:");
+        messageLabel = new JLabel("Enter the path of the file to check:");//
         instructionLabel = new JLabel(
             "Welcome to the Java Syntax Checker!  Enter the path of the file to check, or select \"Find File\" to select a file.  Click \"Check\" to see the parse tree.");
         inputTextField = new JTextField(20); //Create a text field for the input file
@@ -158,6 +158,8 @@ public class ParserWindow{
                     outputField.append(lineNumber + ": " + outputQueue.remove());
                     lineNumber++;
                 }
+                
+                outputField.append("\n\n\nParse successful");
             } catch (InvalidInputException e1) {//if syntax error, display error
                 outputQueue = parser.getOutputQueue();
                 outputField.setText("");
@@ -165,7 +167,7 @@ public class ParserWindow{
                     outputField.append(lineNumber + ": " + outputQueue.remove());
                     lineNumber++;
                 }
-                outputField.append(parser.getErrorMessage());
+                outputField.append("\n\n\n" + parser.getErrorMessage());
             } // end try/catch
             
             
