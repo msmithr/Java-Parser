@@ -34,6 +34,53 @@ public class Parser implements ParserInterface{
 		outputQueue = new ArrayDeque<String>();
 	} // end constructor
 
+	/**
+	* Checks if the current lexeme's associated token is equal to the given token,
+	* prints out the current lexeme, and moves to the next lexeme in the input string
+	*
+	* @param token Expected token
+	* @throws InvalidInputException
+	*/
+	private void parseLexeme(Token token) throws InvalidInputException {
+		
+		if (nextLexeme.getToken() == token) {
+			output(nextLexeme.toString(), 0);
+			nextLexeme = lex.nextLexeme();
+		} else {
+			error();
+		} // end if/else
+		
+	} // end processLexeme()
+
+	/**
+	 * Modified print statement to maintain proper indentation, and redirect output
+	 * to an output queue
+	 *
+	 * @param toPrint String to print
+	 * @param direction Positive integer to decrease indentation, negative to decrease,
+	 *  or 0 to leave it the same.
+	 */
+	private void output(String toPrint, int direction) {
+		if (direction < 0) indentationLevel--;
+
+		String output = "";
+
+		for (int i = 0; i < indentationLevel; i++) {
+			output = output + "    ";
+		} // end for
+		
+		output = output + toPrint + "\n";
+
+		outputQueue.add(output);
+		if (direction > 0) indentationLevel++;
+	} // end printIndented()
+
+	// throws an exception
+	private void error() throws InvalidInputException {
+		String message = String.format("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
+		throw new InvalidInputException(message);
+	} // end error()
+	
 	@Override
 	public ArrayDeque<String> getOutputQueue(){
 		return outputQueue;
@@ -1800,52 +1847,5 @@ public class Parser implements ParserInterface{
 
 		output("Exit <postfix_operator>", -1);
 	} // end postfixOperator()
-
-	/**
-	* Checks if the current lexeme's associated token is equal to the given token,
-	* prints out the current lexeme, and moves to the next lexeme in the input string
-	*
-	* @param token Expected token
-	* @throws InvalidInputException
-	*/
-	private void parseLexeme(Token token) throws InvalidInputException {
-		
-		if (nextLexeme.getToken() == token) {
-			output(nextLexeme.toString(), 0);
-			nextLexeme = lex.nextLexeme();
-		} else {
-			error();
-		} // end if/else
-		
-	} // end processLexeme()
-
-	/**
-	 * Modified print statement to maintain proper indentation, and redirect output
-	 * to an output queue
-	 *
-	 * @param toPrint String to print
-	 * @param direction Positive integer to decrease indentation, negative to decrease,
-	 *  or 0 to leave it the same.
-	 */
-	private void output(String toPrint, int direction) {
-		if (direction < 0) indentationLevel--;
-
-		String output = "";
-
-		for (int i = 0; i < indentationLevel; i++) {
-			output = output + "    ";
-		} // end for
-		
-		output = output + toPrint + "\n";
-
-		outputQueue.add(output);
-		if (direction > 0) indentationLevel++;
-	} // end printIndented()
-
-	// throws an exception
-	private void error() throws InvalidInputException {
-		String message = String.format("ERROR: Line %d: Invalid input: %s\n", lex.getLineNumber(), nextLexeme.getLexeme());
-		throw new InvalidInputException(message);
-	} // end error()
 
 } // end class
