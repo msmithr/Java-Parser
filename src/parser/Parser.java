@@ -135,6 +135,7 @@ public class Parser implements ParserInterface{
 		output("Enter <import>", 1);
 
 		parseLexeme(Token.KEYWORD_IMPORT);
+		
 		// must check lexeme itself as "static" is a modifier
 		if (nextLexeme.getLexeme().equals("static")) {
 			parseLexeme(Token.MODIFIER);
@@ -266,22 +267,22 @@ public class Parser implements ParserInterface{
 		output("Exit <class_body_statement>", -1);
 	} // end classBodyStatement()
 
-	// <class_body_declaration> = <class_declaration>
-	//    | "void" <identifier> <method_declaration>
-	//    | <identifier> <method_declaration>
-	//    | <type> <identifier> <method_declaration>
-	//    | <type> <identifier> <field_declaration> ";";
+	// <class_body_declaration> = <class_declaration> 
+	//    | "void" <identifier> <method_declaration> (*void method declaration*)
+	//    | <identifier> <method_declaration> (*constructor declaration*)
+	//    | <identifier> <type_half> <identifier> <method_declaration> (*standard method declaration*)
+	//    | <identifier> <type_half> <identifier> <field_declaration> ";"; (*field declaration*)
 	private void classBodyDeclaration() throws InvalidInputException {
 		output("Enter <class_body_declaration>", 1);
 
 		switch (nextLexeme.getToken()) {
 
-		// "class": this is a class declaration
+		// <class_declaration> 
 		case KEYWORD_CLASS:
 			classDeclaration(); // <class_declaration>
 			break;
 
-		// "void": this is a void method declaration
+		// "void" <identifier> <method_declaration> (*void method declaration*)
 		case KEYWORD_VOID:
 			parseLexeme(Token.KEYWORD_VOID);
 			parseLexeme(Token.IDENTIFIER);
@@ -294,32 +295,27 @@ public class Parser implements ParserInterface{
 		case PRIMITIVE_TYPE:
 			parseLexeme(nextLexeme.getToken());
 
-			if (nextLexeme.getToken() == Token.LEFT_ANGLEBRACKET) {
-				typeArguments();
+			if (nextLexeme.getToken() == Token.LEFT_PAREN) {
+				// if identifier is followed by a left paren, it
+				// must be a constructor declaration
+				methodDeclaration(); // <method_declaration>
+				break;
 			} // end if
+			
+			// otherwise, we know this is a type
+			
+			typeHalf(); // <type_half>
+
+			parseLexeme(Token.IDENTIFIER);
 
 			if (nextLexeme.getToken() == Token.LEFT_PAREN) {
-				// if immediately followed by a left paren,
-				// this must be a constructor delcaration
+				// if identifier followed by left paren,
+				// this is a method declaration
 				methodDeclaration(); // <method_declaration>
-			}  else { // otherwise, we know that this is a type
-				// {"[]"}
-				while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
-					parseLexeme(Token.LEFT_BRACKET);
-					parseLexeme(Token.RIGHT_BRACKET);
-				} // end while
-
-				parseLexeme(Token.IDENTIFIER);
-
-				if (nextLexeme.getToken() == Token.LEFT_PAREN) {
-					// if identifier followed by left paren,
-					// this is a method declaration
-					methodDeclaration(); // <method_declaration>
-				} else {
-					// if it isn't a left paren, this is a field declaration
-					fieldDeclaration(); // <field_declaration>
-					parseLexeme(Token.SEMICOLON);
-				} // end if/else
+			} else {
+				// if it isn't a left paren, this is a field declaration
+				fieldDeclaration(); // <field_declaration>
+				parseLexeme(Token.SEMICOLON);
 			} // end if/else
 
 			break;
@@ -393,18 +389,9 @@ public class Parser implements ParserInterface{
 		output("Exit <variable_declarators_half>", -1);
 	} // end variableDeclaratorsHalf()
 
-	//<variable_declarators_afterID> = {'[]'} [<identifier> ['{}'] ["=" <variable_init>] <variable_declarators_half>;
+	//<variable_declarators_afterID> = {'[]'} ["=" <variable_init>] <variable_declarators_half>;
 	private void variableDeclaratorsAfterID() throws InvalidInputException {
 		output("Enter <variable_declarators_afterID>", 1);
-		
-		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
-			parseLexeme(Token.LEFT_BRACKET);
-			parseLexeme(Token.RIGHT_BRACKET);
-		} // end while
-		
-		if (nextLexeme.getToken() == Token.IDENTIFIER) {
-			parseLexeme(Token.IDENTIFIER);
-		} // end if
 
 		while (nextLexeme.getToken() == Token.LEFT_BRACKET) {
 			parseLexeme(Token.LEFT_BRACKET);
@@ -469,7 +456,7 @@ public class Parser implements ParserInterface{
 		output("Exit <parameters>", -1);
 	} // end parameters()
 
-	// <parameter> = {<modifier>} <type> <identifier>{"[]"};
+	// <parameter> = {<modifier>} <type> <identifier> {"[]"};
 	private void parameter() throws InvalidInputException {
 		output("Enter <parameter>", 1);
 
@@ -606,7 +593,7 @@ public class Parser implements ParserInterface{
 					parseLexeme(Token.RIGHT_BRACKET);
 				} // end while
 				
-				variableDeclaratorsAfterID(); // <variable_declarators_afterID>
+				variableDeclaratorsAfterID();
 			} // end if/else
 			break;
 

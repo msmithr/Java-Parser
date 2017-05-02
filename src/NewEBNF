@@ -14,22 +14,22 @@
 <class_body_statement> = ';' | {<modifier>} <class_body_declaration> | ["static"] <block>;
 
 <class_body_declaration> = <class_declaration>
-    | "void" <identifier> <method_declaration>
-    | <identifier> <method_declaration>
-    | <type> <identifier> <method_declaration>
-    | <type> <identifier> <field_declaration> ";";
+    | "void" <identifier> <method_declaration>                          (*void method declaration*)
+    | <identifier> <method_declaration>                                 (*constructor declaration*)
+    | <identifier> <type_half> <identifier> <method_declaration>        (*standard method declaration*)
+    | <identifier> <type_half> <identifier> <field_declaration> ";";    (*field declaration*)
 
 <field_declaration> = {"[]"} ["=" <variable_init>] <variable_declarators_half>;
 
 <variable_declarators> = <variable_declarator> <variable_declarators_half>;
 <variable_declarator> = <identifier> {'[]'} ["=" <variable_init>];
 <variable_declarators_half> = {"," <variable_declarator>};
-<variable_declarators_afterID> = {'[]'} [<identifier> ['{}'] ["=" <variable_init>] <variable_declarators_half>;
+<variable_declarators_afterID> = {'{}'} ["=" <variable_init>] <variable_declarators_half>;
 
 <method_declaration> = <parameters> ["throws" <qualified_identifier> {"," <qualified_identifier>}] (<block> | ";");
 
 <parameters> = "(" [<parameter> {, <parameter>}] ")";
-<parameter> = {<modifier>} <type> <identifier>{"[]"};
+<parameter> = {<modifier>} <type> <identifier> {"[]"};
 
 <block> = '{' {<block_statement> }"}";
 
