@@ -421,7 +421,7 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "float":
 		case "double":
 			return Token.PRIMITIVE_TYPE;
-		
+
 		case "public":
 		case "private":
 		case "protected":
@@ -434,37 +434,37 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 		case "synchronized":
 		case "native":
 			return Token.MODIFIER;
-			
+
 		case "assert":
 			return Token.KEYWORD_ASSERT;
-			
+
 		case "break":
 			return Token.KEYWORD_BREAK;
-			
+
 		case "case":
 			return Token.KEYWORD_CASE;
-			
+
 		case "catch":
 			return Token.KEYWORD_CATCH;
-		
+
 		case "class":
 			return Token.KEYWORD_CLASS;
-			
+
 		case "const":
 			return Token.RESERVED_WORD;
-			
+
 		case "continue":
 			return Token.KEYWORD_CONTINUE;
-			
+
 		case "default":
 			return Token.KEYWORD_DEFAULT;
-		
+
 		case "do":
 			return Token.KEYWORD_DO;
-			
+
 		case "else":
 			return Token.KEYWORD_ELSE;
-			
+
 		case "enum":
 			return Token.KEYWORD_ENUM;
 
@@ -473,43 +473,43 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "false":
 			return Token.KEYWORD_FALSE;
-			
+
 		case "finally":
 			return Token.KEYWORD_FINALLY;
 
 		case "for":
 			return Token.KEYWORD_FOR;
-			
+
 		case "goto":
 			return Token.RESERVED_WORD;
-			
+
 		case "if":
 			return Token.KEYWORD_IF;
 
 		case "implements":
 			return Token.KEYWORD_IMPLEMENTS;
-			
+
 		case "import":
 			return Token.KEYWORD_IMPORT;
-			
+
 		case "instanceof":
 			return Token.KEYWORD_INSTANCEOF;
-			
+
 		case "interface":
 			return Token.KEYWORD_INTERFACE;
-			
+
 		case "new":
 			return Token.KEYWORD_NEW;
-			
+
 		case "null":
 			return Token.KEYWORD_NULL;
 
 		case "package":
 			return Token.KEYWORD_PACKAGE;
-			
+
 		case "return":
 			return Token.KEYWORD_RETURN;
-			
+
 		case "super":
 			return Token.KEYWORD_SUPER;
 
@@ -524,10 +524,10 @@ public class LexicalAnalyzer implements LexicalAnalyzerInterface{
 
 		case "throws":
 			return Token.KEYWORD_THROWS;
-			
+
 		case "true":
 			return Token.KEYWORD_TRUE;
-		
+
 		case "try":
 			return Token.KEYWORD_TRY;
 
