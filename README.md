@@ -1,2 +1,2 @@
-# CS311Project
-Lexical Analyzer and Parser for Java class definition
+# Java-Parser
+Lexical Analyzer and Recursive Descent Parser for the Java programming language
